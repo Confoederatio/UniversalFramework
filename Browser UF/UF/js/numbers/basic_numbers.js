@@ -203,6 +203,31 @@ function min (arg0_variable) {
   return minimum;
 }
 
+/*
+  ordinalise() - Ordinalises a number.
+  arg0_number: (Number) - The input number to pass.
+  Returns: String
+*/
+function ordinalise (arg0_number) {
+  //Convert from parameters
+  var i = arg0_number;
+
+  //Declare local instance variables
+  var negative_suffix = (i < 0) ? `-` : "";
+
+  i = Math.abs(i);
+  var j = i % 10, k = i % 100;
+
+  //Return statement
+  if (j == 1 && k != 11)
+    return `${negative_suffix}${i}st`;
+  if (j == 2 && k != 12)
+    return `${negative_suffix}${i}nd`;
+  if (j == 3 && k != 13)
+    return `${negative_suffix}${i}rd`;
+  return `${negative_suffix}${i}th`;
+}
+
 //radiansToDegrees() - Converts radians to degrees
 function radiansToDegrees (arg0_radians) {
   //Convert from parameters
