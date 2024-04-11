@@ -8,6 +8,7 @@
   biuf
 */
 
+//Requires: html2canvas
 /*
   createContextMenu() - Creates a context menu within the DOM.
 
@@ -275,10 +276,38 @@ function createInput (arg0_options) {
   } else if (["color", "colour"].includes(options.type)) {
     //High-intensity - take a page from Naissance colour wheels
     html_string.push(`<div class = "colour-picker-container">`);
+      //Onload handler
+      html_string.push(`<img src = "" onerror = "handleColourWheel('${options.id}');">`);
 
+      //Colour picker HTML
+      html_string.push(`<img id = "colour-picker-hue" class = "colour-picker-hue" src = "https://i.postimg.cc/GtSFx653/colour-wheel.png">`);
+      html_string.push(`<div id = "colour-picker-brightness" class = "colour-picker-brightness"></div>`);
+
+      html_string.push(`<div id = "colour-picker-cursor" class = "colour-picker-cursor"></div>`);
+      html_string.push(`<div id = "colour-picker" class = "colour-picker-mask"></div>`);
+
+      //RGB inputs
+      html_string.push(`<div class = "rgb-inputs">`);
+        html_string.push(`R: <input type = "number" id = "r" value = "255"><br>`);
+        html_string.push(`G: <input type = "number" id = "g" value = "255"><br>`);
+        html_string.push(`B: <input type = "number" id = "b" value = "255"><br>`);
+      html_string.push(`</div>`);
+
+      //No select
+      html_string.push(`<span class = "no-select">`);
+        html_string.push(`<span class = "brightness-range-container">`);
+          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness</span>`);
+          html_string.push(`<input type = "range" min = "0" max = "100" value = "100" id = "colour-picker-brightness-range" class = "colour-picker-brightness-range">`);
+        html_string.push(`</span>`);
+
+        html_string.push(`<span class = "opacity-range-container">`);
+          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity</span>`);
+          html_string.push(`<input type = "range" min = "0" max = "100" value = "50" id = "colour-picker-opacity-range" class = "colour-picker-opacity-range">`);
+        html_string.push(`</span>`);
+      html_string.push(`</span>`);
     html_string.push(`</div>`);
   } else if (options.type == "datalist") {
-
+    
   } else if (options.type == "date") {
     //High-intensity - create date framework first
   } else if (options.type == "email") {
@@ -426,6 +455,84 @@ function createInput (arg0_options) {
       if (remove_node)
         remove_node.parentNode.removeChild(remove_node);
     }
+  }
+
+  function handleColourWheel (arg0_parent_el_id) {
+    //Convert from parameters
+    var parent_el_id = arg0_parent_el_id;
+
+    //Declare local instance variables
+    var parent_el = document.getElementById(parent_el_id);
+
+    var brightness_el = parent_el.querySelector(`#colour-picker-brightness-range`);
+    var colour_brightness_el = parent_el.querySelector(`#colour-picker-brightness`);
+    var colour_cursor_el = parent_el.querySelector(`#colour-picker-cursor`);
+    var colour_picker_el = parent_el;
+    var colour_wheel_el = document.querySelector(`#colour-picker`);
+    var opacity_el = document.querySelector(`#colour-picker-opacity-range`);
+
+    var b_el = parent_el.querySelector(`#b`);
+    var g_el = parent_el.querySelector(`#g`);
+    var r_el = parent_el.querySelector(`#r`);
+
+    //colour_wheel_el onclick handler
+    colour_wheel_el.onclick = function (e) {
+      var bounding_rect = e.target.getBoundingClientRect();
+      var coord_x = e.clientX - bounding_rect.left;
+      var coord_y = e.clientY - bounding_rect.top;
+
+      colour_cursor_el.style.left = `calc(${coord_x}px - 6px)`;
+      colour_cursor_el.style.top = `calc(${coord_y}px - 6px)`;
+
+      //Get r,g,b value of pixel
+      html2canvas(colour_picker_el).then((canvas) => {
+        var ctx = canvas.getContext("2d");
+
+        var canvas_height = ctx.canvas.height;
+        var canvas_width = ctx.canvas.width;
+        var pixel = ctx.getImageData(coord_x, coord_y, 1, 1).data;
+
+        //Set colour wheel CSS, interaction
+        colour_cursor_el.style.background = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+        r_el.value = pixel[0];
+        g_el.value = pixel[1];
+        b_el.value = pixel[2];
+
+        setEntityColour(entity_id);
+      });
+    };
+
+    //Range change listeners
+    onRangeChange(brightness_el, function (e) {
+      var brightness_value = parseInt(brightness_el.value);
+
+      //Set brightness opacity
+      colour_brightness_el.style.opacity = `${1 - brightness_value*0.01}`;
+      updateBrightnessOpacityHeaders(parent_el_id);
+    });
+    onRangeChange(opacity_el, function (e) {
+      if (options.onclick) {
+        var local_expression = options.onclick;
+        var local_result = new Function(local_expression)(e);
+      }
+
+      //Set brightness opacity
+      updateBrightnessOpacityHeaders(parent_el_id);
+    });
+
+    //RGB listeners
+    r_el.onchange = function () {
+      this.value = Math.max(Math.min(this.value, 255), 0);
+      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+    };
+    g_el.onchange = function () {
+      this.value = Math.max(Math.min(this.value, 255), 0);
+      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+    };
+    b_el.onchange = function () {
+      this.value = Math.max(Math.min(this.value, 255), 0);
+      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+    };
   }
 
   function initBIUFToolbar (arg0_parent_el_id) {
@@ -619,5 +726,70 @@ function createInput (arg0_options) {
       return false;
 
     parentTagActive(window.getSelection().anchorNode.parentNode);
+  }
+
+  function setColourWheelCursor (arg0_parent_el_id, arg1_colour, arg2_do_not_change) {
+    //Convert from parameters
+    var parent_el_id = arg0_parent_el_id;
+    var colour = arg1_colour;
+    var do_not_change = arg2_do_not_change;
+
+    //Declare local instance variables
+    var parent_el = document.getElementById(parent_el_id);
+
+    var brightness_el = parent_el.querySelector(`#colour-picker-brightness-range`);
+    var colour_brightness_el = parent_el.querySelector(`#colour-picker-brightness`);
+    var colour_cursor_el = parent_el.querySelector(`#colour-picker-cursor`);
+    var colour_picker_el = parent_el.querySelector(`.colour-picker-container`);
+    var max_brightness = 255;
+
+    //Get closest r, g, b value in colour wheel and teleport cursor there
+    colour_cursor_el.style.visibility = "hidden";
+
+    //Adjust brightness_el to new maximum brightness
+    max_brightness = Math.max(Math.max(colour[0], colour[1]), colour[2])/255;
+
+    brightness_el.value = max_brightness*100;
+    colour_brightness_el.style.opacity = `${1 - max_brightness}`;
+
+    //Move colour_cursor_el
+    html2canvas(colour_picker_el).then((canvas) => {
+      var ctx = canvas.getContext("2d");
+
+      var canvas_height = ctx.canvas.height;
+      var canvas_width = ctx.canvas.width;
+      var circle_radius = canvas_width/2;
+      var image_data = ctx.getImageData(0, 0, canvas_width, canvas_height).data;
+
+      //Iterate over all image_data; each pixel has 4 elements
+      var closest_pixel = [10000000, 0, 0]; //[colour_distance, x, y];
+
+      //Iterate over image_data array
+      for (var i = 0; i < image_data.length; i += 4) {
+        var local_colour = [image_data[i], image_data[i + 1], image_data[i + 2]];
+      }
+    });
+  }
+
+  function updateBrightnessOpacityHeaders (arg0_parent_el_id) {
+    //Convert from parameters
+    var parent_el_id = arg0_parent_el_id;
+
+    //Declare local instance variables
+    var parent_el = document.getElementById(parent_el_id);
+
+    var brightness_el = parent_el.querySelector(`#colour-picker-brightness-range`);
+    var brightness_header_el = parent_el.querySelector(`#brightness-header`);
+    var opacity_el = parent_el.querySelector(`#colour-picker-opacity-range`);
+    var opacity_header_el = parent_el.querySelector(`#opacity-header`);
+
+    var brightness_value = parseInt(brightness_el.value);
+    var opacity_value = parseInt(opacity_el.value);
+
+    //Update values
+    if (brightness_header_el)
+      brightness_header_el.innerHTML = `Brightness | ${brightness_value/100}`;
+    if (opacity_header_el)
+      opacity_header_el.innerHTML = `Opacity | ${opacity_value/100}`;
   }
 }
