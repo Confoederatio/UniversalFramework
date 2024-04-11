@@ -32,21 +32,21 @@ function objectToArray (arg0_input_object) {
 }
 
 function onRangeChange (arg0_range_el, arg1_listener) {
-    //Convert from parameters
-    var range_el = arg0_range_el;
-    var listener = arg1_listener;
+  //Convert from parameters
+  var range_el = arg0_range_el;
+  var listener = arg1_listener;
 
-    //Declare local instance variables
-    var n, c, m;
+  //Declare local instance variables
+  var n, c, m;
 
-    range_el.addEventListener("input", function (e) {
-      n = 1;
-      c = e.target.value;
+  range_el.addEventListener("input", function (e) {
+    n = 1;
+    c = e.target.value;
 
-      if (c != m) listener(e);
-      m = c;
-    });
-    range_el.addEventListener("change", function (e) {
-      if (!n) listener(e);
-    });
-  }
+    if (c != m) listener(e);
+    m = c;
+  });
+  range_el.addEventListener("change", function (e) {
+    if (!n) listener(e);
+  });
+}

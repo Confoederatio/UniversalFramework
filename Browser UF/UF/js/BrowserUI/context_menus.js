@@ -121,9 +121,10 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
     onclick: (String) - Optional. The onclick/confirm attribute of the button.
     tooltip: (String) - Optional. The HTML tooltip a user can see by hovering over this input.
 
-    attributes: {
+    attributes: - Optional.
       <attribute_name>: <value> - The attribute to pass to the focus element.
-    }
+    options: - Optional. Used for datalists only.
+      <option_id>: <value> - The datalist option ID to pass to the focus element.
   }
 */
 function createInput (arg0_options) {
@@ -132,6 +133,7 @@ function createInput (arg0_options) {
 
   //Intiialise options
   if (!options.attributes) options.attributes = {};
+  if (!options.options) options.options = {};
 
   //Declare local instance variables
   var html_string = [];
@@ -307,7 +309,18 @@ function createInput (arg0_options) {
       html_string.push(`</span>`);
     html_string.push(`</div>`);
   } else if (options.type == "datalist") {
-    
+    html_string.push(`<datalist class = "datalist">`);
+      //Add .options to datalist
+      var all_options = Object.keys(options.options);
+
+      //Iterate over all_options
+      for (var i = 0; i < all_options.length; i++) {
+        var local_value = options.options[all_options[i]];
+
+        //Push option to html_string
+        html_string.push(`<option id = "${all_options[i]}" value = "${local_value}">`);
+      }
+    html_string.push(`</datalist>`);
   } else if (options.type == "date") {
     //High-intensity - create date framework first
   } else if (options.type == "email") {
