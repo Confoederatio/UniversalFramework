@@ -1,6 +1,7 @@
 /*
   getArrayElements() - Fetches array elements that fulfil the following criteria and returns it as an array. If an element being compared to is not of a valid type to the comparison (e.g. .greater option on an object), the element will be returned as-is in the new array.
-  options: {
+  arg0_array: (Array) - The array to pass to the function.
+  arg1_options: (Object)
     cardinality: (Number) - Optional. Elements in returned array must have a length of this.
     cardinality_greater: (Number) - Optional. Elements in returned array must have a length greater than this number.
     cardinality_geq: (Number) - Optional. Elements in returned array must have a length greater to or equal to this number.
@@ -16,7 +17,8 @@
     range: (Array<Number, Number>) - Optional. Returns array values within this range.
     not_range: (Array<Number, Number>) - Optional. Returns array values outside this range.
     recursive: (Boolean) - Optional. Whether the array is recursive. False by default.
-  }
+
+  Returns: (Array)
 */
 function getArrayElements (arg0_array, arg1_options) {
   //Convert from parameters
@@ -93,9 +95,12 @@ function getArrayElements (arg0_array, arg1_options) {
 
 /*
   getArraySubstring() - Recursively fetches the element of an array containing a substring.
-  options: {
+  arg0_array: (Array) - The array to pass to the function.
+  arg1_string: (String) - The substring to search array elements for.
+  arg2_options:
     recursive: (Boolean) - Optional. Where to traverse recursively. True by default.
-  }
+
+  Returns: (Array<String, ...>)
 */
 function getArraySubstring (arg0_array, arg1_string, arg2_options) {
   //Convert from parameters
@@ -129,9 +134,11 @@ function getArraySubstring (arg0_array, arg1_string, arg2_options) {
 
 /*
   indexesOf() - Returns the indexes of an array of strings.
-  options: {
+  arg0_array: (Array) - The array to pass to the function.
+  arg1_index_array: (Array<Number, ...>) - The array of indices to fetch from the array
+  arg2_options: (Object)
     return_values: (Boolean) - Optional. Whether to return array values instead of indices. False by default.
-  }
+  Returns: (Array)
 */
 function indexesOf (arg0_array, arg1_index_array, arg2_options) {
   //Convert from parameters
@@ -155,12 +162,14 @@ function indexesOf (arg0_array, arg1_index_array, arg2_options) {
 
 /*
   sortArray() - Sorts an array. Can be based on subkey values (recursive, e.g. 'population.size').
-  options: {
+  arg0_array: (Array) - The array to pass to the function.
+  arg1_options: (Object)
     sort_key: (String) - Optional. The sort subkey to specify. Empty (indicating the base index) by default.
 
     mode: (String) - Optional. "alphabetical"/"ascending"/"descending". 'descending' by default.
     recursive: (Boolean) - Optional. Whether the sort is recursive. False by default.
-  }
+
+  Returns: (Array)
 */
 function sortArray (arg0_array, arg1_options) {
   //Convert from parameters

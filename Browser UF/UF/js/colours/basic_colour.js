@@ -1,4 +1,10 @@
 //Colours framework
+/*
+  componentToHex() - Fetches the hex of a single component.
+  c: (Number) - The individual r/g/b component to pass to the function.
+
+  Returns: (String)
+*/
 function componentToHex (c) {
   var hex = c.toString(16);
 
@@ -6,6 +12,12 @@ function componentToHex (c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 
+/*
+  deltaE() - Calculates the deltaE between two RGB values
+  rgbA: (Array<Number, Number, Number>) - The 1st RGB code to pass.
+  rgbB: (Array<Number, Number, Number>) - The 2nd RGB code to pass.
+  Returns: (Number)
+*/
 function deltaE (rgbA, rgbB) {
   var labA = RGB2Lab(rgbA);
   var labB = RGB2Lab(rgbB);
@@ -28,11 +40,21 @@ function deltaE (rgbA, rgbB) {
   return i < 0 ? 0 : Math.sqrt(i);
 }
 
+/*
+  generateRandomColour() - Generates a random RGB colour.
+  Returns: (Array<Number, Number, Number>)
+*/
 function generateRandomColour () {
   //Return statement
   return [randomNumber(0, 255), randomNumber(0, 255), randomNumber(0, 255)];
 }
 
+/*
+  getColourDistance() - Fetches the absolute colour distance between two colours.
+  arg0_rgb: (Array<Number, Number, Number>) - The 1st RGB code to pass.
+  arg1_rgb: (Array<Number, Number, Number>) - The 2nd RGB code to pass.
+  Returns: (Number)
+*/
 function getColourDistance (arg0_rgb, arg1_rgb) {
   //Convert from parameters
   var colour_one = arg0_rgb;
@@ -49,6 +71,11 @@ function getColourDistance (arg0_rgb, arg1_rgb) {
   return distance;
 }
 
+/*
+  hexToRGB() - Converts a hex to RGB.
+  hex: (String) - The hex code to pass to the function.
+  Returns: (Array<Number, Number, Number>)
+*/
 function hexToRGB (hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
@@ -60,11 +87,30 @@ function hexToRGB (hex) {
   ] : undefined;
 }
 
+/*
+  RGBToHex() - Converts an RGB value to hex.
+  r: (Number) - The r value.
+  g: (Number) - The g value.
+  b: (Number) - The b value.
+  Returns: (String)
+*/
 function RGBToHex (r, g, b) {
+  //Convert from parameters
+  if (Array.isArray(r)) { //This is an RGB array instead
+    g = r[1];
+    b = r[2];
+    r = r[0];
+  }
+
   //Return statement
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
+/*
+  RGB2Lab() - Converts an RGB value to lab distance.
+  rgb: (Array<Number, Number, Number>) - The RGB value to pass.
+  Returns: (Array<Number, Number, Number>)
+*/
 function RGB2Lab (rgb) {
   let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, x, y, z;
   r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;

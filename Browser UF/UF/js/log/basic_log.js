@@ -1,9 +1,8 @@
 global.log = {
   /*
     log.debug() - Logs debugging to the console.
-    options: {
+    options: (...)
       flag: (Boolean) - Optional. Only outputs a debug log if this variable is true. global.debug by default
-    }
   */
   debug: function () {
     //Convert from parameters

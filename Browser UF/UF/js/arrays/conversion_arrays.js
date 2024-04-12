@@ -1,4 +1,8 @@
-//arrayToObject() - Casts an array to object.
+/*
+  arrayToObject() - Casts an array to object.
+  arg0_array: (Array) - The array to input.
+  Returns: (Object)
+*/
 function arrayToObject (arg0_array) {
   //Convert from parameters
   var array = arg0_array;
@@ -14,7 +18,11 @@ function arrayToObject (arg0_array) {
   return return_object;
 }
 
-//objectToArray() - Casts an object to array.
+/*
+  objectToArray() - Casts an object to array.
+  arg0_input_object: (Object) - The object to input.
+  Returns: (Array)
+*/
 function objectToArray (arg0_input_object) {
   //Convert from parameters
   var input_object = arg0_input_object;
@@ -29,24 +37,4 @@ function objectToArray (arg0_input_object) {
 
   //Return statement
   return return_array;
-}
-
-function onRangeChange (arg0_range_el, arg1_listener) {
-  //Convert from parameters
-  var range_el = arg0_range_el;
-  var listener = arg1_listener;
-
-  //Declare local instance variables
-  var n, c, m;
-
-  range_el.addEventListener("input", function (e) {
-    n = 1;
-    c = e.target.value;
-
-    if (c != m) listener(e);
-    m = c;
-  });
-  range_el.addEventListener("change", function (e) {
-    if (!n) listener(e);
-  });
 }

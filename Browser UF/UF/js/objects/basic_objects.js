@@ -4,7 +4,13 @@ function cleanObject (arg0_object) {
 }
 
 //getDepth() - Returns object depth as a number.
-//getObjectKey() - Fetches object value from a string (e.g. 'test.one.two')
+/*
+  getObjectKey() - Fetches object value from a string (e.g. 'test.one.two')
+  arg0_object: (Object) - The object to fetch the key from.
+  arg1_key: (String) - The string of the key to fetch from the object.
+
+  Returns: (Variable)
+*/
 function getObjectKey (arg0_object, arg1_key) {
   //Convert from parameters
   var object = arg0_object;

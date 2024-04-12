@@ -1,8 +1,10 @@
 /*
   absoluteValueArrays() - Absolute value the distance between two arrays, recursively.
-  options: {
-    recursive: true/false - Whether the operation is recursive. True by default
-  }
+  arg0_array: (Array) - The array to perform absolute distances on.
+  arg1_array: (Array) - The second array with which to compare distances
+  arg2_options: (Object)
+    recursive: (Boolean) - Whether the operation is recursive. True by default
+  Returns: (Array)
 */
 function absoluteValueArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -16,9 +18,11 @@ function absoluteValueArrays (arg0_array, arg1_array, arg2_options) {
 
 /*
   addArrays() - Adds two arrays together recursively.
-  options: {
-    recursive: true/false - Whether the operation is recursive. True by default
-  }
+  arg0_array: (Array) - The first array to add to.
+  arg1_array: (Array) - The second array to add with.
+  arg2_options: (Object)
+    recursive: (Boolean)) - Optional. Whether the operation is recursive. True by default
+  Returns: (Array)
 */
 function addArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -30,7 +34,12 @@ function addArrays (arg0_array, arg1_array, arg2_options) {
   return operateArrays(array, ot_array, `i + x`, options);
 }
 
-//addMatrices() - Adds 2 matrices represented as 2D arrays together
+/*
+  addMatrices() - Adds 2 matrices represented as 2D arrays together
+  arg0_matrix: (Array<Array, ...>) - The first matrix to add.
+  arg1_matrix: (Array<Array, ...>) - The second matrix to add.
+  Returns: (Array<Array, ...>)
+*/
 function addMatrices (arg0_matrix, arg1_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -54,7 +63,12 @@ function addMatrices (arg0_matrix, arg1_matrix) {
   return result;
 }
 
-//appendArrays() - Concatenates two arrays and returns it
+/*
+  appendArrays() - Concatenates two arrays and returns it
+  arg0_array: (Array) - The base array.
+  arg1_array: (Array) - The second array to append to the first.
+  Returns: (Array)
+*/
 function appendArrays (arg0_array, arg1_array) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -64,7 +78,12 @@ function appendArrays (arg0_array, arg1_array) {
   return array.concat(ot_array);
 }
 
-//augmentMatrices() - Combine the columns of two matrices to form a new matrix
+/*
+  augmentMatrices() - Combine the columns of two matrices to form a new matrix.
+  arg0_matrix: (Array<Array, ...>) - The first matrix to augment on.
+  arg1_matrix: (Array<Array, ...>) - The second matrix to augment with.
+  Returns: (Array<Array, ...>)
+*/
 function augmentMatrices (arg0_matrix, arg1_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -80,7 +99,11 @@ function augmentMatrices (arg0_matrix, arg1_matrix) {
   return return_matrix;
 }
 
-//arrayAbsoluteValue() - Performs an absolute value operation on every valid element in an array, recursively.
+/*
+  arrayAbsoluteValue() - Performs an absolute value operation on every valid element in an array, recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayAbsoluteValue (arg0_array) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -89,7 +112,11 @@ function arrayAbsoluteValue (arg0_array) {
   return arrayOperation(array, `Math.abs(n)`);
 }
 
-//arrayAdd() - Performs an addition operation on every valid element in an array, recursively.
+/*
+  arrayAdd() - Performs an addition operation on every valid element in an array, recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayAdd (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -99,7 +126,11 @@ function arrayAdd (arg0_array, arg1_number) {
   return arrayOperation(array, `n + ${number}`);
 }
 
-//arrayDivide()
+/*
+  arrayDivide() - Performs a division operation on every valid element in an array, recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayDivide (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -109,7 +140,11 @@ function arrayDivide (arg0_array, arg1_number) {
   return arrayOperation(array, `n/${number}`);
 }
 
-//arrayExponentiate()
+/*
+  arrayExponentiate() - Performs an exponent operation on every valid element in an array, recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayExponentiate (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -119,7 +154,11 @@ function arrayExponentiate (arg0_array, arg1_number) {
   return arrayOperation(array, `Math.pow(n, ${number})`);
 }
 
-//arrayMultiply()
+/*
+  arrayMultiply() - Performs a multiplication operation on every valid element in an array, recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayMultiply (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -134,6 +173,7 @@ function arrayMultiply (arg0_array, arg1_number) {
   arg0_array: (Array) - The array to pass to arrayOperation()
   arg1_equation: (String) - The string literal to use as an equation.
     'n' represents the current array element.
+  Returns: (Array)
 */
 function arrayOperation (arg0_array, arg1_equation) {
   //Convert from parameters
@@ -163,7 +203,11 @@ function arrayOperation (arg0_array, arg1_equation) {
   });
 }
 
-//arraySubtract() - Subtracts from an array recursively
+/*
+  arraySubtract() - Subtracts from an array recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arraySubtract (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -173,7 +217,11 @@ function arraySubtract (arg0_array, arg1_number) {
   return arrayOperation(array, `n - ${number}`);
 }
 
-//arrayRoot() - Roots an array recursively
+/*
+  arrayRoot() - Roots an array recursively.
+  arg0_array: (Array) - The array to pass to the function.
+  Returns: (Array)
+*/
 function arrayRoot (arg0_array, arg1_number) {
   //Convert from parameters
   var array = getList(arg0_array);
@@ -183,7 +231,11 @@ function arrayRoot (arg0_array, arg1_number) {
   return arrayOperation(array, `root(n, ${number})`);
 }
 
-//choleskyDecompositionMatrix() - Performs a Cholesky decomposition on a matrix
+/*
+  choleskyDecompositionMatrix() - Performs a Cholesky decomposition on a matrix
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Array<Array, ...>)
+*/
 function choleskyDecompositionMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -217,9 +269,11 @@ function choleskyDecompositionMatrix (arg0_matrix) {
 
 /*
   divideArrays() - Divides two arrays together recursively.
-  options: {
+  arg0_array: (Array) - The base array.
+  arg1_array: (Array) - The divisor array.
+  arg2_options: (Object)
     recursive: true/false - Whether the operation is recursive. True by default
-  }
+  Returns: (Arary)
 */
 function divideArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -233,9 +287,11 @@ function divideArrays (arg0_array, arg1_array, arg2_options) {
 
 /*
   exponentiateArrays() - Exponentiates two arrays recursively.
-  options: {
+  arg0_array: (Array) - The base array.
+  arg1_array: (Array) - The power array.
+  arg2_options: (Object)
     recursive: true/false - Whether the operation is recursive. True by default
-  }
+  Returns: (Array)
 */
 function exponentiateArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -247,7 +303,11 @@ function exponentiateArrays (arg0_array, arg1_array, arg2_options) {
   return operateArrays(array, ot_array, `Math.pow(i, x)`, options);
 }
 
-//gaussEliminationMatrix()
+/*
+  gaussEliminationMatrix() - Performs Gauss elimination on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Array<Array, ...>)
+*/
 function gaussEliminationMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -289,7 +349,13 @@ function gaussEliminationMatrix (arg0_matrix) {
   return solution;
 }
 
-//gaussJacobiMatrix()
+/*
+  gaussJacobiMatrix() - Performs Gauss-Jacobi on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  arg1_tolerance: (Number) - Optional. The level of accuracy to tolerate. 1e-6 by default.
+  arg2_max_iterations: (Number) - Optional. The number of max iterations. 1000 by default.
+  Returns: (Array<Array, ...>)
+*/
 function gaussJacobiMatrix (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -324,7 +390,11 @@ function gaussJacobiMatrix (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
   return solution;
 }
 
-//gaussJordanMatrix()
+/*
+  gaussJordanMatrix() - Performs Gauss-Jordan on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Array<Array, ...>)
+*/
 function gaussJordanMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -363,7 +433,13 @@ function gaussJordanMatrix (arg0_matrix) {
   return matrix.map(row => row[matrix.length]);
 }
 
-//gaussSeidelMatrix()
+/*
+  gaussSeidelMatrix() - Performs Gauss-Seidel on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  arg1_tolerance: (Number) - Optional. The level of accuracy to tolerate. 1e-6 by default.
+  arg2_max_iterations: (Number) - Optional. The number of max iterations. 1000 by default.
+  Returns: (Array<Array, ...>)
+*/
 function gaussSeidelMatrix (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -398,7 +474,12 @@ function gaussSeidelMatrix (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
   return solution;
 }
 
-//getCofactor() - Fetches the cofactor in a matrix.
+/*
+  getCofactor() - Fetches the cofactor in a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  arg1_row: (Number) - The row to calculate cofactor for.
+  arg2_column: (Number) - The row to calcualte cofactor for.
+*/
 function getCofactor (arg0_matrix, arg1_row, arg2_column) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -424,7 +505,11 @@ function getCofactor (arg0_matrix, arg1_row, arg2_column) {
   return minor_matrix.push(new_row);
 }
 
-//getMatrixDeterminant()
+/*
+  getMatrixDeterminant() - Calculates the matrix determinant.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Number)
+*/
 function getMatrixDeterminant (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -448,7 +533,11 @@ function getMatrixDeterminant (arg0_matrix) {
   return determinant;
 }
 
-//householderTransformationMatrix()
+/*
+  householderTransformationMatrix() - Performs Householder transformation on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Array<Array, ...>)
+*/
 function householderTransformationMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -485,7 +574,11 @@ function householderTransformationMatrix (arg0_matrix) {
   return tridiagonal_matrix;
 }
 
-//inverseMatrix()
+/*
+  inverseMatrix() - Inverts a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Array<Array, ...>)
+*/
 function inverseMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -517,7 +610,13 @@ function inverseMatrix (arg0_matrix) {
   return inverse;
 }
 
-//LUDecompositionMatrix()
+/*
+  LUDecompositionMatrix() - Performs LUD decomposition on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Object)
+    L: (Array<Array, ...>)
+    U: (Array<Array, ...>)
+*/
 function LUDecompositionMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -557,15 +656,67 @@ function LUDecompositionMatrix (arg0_matrix) {
 }
 
 /*
+  multiplyArrays() - Multiplies two arrays recursively.
+  arg0_array: (Array<Number, ...>) - The base array.
+  arg1_array: (Array<Number, ...>) - The array to multiply by.
+  arg2_options: (Object)
+    recursive: (Boolean) - Optional. Whether the operation is recursive. True by default
+  Returns: (Array)
+*/
+function multiplyArrays (arg0_array, arg1_array, arg2_options) {
+  //Convert from parameters
+  var array = getList(arg0_array);
+  var ot_array = getList(arg1_array);
+  var options = (arg2_options) ? arg2_options : {};
+
+  //Return statement
+  return operateArrays(array, ot_array, `i*x`, options);
+}
+
+/*
+  multiplyMatrices() - Multiplies two matrices.
+  arg0_matrix: (Array<Array, ...>) - The 1st matrix to input.
+  arg1_matrix: (Array<Array, ...>) - The 2nd matrix to input.
+  Returns: (Array<Array, ...>)
+*/
+function multiplyMatrices (arg0_matrix, arg1_matrix) {
+  //Convert from parameters
+  var matrix = arg0_matrix;
+  var ot_matrix = arg1_matrix;
+
+  //Declare local instance variables
+  var m1_rows = matrix.length;
+  var m1_columns = matrix[0].length;
+  var m2_columns = ot_matrix.length;
+  var return_matrix = [];
+
+  //Iterate over matrix rows to multiply
+  for (var i = 0; i < m1_rows; i++) {
+    return_matrix.push([]);
+
+    for (var x = 0; x < m2_columns; x++) {
+      var local_sum = 0;
+
+      for (var y = 0; y < m1_columns; y++)
+        sum += matrix[i][y]*ot_matrix[y][x];
+      return_matrix[i][x] = local_sum;
+    }
+  }
+
+  //Return statement
+  return return_matrix;
+}
+
+/*
   operateArrays() - Performs an operation when merging two arrays together, recursively.
   arg0_array: (Array) - The first array to pass to operateArrays()
   arg1_array: (Array) - The second array to pass to operateArrays()
   arg2_equation: (String) - The string literal to use as an equation.
     'i' represents the corresponding element of the first array,
     'x' represents the corresponding element of the second array
-  options: {
-    recursive: true/false - Whether the operatioon is recursive. True by default
-  }
+  arg3_options: (Object)
+    recursive: (Boolean) - Whether the operatioon is recursive. True by default
+  Returns: (Array)
 */
 function operateArrays (arg0_array, arg1_array, arg2_equation, arg3_options) {
   //Convert from parameters
@@ -598,7 +749,13 @@ function operateArrays (arg0_array, arg1_array, arg2_equation, arg3_options) {
   return result;
 }
 
-//QRDecompositionMatrix()
+/*
+  QRDecompositionMatrix() - Perofrms QR decomposition on a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to pass to the function.
+  Returns: (Object)
+    Q: (Array<Array, ...>)
+    R: (Array<Array, ...>)
+*/
 function QRDecompositionMatrix (arg0_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -645,7 +802,12 @@ function QRDecompositionMatrix (arg0_matrix) {
   return { Q, R };
 }
 
-//QRLeastSquaredMatrix()
+/*
+  QRLeastSquaredMatrix() - Perofrms QR least squared on two matrices.
+  arg0_matrix: (Array<Array, ...>) - The 1st matrix to pass to the function.
+  arg1_matrix: (Array<Array, ...>) - The 2nd matrix to pass to the function.
+  Returns: (Array)
+*/
 function QRLeastSquaredMatrix (arg0_matrix, arg1_matrix) {
   //Convert from parameters
   var A = arg0_matrix;
@@ -681,55 +843,11 @@ function QRLeastSquaredMatrix (arg0_matrix, arg1_matrix) {
 }
 
 /*
-  multiplyArrays() - Multiplies two arrays recursively.
-  options: {
-    recursive: true/false - Whether the operation is recursive. True by default
-  }
-*/
-function multiplyArrays (arg0_array, arg1_array, arg2_options) {
-  //Convert from parameters
-  var array = getList(arg0_array);
-  var ot_array = getList(arg1_array);
-  var options = (arg2_options) ? arg2_options : {};
-
-  //Return statement
-  return operateArrays(array, ot_array, `i*x`, options);
-}
-
-//multiplyMatrices()
-function multiplyMatrices (arg0_matrix, arg1_matrix) {
-  //Convert from parameters
-  var matrix = arg0_matrix;
-  var ot_matrix = arg1_matrix;
-
-  //Declare local instance variables
-  var m1_rows = matrix.length;
-  var m1_columns = matrix[0].length;
-  var m2_columns = ot_matrix.length;
-  var return_matrix = [];
-
-  //Iterate over matrix rows to multiply
-  for (var i = 0; i < m1_rows; i++) {
-    return_matrix.push([]);
-
-    for (var x = 0; x < m2_columns; x++) {
-      var local_sum = 0;
-
-      for (var y = 0; y < m1_columns; y++)
-        sum += matrix[i][y]*ot_matrix[y][x];
-      return_matrix[i][x] = local_sum;
-    }
-  }
-
-  //Return statement
-  return return_matrix;
-}
-
-/*
   rootArrays() - Roots two arrays recursively.
-  options: {
-    recursive: true/false - Whether the operation is recursive. True by default
-  }
+  arg0_array: (Array) - The 1st array to pass to the function.
+  arg1_array: (Array) - The 1st array to pass to the function.
+    recursive: (Boolean) - Whether the operation is recursive. True by default
+  Returns: (Array)
 */
 function rootArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -741,7 +859,12 @@ function rootArrays (arg0_array, arg1_array, arg2_options) {
   return operateArrays(array, ot_array, `root(i, x)`, options);
 }
 
-//SORMatrix()
+/*
+  SORMatrix() - Performs SOR inversion and multiplication matrices.
+  arg0_matrix: (Array<Array, ...>) - The 1st matrix to pass to the function.
+  arg1_matrix: (Array<Array, ...>) - The 2nd matrix to pass to the function.
+  Returns: (Array)
+*/
 function SORMatrix (arg0_matrix, arg1_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -761,9 +884,11 @@ function SORMatrix (arg0_matrix, arg1_matrix) {
 
 /*
   subtractArrays() - Subtract two arrays recursively.
-  options: {
+  arg0_array: (Array) - The 1st base array.
+  arg1_array: (Array) - The 2nd array, containing what to subtract from the 1st.
+  options: (Object)
     recursive: true/false - Whether the operation is recursive. True by default
-  }
+  Returns: (Array)
 */
 function subtractArrays (arg0_array, arg1_array, arg2_options) {
   //Convert from parameters
@@ -775,7 +900,12 @@ function subtractArrays (arg0_array, arg1_array, arg2_options) {
   return operateArrays(array, ot_array, `i - x`, options);
 }
 
-//subtractMatrices()
+/*
+  subtractMatrices() - Subtracts one matrix from another.
+  arg0_matrix: (Array<Array, ...>) - The 1st base matrix to subtract from.
+  arg1_matrix: (Array<Array, ...>) - The 2nd matrix to subtract with.
+  Returns: (Array<Array, ...>)
+*/
 function subtractMatrices (arg0_matrix, arg1_matrix) {
   //Convert from parameters
   var matrix = arg0_matrix;
@@ -796,7 +926,11 @@ function subtractMatrices (arg0_matrix, arg1_matrix) {
   return return_matrix;
 }
 
-//transposeMatrix()
+/*
+  transposeMatrix() - Transposes a matrix.
+  arg0_matrix: (Array<Array, ...>) - The matrix to transpose.
+  Returns: (Array<Array, ...>)
+*/
 function transposeMatrix (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;

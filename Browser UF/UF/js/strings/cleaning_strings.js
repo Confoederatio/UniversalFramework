@@ -1,6 +1,7 @@
 /*
   stripMarkdown() - Strips markdown from a string.
   arg0_input_string: (String) - The string to pass to the function.
+
   Returns: (String)
 */
 function stripMarkdown (arg0_input_string) {
@@ -17,6 +18,7 @@ function stripMarkdown (arg0_input_string) {
 /*
   stripNonNumerics() - Strips all non-numeric characters (0-9) from a string.
   arg0_input_string: (String) - The string to pass to the function.
+  
   Returns: (String)
 */
 function stripNonNumerics (arg0_input_string) {

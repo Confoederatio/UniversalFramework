@@ -1,7 +1,8 @@
 /*
   capitaliseWords() - Capitalises all the words in a string.
   arg0_input_string: (String) - The string to pass to the function.
-  Returns: String
+
+  Returns: (String)
 */
 function capitaliseWords (arg0_input_string) {
   //Convert from parameters
@@ -23,7 +24,8 @@ function capitaliseWords (arg0_input_string) {
 /*
   cleanStringify() - Cleans an input object to be compatible with JSON.stringify().
   arg0_input_object: (String) - The object to pass to the function.
-  Returns: Object
+
+  Returns: (Object)
 */
 function cleanStringify (arg0_input_object) {
   //Convert from parameters
@@ -69,7 +71,8 @@ function cleanStringify (arg0_input_object) {
     equalsIgnoreCase() - Compares two strings, ignoring their case. Returns a boolean
     arg0_string: (String) - The first string to compare.
     arg1_string: (String) - The second string to compare.
-    Returns: Boolean
+
+    Returns: (Boolean)
   */
   function equalsIgnoreCase (arg0_string, arg1_string) {
     //Convert from parameters
@@ -83,7 +86,8 @@ function cleanStringify (arg0_input_object) {
   /*
     formaliseString() - Formalises a debug string into human-readable text. Returns a string.
     arg0_input_string: (String) - The string to pass to the function.
-    Returns: String
+
+    Returns: (String)
   */
   function formaliseString (arg0_input_string) {
     //Convert from parameters
@@ -96,7 +100,8 @@ function cleanStringify (arg0_input_object) {
   /*
     getDateFromString() - Fetches the date from an input string.
     arg0_input_string: (String) - The string to pass to the function.
-    Returns: Date
+
+    Returns: (Date)
   */
   function getDateFromString (arg0_input_string) {
     //Convert from parameters
@@ -109,7 +114,8 @@ function cleanStringify (arg0_input_object) {
   /*
     getNesting() - Fetches the amount of nesting embedded within the current string.
     arg0_input_string: (String) - The string to pass to the function.
-    Returns: Number
+
+    Returns: (Number)
   */
   function getNesting (arg0_input_string) {
     //Convert from parameters
@@ -143,7 +149,8 @@ function cleanStringify (arg0_input_object) {
   /*
     isImage() - Checks if the given link is that of a compatible image.
     arg0_input_string: (String) - The input link to pass to the function.
-    Returns: Boolean
+
+    Returns: (Boolean)
   */
   function isImage (arg0_input_string) {
     //Convert from parameters
@@ -156,7 +163,8 @@ function cleanStringify (arg0_input_object) {
   /*
     parseBoolean() - Returns a human readable version of a boolean.
     arg0_input_boolean: (Boolean) - The boolean to pass to the function.
-    Returns: String
+
+    Returns: (String)
   */
   function parseBoolean (arg0_input_boolean) {
     //Convert from parameters
@@ -169,6 +177,7 @@ function cleanStringify (arg0_input_object) {
   /*
     parseDate() - Returns a string timestamp of a contemporary date.
     arg0_timestamp: (String) - The Date timestamp to pass to the function.
+
     Returns: (String)
   */
   function parseDate (arg0_timestamp) {
@@ -190,6 +199,7 @@ function cleanStringify (arg0_input_object) {
   /*
     parseList() - Parses a list into human-readable form.
     arg0_input_list: (Array<String>) - The array to pass to the function.
+
     Returns: (String)
   */
   function parseList (arg0_input_list) {
@@ -217,6 +227,7 @@ function cleanStringify (arg0_input_object) {
   /*
     processOrdinalString() - Fetches the current ordinal present in a numeric string.
     arg0_input_string: (String) - The ordinal string to pass to the function.
+
     Returns: (String)
   */
   function processOrdinalString (arg0_input_string) {

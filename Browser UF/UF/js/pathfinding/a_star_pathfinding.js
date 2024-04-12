@@ -1,4 +1,11 @@
-//aStar() - Performs the A* algorithm between a starting point and destination within an object graph.
+/*
+  aStar() - Performs the A* algorithm between a starting point and destination within an object graph.
+  arg0_graph: (Object)
+  arg1_start_key: (String) - The node key to start in.
+  arg2_end_key: (String) - The node key to end in.
+
+  Returns: (Array<String, ...>)
+*/
 function aStar (arg0_graph, arg1_start_key, arg2_end_key) {
   //Convert from parameters
   var graph = arg0_graph;
@@ -45,7 +52,7 @@ function aStar (arg0_graph, arg1_start_key, arg2_end_key) {
     }
 
     //Consider neighbours in the reverse direction for bidirectional connections
-    var reverse_neighbours = getReverseNiehgbours(graph, current);
+    var reverse_neighbours = getReverseNeighbours(graph, current);
 
     for (var reverse_neighbour in reverse_neighbours) {
       var tentative_g_score_reverse = g_score[current] + reverse_neighbours[reverse_neighbour];
@@ -74,6 +81,13 @@ function aStarHeuristicCost (arg0_start_key, arg1_end_key) {
   return 0;
 }
 
+/*
+  getLowestFScoreNode() - Fethces the node with the lowest F-score.
+  arg0_nodes: (Array<String, ...>) - The nodes to pass to the function.
+  arg1_f_score: (Number) - The F-score to compare to.
+
+  Returns: (String)
+*/
 function getLowestFScoreNode (arg0_nodes, arg1_f_score) {
   //Convert from parameters
   var nodes = arg0_nodes;
@@ -91,7 +105,14 @@ function getLowestFScoreNode (arg0_nodes, arg1_f_score) {
   return lowest;
 }
 
-function getReverseNiehgbours (arg0_graph, arg1_node) {
+/*
+  getReverseNeighbours() - Fetches the reverse neighbours in a path graph.
+  arg0_graph: (Object) - The graph to pass.
+  arg1_node: (String) - The key of the node to reverse neighbours for.
+
+  Returns: (Object)
+*/
+function getReverseNeighbours (arg0_graph, arg1_node) {
   //Convert from parameters
   var graph = arg0_graph;
   var node = arg1_node;
@@ -113,6 +134,13 @@ function getReverseNiehgbours (arg0_graph, arg1_node) {
   return reverse_neighbours;
 }
 
+/*
+  reconstructPath() - Internal helper function for reconstructing a path.
+  arg0_came_from: (Object) - The starting node.
+  arg1_current: (Object) - The ending node.
+
+  Returns: (Array<String, ...>)
+*/
 function reconstructPath (arg0_came_from, arg1_current) {
   //Convert from parameters
   var came_from = arg0_came_from;
@@ -120,8 +148,6 @@ function reconstructPath (arg0_came_from, arg1_current) {
 
   //Declare local instance variables
   var total_path = [current];
-
-  console.log(came_from, current)
 
   //While loop to reconstruct path
   while (came_from.hasOwnProperty(current)) {

@@ -2,10 +2,12 @@
 
 /*
   createTimeline() - Creates a new timeline from a parent (or an unassociataed one if no parent is defined). The parent may be cloned into the new timeline if necessary.
-  options: {
+  arg0_parent_timeline: (String) - Optional. The ID of the parent timeline to split off from. global.actions.initial_timeline by default
+  arg1_options: (Object)
     timeline_index: (Number) - Optional. The index off of which the timeline should split. The last index of the timeline by default
     return_key: (Boolean) - Optional. Whether to return the timeline key. False by default.
-  }
+
+  Returns: (Object, Timeline)/(String)
 */
 function createTimeline (arg0_parent_timeline, arg1_options) {
   //Convert from parameters
@@ -37,10 +39,9 @@ function createTimeline (arg0_parent_timeline, arg1_options) {
 /*
   constructTimelineGraph() - Returns an A* compatible graph of global.timelines.
 
-  Returns: {
+  Returns: (Object)
     <Timeline ID-index>: (Object)
       <Timeline ID-index>: (Number) - Represents the connection cost between the current Timeline Position and another Timeline Position.
-  }
 */
 function constructTimelineGraph () {
   //Declare local instance variables
@@ -90,7 +91,10 @@ function constructTimelineGraph () {
   return timeline_graph;
 }
 
-//deleteTimeline() - Deletes a timeline and the timelines that branch off of it.
+/*
+  deleteTimeline() - Deletes a timeline and the timelines that branch off of it.
+  arg0_timeline_id: (String) - The timeline ID to delete.
+*/
 function deleteTimeline (arg0_timeline_id) {
   //Convert from parameters
   var timeline_id = arg0_timeline_id;
@@ -126,10 +130,11 @@ function deleteTimeline (arg0_timeline_id) {
 
 /*
   generateTimelineGraph() - Returns a graph of all timelines starting from initial_timeline[0].
-  options: {
+  arg0_timeline_id: (String) - The ID of the timeline to start generating a graph from.
+  arg1_options: (Object)
     x_offset: (Number) - Optional. The current x offset. 0 by default.
     y_offset: (Number) - Optional. The current y offset. 0 by default.
-  }
+  Returns: (Object) - A timeline graph object to render.
 */
 function generateTimelineGraph (arg0_timeline_id, arg1_options) {
   //Convert from parameters
@@ -213,7 +218,11 @@ function generateTimelineGraph (arg0_timeline_id, arg1_options) {
   return timeline_graph;
 }
 
-//getTimelineWidth() - Fetches the total X/Y width of a timeline from all future descendant timelines.
+/*
+  getTimelineWidth() - Fetches the total X/Y width of a timeline from all future descendant timelines.
+  arg0_timeline_id: (String) - The ID of the timeline to measure the descendant width of
+  Returns: (Number)
+*/
 function getTimelineWidth (arg0_timeline_id) {
   //Convert from parameters
   var timeline_id = arg0_timeline_id;
@@ -237,9 +246,9 @@ function getTimelineWidth (arg0_timeline_id) {
 
 /*
   loadTimeline() - Loads in the current timeline, undoing/redoing all actions needed to get there.
-  options: {
+  arg0_timeline_id: (String) - The ID of the timeline to load into the current state
+  arg1_options: (Object)
     timeline_index: (Number) - Optional. The index off of which the timeline should split. The last index of the timeline by default
-  }
 */
 function loadTimeline (arg0_timeline_id, arg1_options) {
   //Convert from parameters
@@ -277,7 +286,10 @@ function loadTimeline (arg0_timeline_id, arg1_options) {
   global.actions.current_index = returnSafeNumber(options.timeline_index);
 }
 
-//jumpToTimeline()
+/*
+  jumpToTimeline() - Jumps to a specific timeline.
+  arg0_timeline_id: (String) - The timeline ID to jump to
+*/
 function jumpToTimeline (arg0_timeline_id) {
   //Convert from parameters
   var timeline_id = arg0_timeline_id;
@@ -286,7 +298,10 @@ function jumpToTimeline (arg0_timeline_id) {
   loadTimeline(timeline_id, { timeline_index: 0 });
 }
 
-//redoAction() - Redoes an action in the current timeline.
+/*
+  redoAction() - Redoes an action in the current timeline.
+  Returns: (Boolean) - Whether the action was successfully redone
+*/
 function redoAction () {
   //Declare local instance variables
   var current_index = returnSafeNumber(global.actions.current_index);
@@ -311,13 +326,12 @@ function redoAction () {
 
 /*
   performAction() - Logs a delta action in the current timeline.
-  options: {
+  arg0_options: (Object)
     action_id: (String) - The ID of the action currently being performed.
     redo_function: (String) - The corresponding redo function.
     redo_function_parameters: (Array<Variable, ...>) - The current arguments passed to perform the delta action.
     undo_function: (String) - The corresponding undo function.
     undo_function_parameters: (Array<Variable, ...>) - The arguments needed to undo the delta action.
-  }
 */
 function performAction (arg0_options) {
   //Convert from parameters
@@ -356,7 +370,10 @@ function performAction (arg0_options) {
   }
 }
 
-//undoAction() - Undoes the last action in the current timeline.
+/*
+  undoAction() - Undoes the last action in the current timeline.
+  Returns: (Boolean) - Whether the action was successfully undone.
+*/
 function undoAction () {
   //Declare localk instance variables
   var current_index = returnSafeNumber(global.actions.current_index);
