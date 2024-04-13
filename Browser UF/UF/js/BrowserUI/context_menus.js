@@ -30,6 +30,7 @@ arg0_options: (Object)
       - color/colour
       - datalist
       - date
+      - date_range
       - email
       - file
       - hidden

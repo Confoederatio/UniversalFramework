@@ -1,4 +1,29 @@
 /*
+  alphabetiseNumber() - Alphabetises a number based on a0-j9.
+  arg0_string: (String) - The string of the number to numerise; if applicable.
+  Returns: (String)
+*/
+function alphabetiseNumber (arg0_string) {
+  //Convert from parameters
+  var string = arg0_strin.toString();
+
+  //Declare local instance variables
+  var alphabet_array = "abcdefghij";
+	var alphabetised_string = "";
+
+  //Iterate over number to alphabetise it
+	for (var i = 0; i < number.length; i++)
+		if (!isNaN(parseInt(number[i]))) {
+			alphabetised_string += alphabet_array[parseInt(number[i])];
+		} else {
+			alphabetised_string += number[i];
+		}
+
+	//Return statement
+	return alphabetised_string;
+}
+
+/*
   arabicise() - Arabicises a Roman numeral string.
   arg0_number: (String) - The number to arabicise.
 
@@ -46,49 +71,24 @@ function degreesToRadians (arg0_degrees) {
 }
 
 /*
-  deordinalise() - Strip ordinals from a string and convert it to a number (e.g. '2nd' = 2).
+  deordinalise() - Deordinalises a string.
   arg0_string: (String) - The string to deordinalise.
 
   Returns: (String)
 */
 function deordinalise (arg0_string) {
   //Convert from parameters
-  var deordinalised_string = arg0_string;
+  var string = arg0_string;
 
   //Declare local instance variables
-  var ordinals = ["st", "nd", "rd", "th"];
+	var ordinals = ["st", "nd", "rd", "th"];
 
-  //Split deordinalised_string into multiple chunks, remove stray ordinals
-  deordinalised_string = (deordinalised_string.includes(" ")) ?
-    deordinalised_string.split(" ") : [deordinalised_string];
+	//Iterate through all ordinals and replace them with nothing
+	for (var i = 0; i < ordinals.length; i++)
+		string = string.replace(ordinals[i], "");
 
-  for (var i = 0; i < deordinalised_string.length; i++) {
-    for (var x = 0; x < ordinals.length; x++)
-      if (deordinalised_string[i].indexOf(ordinals[x]) == 0)
-        deordinalised_string[i] = deordinalised_string[i].replace(ordinals[x], "");
-    if (deordinalised_string[i] == "")
-      deordinalised_string.splice(i, 1);
-  }
-
-  //Iterate over to purge ordinals
-  for (var i = 0; i < deordinalised_string.length; i++) {
-		//Look for ordinal
-		var ordinal_found = false;
-
-    //Check if an ordinal was found
-		for (var x = 0; x < ordinals.length; x++)
-			if (deordinalised_string[i].indexOf(ordinals[x]) != -1)
-				ordinal_found = true;
-
-		var total_ordinal_amount = (ordinal_found) ? 2 : 0;
-		var ordinal_percentage = total_ordinal_amount/deordinalised_string[i].length;
-
-		if (ordinal_percentage > 0.67) //Ordinal makes up majority of string, so delete
-			deordinalised_string.splice(i, 1);
-	}
-
-  //Return statement
-	return deordinalised_string.join(" ").trim();
+	//Return string as number
+	return parseInt(string);
 }
 
 /*
@@ -247,6 +247,80 @@ function min (arg0_variable) {
 
   //Return statement
   return minimum;
+}
+
+/*
+  numeriseAlphabet() - Numerises an alphabetical string, assuming a0-j9.
+  arg0_string: (String) - The string to numerise.
+
+  Returns: (String)
+*/
+function numeriseAlphabet (arg0_string) {
+  //Convert from parameters
+	var string = arg0_string.toString();
+
+	//Declare local instance variables
+	var alphabet_array = {
+		a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9
+	}
+	var alphabetised_string = "";
+
+  //Iterate over string to convert it back into numbers
+	for (var i = 0; i < string.length; i++)
+		if (alphabet_array[string[i]] != undefined) {
+			alphabetised_string += alphabet_array[string[i]];
+		} else {
+			alphabetised_string += string[i];
+		}
+
+	//Return statement
+	return alphabetised_string;
+}
+
+/*
+  oldDeordinalise() - Strip ordinals from a string and convert it to a number (e.g. '2nd' = 2).
+  arg0_string: (String) - The string to deordinalise, using the old list specification pattern.
+
+  Returns: (String)
+*/
+function oldDeordinalise (arg0_string) {
+  //Convert from parameters
+  var deordinalised_string = arg0_string;
+
+  //Declare local instance variables
+  var ordinals = ["st", "nd", "rd", "th"];
+
+  //Split deordinalised_string into multiple chunks, remove stray ordinals
+  deordinalised_string = (deordinalised_string.includes(" ")) ?
+    deordinalised_string.split(" ") : [deordinalised_string];
+
+  for (var i = 0; i < deordinalised_string.length; i++) {
+    for (var x = 0; x < ordinals.length; x++)
+      if (deordinalised_string[i].indexOf(ordinals[x]) == 0)
+        deordinalised_string[i] = deordinalised_string[i].replace(ordinals[x], "");
+    if (deordinalised_string[i] == "")
+      deordinalised_string.splice(i, 1);
+  }
+
+  //Iterate over to purge ordinals
+  for (var i = 0; i < deordinalised_string.length; i++) {
+		//Look for ordinal
+		var ordinal_found = false;
+
+    //Check if an ordinal was found
+		for (var x = 0; x < ordinals.length; x++)
+			if (deordinalised_string[i].indexOf(ordinals[x]) != -1)
+				ordinal_found = true;
+
+		var total_ordinal_amount = (ordinal_found) ? 2 : 0;
+		var ordinal_percentage = total_ordinal_amount/deordinalised_string[i].length;
+
+		if (ordinal_percentage > 0.67) //Ordinal makes up majority of string, so delete
+			deordinalised_string.splice(i, 1);
+	}
+
+  //Return statement
+	return deordinalised_string.join(" ").trim();
 }
 
 /*
