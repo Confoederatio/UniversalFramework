@@ -41,6 +41,55 @@ function cleanObject (arg0_object, arg1_options) {
 }
 
 /*
+  flattenObject() - Moves all keys into the 1st nesting.
+  arg0_object: (Object) - The object to pass.
+
+  Returns: (Object)
+*/
+function flattenObject (arg0_object) {
+  //Convert from parameters
+  var object = arg0_object;
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+
+  //Iterate over all_object_keys to move keys into current object
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var flattened_subobj = {};
+    var local_subobj = object[all_object_keys[i]];
+
+    if (typeof local_subobj == "object") {
+      flattened_subobj = module.exports.flattenObject(local_subobj);
+
+      var all_flattened_keys = Object.keys(flattened_subobj);
+
+      for (var x = 0; x < all_flattened_keys.length; x++)
+        if (!object[all_flattened_keys[x]]) {
+          object[all_flattened_keys[x]] = flattened_subobj[all_flattened_keys[x]];
+        } else {
+          object[all_flattened_keys[x]] += flattened_subobj[all_flattened_keys[x]];
+        }
+    } else if (typeof local_subobj == "number") {
+      if (!object[all_object_keys[i]])
+        object[all_object_keys[i]] = local_subobj;
+      //Do not implement an else object here because that would add 1n per depth
+    } else {
+      object[all_object_keys[i]] = local_subobj;
+    }
+  }
+
+  //Delete any remanent typeof object in the current object
+  all_object_keys = Object.keys(object);
+
+  for (var i = 0; i < all_object_keys.length; i++)
+    if (typeof object[all_object_keys[i]] == "object")
+      delete object[all_object_keys[i]];
+
+  //Return statement
+  return object;
+}
+
+/*
   getDepth() - Returns object depth as a number.
   arg0_object: (Object) - The object to fetch depth for.
   arg1_depth: (Number) - Optimisation parameter used as an internal helper.
@@ -124,6 +173,61 @@ function getObjectList (arg0_object_list) {
     return object_array;
   } else {
     return [];
+  }
+}
+
+/*
+  getSubobject() - Fetches a subobject.
+  arg0_object: (Object) - The object to pass.
+  arg1_key: (String) - The key to recursively look for to fetch the local subobject.
+  arg2_restrict_search: (Boolean) - Whether to restrict the search to the 1st layer.
+
+  Returns: (Object)
+*/
+function getSubobject (arg0_object, arg1_key, arg2_restrict_search) {
+  //Convert from parameters
+  var object = arg0_object;
+  var key = arg1_key;
+  var restrict_search = arg2_restrict_search;
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+
+  //Process key
+  if (!Array.isArray(key))
+    key = getList(key.split("."));
+
+  //Iterate over all_object_keys
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_subobj = object[all_object_keys[i]];
+
+    if (all_object_keys[i] == key[key.length - 1]) {
+      //Guard clause
+      return local_subobj;
+      break;
+    } else if (typeof local_subobj == "object") {
+      var explore_object = false;
+      var new_key = JSON.parse(JSON.stringify(key));
+      if (key.length > 1)
+        restrict_search = true;
+
+      if (restrict_search && all_object_keys[i] == key[0]) {
+        new_key.splice(0, 1);
+        explore_object = true;
+      }
+      if (!restrict_search) explore_object = true;
+
+      //Restrict search for certain arguments
+      if (explore_object) {
+        var has_subobj = module.exports.getSubobject(local_subobj, new_key, restrict_search);
+
+        if (has_subobj) {
+          //Return statement
+          return has_subobj;
+          break;
+        }
+      }
+    }
   }
 }
 

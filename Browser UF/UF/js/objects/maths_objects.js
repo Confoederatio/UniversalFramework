@@ -36,40 +36,40 @@ function addObjects (arg0_object, arg1_object, arg2_options) {
 }
 
 /*
-  changeObjectRange() - Modifies ranges in an object recursively, by operating on objects
+  changeObjectRange() - Changes object ranges, non-recursively, for a given key.
+
   arg0_object: (Object) - The object to pass.
-  arg1_value: (Number) - The value to modify ranges by.
-  arg2_options: (Object)
-    include_numbers: (Number) - Optional. Whether to include single numbers. True by default.
+  arg1_key: (String) - The key corresponding to the range to modify.
+  arg2_min_max_argument: (String) - Optional. Either 'minimum'/'maximum'. 'both' by default.
+  arg3_value: (Number)
 
   Returns: (Object)
 */
-function changeObjectRange (arg0_object, arg1_value, arg2_options) {
+function changeObjectRange (arg0_object, arg1_key, arg2_min_max_argument, arg3_value) {
   //Convert from parameters
   var object = arg0_object;
-  var value = returnSafeNumber(arg1_value);
-  var options = (arg2_options) ? arg2_options : {};
+  var key = arg1_key;
+  var min_max_argument = arg2_min_max_argument;
+  var value = Math.round(returnSafeNumber(arg3_value));
 
-  //Initialise options
-  options.include_numbers = (options.include_numbers != false) ? true : false;
-
-  //Declare local instance variables
-  var all_object_keys = Object.keys(object);
-
-  //Iterate over all_object
-  for (var i = 0; i < all_object_keys.length; i++) {
-    var local_value = object[all_object_keys[i]];
-
-    //Check if local_value is a range
-    if (Array.isArray(local_value))
-      if (local_value == 2)
-        if (arrayIsOfType(local_value, "number")) {
-          local_value[0] += value;
-          local_value[1] += value;
-        }
-    //Check if local_value is a number
-    if (options.include_numbers && typeof local_value == "number")
-      local_value += value;
+  //Add to object
+  if (object[key]) {
+    if (min_max_argument == "minimum") {
+      object[key][0] += value;
+    } else if (min_max_argument == "maximum") {
+      object[key][1] += value;
+    } else {
+      object[key][0] += value;
+      object[key][1] += value;
+    }
+  } else {
+    if (min_max_argument == "minimum") {
+      object[key] = [value, 0];
+    } else if (min_max_argument == "maximum") {
+      object[key] = [0, value];
+    } else {
+      object[key] = [value, value];
+    }
   }
 
   //Return statement
@@ -202,6 +202,107 @@ function getObjectMinimum (arg0_object, arg1_options) {
 
   //Return statement
   return local_minimum;
+}
+
+/*
+  getObjectSum() - Fetches the object sum, recursively.
+  arg0_object: (Object) - The object to pass.
+  arg1_options: (Object)
+    recursive: (Boolean) - Optional. Whether to sum recursively. True by default.
+
+  Returns: (Number)
+*/
+function getObjectSum (arg0_object, arg1_options) {
+  //Convert from parameters
+  var object = arg0_object;
+  var options = (arg1_options) ? arg1_options : {};
+
+  //Initialise options
+  if (options.recursive != false) options.recursive = true;
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+  var total_sum = 0;
+
+  //Iterate over all_object_keys
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_value = object[all_object_keys[i]];
+
+    if (typeof local_value == "number") {
+      total_sum += local_value;
+    } else if (typeof local_value == "object") {
+      //Recursively call function
+      total_sum += getObjectSum(local_value, options);
+    }
+  }
+
+  //Return statement
+  return total_sum;
+}
+
+/*
+  invertFractionObject() - Inverts a fraction object, fetching the reciprocal of percentage values.
+  arg0_object: (Object) - The object to pass.
+
+  Returns: (Object)
+*/
+function invertFractionObject (arg0_object) {
+  //Convert from parameters
+  var object = JSON.parse(JSON.stringify(arg0_object));
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+
+  //Iterate over all_object_keys
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_value = object[all_object_keys[i]];
+
+    object[all_object_keys[i]] = 1 - local_value;
+  }
+
+  //Return statement
+  return object;
+}
+
+/*
+modifyObjectRange() - Modifies ranges in an object recursively, by operating on objects
+arg0_object: (Object) - The object to pass.
+arg1_value: (Number) - The value to modify ranges by.
+arg2_options: (Object)
+  include_numbers: (Number) - Optional. Whether to include single numbers. True by default.
+
+Returns: (Object)
+*/
+function modifyObjectRange (arg0_object, arg1_value, arg2_options) {
+  //Convert from parameters
+  var object = arg0_object;
+  var value = returnSafeNumber(arg1_value);
+  var options = (arg2_options) ? arg2_options : {};
+
+  //Initialise options
+  options.include_numbers = (options.include_numbers != false) ? true : false;
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+
+  //Iterate over all_object
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_value = object[all_object_keys[i]];
+
+    //Check if local_value is a range
+    if (Array.isArray(local_value))
+      if (local_value == 2)
+        if (arrayIsOfType(local_value, "number")) {
+          local_value[0] += value;
+          local_value[1] += value;
+        }
+    //Check if local_value is a number
+    if (options.include_numbers && typeof local_value == "number")
+      local_value += value;
+  }
+
+  //Return statement
+  return object;
 }
 
 /*
@@ -404,6 +505,72 @@ function operateObjects (arg0_object, arg1_object, arg2_equation, arg3_options) 
     object: processed_object,
     ot_object: processed_ot_object
   };
+}
+
+/*
+  standardiseFraction() - Standardises the object to maximum = 1, with each other value being adjusted to a value.
+  arg0_object: (Object) - The object to pass.
+
+  Returns: (Object)
+*/
+function standardiseFraction (arg0_object) {
+  //Convert from parameters
+  var object = JSON.parse(JSON.stringify(arg0_object));
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+  var object_maximum = module.exports.getObjectMaximum(object);
+
+  //Iterate over all_object_keys
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_value = object[all_object_keys[i]];
+
+    if (object_maximum == 0) {
+      object[all_object_keys[i]] = 0;
+    } else {
+      object[all_object_keys[i]] = local_value/object_maximum;
+    }
+  }
+
+  //Return statement
+  return object;
+}
+
+/*
+  standardisePercentage() - Standardises the object to a given total.
+  arg0_object: (Object) - The object to pass.
+  arg1_total: (Number) - The total figure to adjust the object to.
+  arg2_round: (Boolean) - Whether to force rounding when standardising.
+*/
+function standardisePercentage (arg0_object, arg1_total, arg2_round) {
+  //Convert from parameters
+  var object = JSON.parse(JSON.stringify(arg0_object));
+  var total = (arg1_total) ? arg1_total : 1;
+  var round = arg2_round;
+
+  //Declare local instance variables
+  var all_object_keys = Object.keys(object);
+  var object_total = 0;
+
+  //Fetch object_total
+  for (var i = 0; i < all_object_keys.length; i++)
+    object_total += returnSafeNumber(object[all_object_keys[i]]);
+
+  //Standardise to object_total
+  for (var i = 0; i < all_object_keys.length; i++) {
+    var local_value = object[all_object_keys[i]];
+
+    //Set local_value to % value
+    local_value = local_value/object_total;
+
+    //Multiply % value by total
+    object[all_object_keys[i]] = (round) ?
+      Math.ceil(local_value*total) :
+      local_value*total;
+  }
+
+  //Return statement
+  return object;
 }
 
 /*
