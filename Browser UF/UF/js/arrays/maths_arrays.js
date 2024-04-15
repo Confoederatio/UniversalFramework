@@ -21,7 +21,7 @@ function absoluteValueArrays (arg0_array, arg1_array, arg2_options) {
   arg0_array: (Array) - The first array to add to.
   arg1_array: (Array) - The second array to add with.
   arg2_options: (Object)
-    recursive: (Boolean)) - Optional. Whether the operation is recursive. True by default
+    recursive: (Boolean) - Optional. Whether the operation is recursive. True by default
   Returns: (Array)
 */
 function addArrays (arg0_array, arg1_array, arg2_options) {
@@ -115,6 +115,7 @@ function arrayAbsoluteValue (arg0_array) {
 /*
   arrayAdd() - Performs an addition operation on every valid element in an array, recursively.
   arg0_array: (Array) - The array to pass to the function.
+
   Returns: (Array)
 */
 function arrayAdd (arg0_array, arg1_number) {
@@ -129,6 +130,7 @@ function arrayAdd (arg0_array, arg1_number) {
 /*
   arrayDivide() - Performs a division operation on every valid element in an array, recursively.
   arg0_array: (Array) - The array to pass to the function.
+
   Returns: (Array)
 */
 function arrayDivide (arg0_array, arg1_number) {
@@ -152,6 +154,30 @@ function arrayExponentiate (arg0_array, arg1_number) {
 
   //Return statement
   return arrayOperation(array, `Math.pow(n, ${number})`);
+}
+
+/*
+  arrayIsOfType() - Whether an array is purely of a given type.
+  arg0_array: (Array) - The array to pass to the function.
+  arg1_type: (String) - The typeof to compare to.
+
+  Returns: (Array)
+*/
+function arrayIsOfType (arg0_array, arg1_type) {
+  //Convert from parameters
+  var array = getList(arg0_array);
+  var type = arg1_type;
+
+  //Declare local instance variables
+  var check_failed = false;
+
+  //Iterate over array
+  for (var i = 0; i < array.length; i++)
+    if (typeof array[i] != type)
+      check_failed = true;
+
+  //Return statement
+  return (!check_failed);
 }
 
 /*
@@ -715,7 +741,7 @@ function multiplyMatrices (arg0_matrix, arg1_matrix) {
     'i' represents the corresponding element of the first array,
     'x' represents the corresponding element of the second array
   arg3_options: (Object)
-    recursive: (Boolean) - Whether the operatioon is recursive. True by default
+    recursive: (Boolean) - Whether the operation is recursive. True by default
   Returns: (Array)
 */
 function operateArrays (arg0_array, arg1_array, arg2_equation, arg3_options) {

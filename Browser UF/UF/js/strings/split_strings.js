@@ -135,6 +135,7 @@ function splitMarkdownString (arg0_input_string, arg1_options) {
 
     //Return statement
     return all_strings;
+  } catch {}
 }
 
 /*
