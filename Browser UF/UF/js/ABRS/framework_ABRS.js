@@ -116,6 +116,7 @@ function cleanInvalidJSONFiles (arg0_options) {
 /*
   cleanEscapeStrings() - Cleans escape strings from a given string.
   arg0_string: (String) - The input string to pass to the function.
+
   Returns: (String)
 */
 function cleanEscapeStrings (arg0_string) {
@@ -268,9 +269,8 @@ function returnABRSDateString () {
 
 /*
   writeDB() - Writes the DB to a current file.
-  options: {
+  arg0_options: (Object)
     log: (Boolean) -  Optional. Whether to log the backup array. True by default.
-  }
 */
 function writeDB (arg0_file, arg1_options) {
   //Convert from parameters
@@ -294,11 +294,10 @@ function writeDB (arg0_file, arg1_options) {
 
 /*
   writeSave() - Writes a save to backups folder.
-  options: {
+  arg0_options: (Object)
     do_not_clean_escapes: (Boolean) - Optional. Whether to clear escapes. False by default.
     file_limit: (Number) - Optional. The amount of backups to keep
     save_object_function: (String) - The string variable address for the current save object function.
-  }
 */
 function writeSave (arg0_options) {
   //Convert from parameters

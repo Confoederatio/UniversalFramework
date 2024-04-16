@@ -16,6 +16,7 @@ function componentToHex (c) {
   deltaE() - Calculates the deltaE between two RGB values
   rgbA: (Array<Number, Number, Number>) - The 1st RGB code to pass.
   rgbB: (Array<Number, Number, Number>) - The 2nd RGB code to pass.
+
   Returns: (Number)
 */
 function deltaE (rgbA, rgbB) {
@@ -42,6 +43,7 @@ function deltaE (rgbA, rgbB) {
 
 /*
   generateRandomColour() - Generates a random RGB colour.
+
   Returns: (Array<Number, Number, Number>)
 */
 function generateRandomColour () {
@@ -51,7 +53,8 @@ function generateRandomColour () {
 
 /*
   getColourDistance() - Fetches the absolute colour distance between two colours.
-  arg0_rgb: (Array<Number, Number, Number>) - The 1st RGB code to pass.
+  arg0_rgb: (Array<Number, Number, Number>) - The 1st RGB code to pass
+
   arg1_rgb: (Array<Number, Number, Number>) - The 2nd RGB code to pass.
   Returns: (Number)
 */
@@ -74,6 +77,7 @@ function getColourDistance (arg0_rgb, arg1_rgb) {
 /*
   hexToRGB() - Converts a hex to RGB.
   hex: (String) - The hex code to pass to the function.
+
   Returns: (Array<Number, Number, Number>)
 */
 function hexToRGB (hex) {
@@ -92,6 +96,7 @@ function hexToRGB (hex) {
   r: (Number) - The r value.
   g: (Number) - The g value.
   b: (Number) - The b value.
+
   Returns: (String)
 */
 function RGBToHex (r, g, b) {
@@ -109,6 +114,7 @@ function RGBToHex (r, g, b) {
 /*
   RGB2Lab() - Converts an RGB value to lab distance.
   rgb: (Array<Number, Number, Number>) - The RGB value to pass.
+  
   Returns: (Array<Number, Number, Number>)
 */
 function RGB2Lab (rgb) {

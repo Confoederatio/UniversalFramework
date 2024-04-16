@@ -4,6 +4,7 @@
   arg1_dataframe: (Array<Array, ...>) - The dataframe to append.
   arg2_options: (Object)
     default_value: (Variable) - Optional. What the default variable should be. Undefined by default.
+
   Returns: (Array<Array, ...>)
 */
 function appendDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
@@ -42,6 +43,7 @@ function appendDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
 /*
   convertDataframeToObject() - Converts a dataframe to an object.
   arg0_dataframe: (Array<Array, ...>) - The dataframe to convert to an object
+
   Returns: (Object)
 */
 function convertDataframeToObject (arg0_dataframe) {
@@ -76,6 +78,7 @@ function convertDataframeToObject (arg0_dataframe) {
 /*
   convertObjectToDataframe() - Converts a given object to a dataframe.
   arg0_dataframe_obj: (Object) - The object to convert into a dataframe.
+
   Returns: (Array<Array, ...>)
 */
 function convertObjectToDataframe (arg0_dataframe_obj) {
@@ -115,6 +118,7 @@ function convertObjectToDataframe (arg0_dataframe_obj) {
 /*
   getColumns() - Fetches the number of columns in a dataframe.
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
   Returns: (Number)
 */
 function getColumns (arg0_dataframe) {
@@ -138,6 +142,7 @@ function getColumns (arg0_dataframe) {
 /*
   getDimensions() - Returns the number of columns and rows.
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
   Returns: (Array<Number, Number>)
 */
 function getDimensions (arg0_dataframe) {
@@ -151,7 +156,8 @@ function getDimensions (arg0_dataframe) {
 /*
   getRows() - Fetches the number of rows in a dataframe.
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
-  Returns: (Array<Number, Number>)
+
+  Returns: (Number)
 */
 function getRows (arg0_dataframe) {
   //Convert from parameters
@@ -164,6 +170,7 @@ function getRows (arg0_dataframe) {
 /*
   hasHeader() - Checks whether a dataframe has a true header.
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
   Returns: (Boolean)
 */
 function hasHeader (arg0_dataframe) {
@@ -343,6 +350,7 @@ function setHeader (arg0_dataframe, arg1_header_array) {
   arg1_column_name: (String) - The name of the variable/column to select.
   arg2_options: (Object)
     return_index: (Boolean) - Optional. Whether or not to return an index. False by default
+
   Returns: (Array)
 */
 function selectColumn (arg0_dataframe, arg1_column_name, arg2_options) {
@@ -391,6 +399,7 @@ function selectColumn (arg0_dataframe, arg1_column_name, arg2_options) {
   arg1_row_index: (Number) - The row index to pass to the function.
   arg2_options: (Object)
     exclude_header: (Boolean) - Optional. Whether to exclude the header. False by default
+
   Returns: (Array)
 */
 function selectRow (arg0_dataframe, arg1_row_index, arg2_options) {
@@ -408,6 +417,7 @@ function selectRow (arg0_dataframe, arg1_row_index, arg2_options) {
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
   arg1_column_name: (String) - The name of the variable/column to set.
   arg2_values: (Array) - The list of values to set for this column.
+
   Returns: (Array)
 */
 function setColumn (arg0_dataframe, arg1_column_name, arg2_values) {
@@ -434,6 +444,7 @@ function setColumn (arg0_dataframe, arg1_column_name, arg2_values) {
   arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
   arg1_row_index: (Number) - The row index to pass to the function.
   arg2_values: (Array) - The list of values to set for this row.
+
   Returns: (Array)
 */
 function setRow (arg0_dataframe, arg1_row_index, arg2_values) {

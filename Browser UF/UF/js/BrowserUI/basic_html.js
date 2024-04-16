@@ -23,6 +23,12 @@ function isDescendant (arg0_parent_el, arg1_child_el) {
   return false;
 }
 
+/*
+  objectToAttributes() - Converts a given object to a bunch of attributes in terms of key/value pairs.
+  arg0_input_object: (Object) - The object to pass to the function.
+
+  Returns: (String)
+*/
 function objectToAttributes (arg0_input_object) {
   //Convert from parameters
   var input_object = (arg0_input_object) ? arg0_input_object : {};

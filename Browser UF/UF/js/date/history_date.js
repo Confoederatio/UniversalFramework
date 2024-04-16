@@ -1,8 +1,8 @@
 /*
   adjustObjectHistory() - Adjusts an object history keyframe to that of another date/timestamp.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The keyframe to move.
-  arg2_date_object: (String/Object, Date) - The date to move the keyframe to.
+  arg1_date_object: (Object, Date) - The keyframe to move.
+  arg2_date_object: (Object, Date) - The date to move the keyframe to.
 
   Returns: (Object)
 */
@@ -38,7 +38,7 @@ function adjustObjectHistory (arg0_object, arg1_date_object, arg2_date_object) {
 /*
   checkObjectHistory() - Checks whether an object has a given property defined somewhere in its history.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date being referenced.
+  arg1_date_object: (Object, Date) - The date being referenced.
   arg2_conditional_function: (Function) - The conditional function to check for in all history entries.
 
   Returns: (Boolean/Variable)
@@ -74,7 +74,7 @@ function checkObjectHistory (arg0_object, arg1_date_object, arg2_conditional_fun
 /*
   createObjectHistory() - Creates an object history keyframe at the current date.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date to create a history keyframe at.
+  arg1_date_object: (Object, Date) - The date to create a history keyframe at.
   arg2_options: (Object) - Optional. The actual .options styling data being carried at this frame. Undefined by default
   arg3_coords: (Array<Array<Number, Number>, ...>) - The coordinates to input for this frame. Defaults to old coordinates if available.
 
@@ -149,7 +149,7 @@ function createObjectHistory (arg0_object, arg1_date_object, arg2_options, arg3_
 /*
   deleteObjectHistory() - Deletes an object history keyframe.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date to delete a history keyframe at.
+  arg1_date_object: (Object, Date) - The date to delete a history keyframe at.
 
   Returns: (Object)/undefined if all history entries deleted
 */
@@ -214,7 +214,7 @@ function getFirstHistoryFrame (arg0_object) {
 /*
   getHistoryCoords() - Fetches the coords of an object at a certain date.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date being referenced.
+  arg1_date_object: (Object, Date) - The date being referenced.
 
   Returns: (Array<Array<Number, Number>, ...>)
 */
@@ -233,7 +233,7 @@ function getHistoryCoords (arg0_object, arg1_date_object) {
 /*
   getHistoryFrame() - Returns the history frame of an entity.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date being referenced.
+  arg1_date_object: (Object, Date) - The date being referenced.
 
   Returns: (Object)
 */
@@ -325,7 +325,7 @@ function getLastCoords (arg0_object, arg1_history_frame, arg2_options) {
 }
 
 /*
-  getLastIdenticalCoords() - Fetches the lastr identical coords prior to the current frame.
+  getLastIdenticalCoords() - Fetches the last identical coords prior to the current frame.
   arg0_object: (Object) - The object being referenced.
   arg1_history_frame: (Object) - The history frame object being referenced.
 
@@ -357,9 +357,11 @@ function getLastIdenticalCoords (arg0_object, arg1_history_frame) {
 /*
   getObjectHistory() - Returns a history frame for the specified date.
   arg0_object: (Object) - The object being referenced.
-  arg1_date_object: (String/Object, Date) - The date being referenced.
+  arg1_date_object: (Object, Date) - The date being referenced.
   arg2_options: (Object)
     return_key: (Boolean) - Optional. Whether to return the key instead of the object. False by default.
+
+  Returns: (Object)
 */
 function getObjectHistory (arg0_object, arg1_date_object, arg2_options) {
   //Convert from parameters

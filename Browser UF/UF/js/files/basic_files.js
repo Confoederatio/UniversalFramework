@@ -3,6 +3,7 @@
 /*
   getAllFiles() - Fetches an array of all files in a given folder.
   arg0_folder: (String) - The folder path.
+  
   Returns: (Array<String, ...>)
 */
 function getAllFiles (arg0_folder) {

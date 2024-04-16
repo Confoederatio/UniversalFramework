@@ -134,6 +134,7 @@ function deleteTimeline (arg0_timeline_id) {
   arg1_options: (Object)
     x_offset: (Number) - Optional. The current x offset. 0 by default.
     y_offset: (Number) - Optional. The current y offset. 0 by default.
+
   Returns: (Object) - A timeline graph object to render.
 */
 function generateTimelineGraph (arg0_timeline_id, arg1_options) {
@@ -221,6 +222,7 @@ function generateTimelineGraph (arg0_timeline_id, arg1_options) {
 /*
   getTimelineWidth() - Fetches the total X/Y width of a timeline from all future descendant timelines.
   arg0_timeline_id: (String) - The ID of the timeline to measure the descendant width of
+
   Returns: (Number)
 */
 function getTimelineWidth (arg0_timeline_id) {
@@ -300,6 +302,7 @@ function jumpToTimeline (arg0_timeline_id) {
 
 /*
   redoAction() - Redoes an action in the current timeline.
+  
   Returns: (Boolean) - Whether the action was successfully redone
 */
 function redoAction () {
@@ -372,6 +375,7 @@ function performAction (arg0_options) {
 
 /*
   undoAction() - Undoes the last action in the current timeline.
+
   Returns: (Boolean) - Whether the action was successfully undone.
 */
 function undoAction () {

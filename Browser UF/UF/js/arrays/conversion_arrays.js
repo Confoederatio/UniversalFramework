@@ -1,6 +1,7 @@
 /*
   arrayToObject() - Casts an array to object.
   arg0_array: (Array) - The array to input.
+
   Returns: (Object)
 */
 function arrayToObject (arg0_array) {
@@ -21,6 +22,7 @@ function arrayToObject (arg0_array) {
 /*
   objectToArray() - Casts an object to array.
   arg0_input_object: (Object) - The object to input.
+  
   Returns: (Array)
 */
 function objectToArray (arg0_input_object) {

@@ -8,6 +8,7 @@
       sequence[1] - The total number of iterations to repeat the sequence for.
     repeat: (Array<Array<...>, Number>) - Repeats an array x times.
     repeat_each: (Array<Array<...>, Number>) - Repeats each element of an array x times.
+
   Returns: (Array)
 */
 function createArray (arg0_options) {
@@ -60,6 +61,7 @@ function createArray (arg0_options) {
   dimensionality() - Formats an array with n dimensions with zero-indexed dimensionality.
   arg0_input_array: (Array) - The array to input
   arg1_dimension_array: (Array<Number, ...>) - An array providing the dimensions of the current array (what to break it down into), starting with the Y dimension.
+
   Returns: (Array<Array, ...>)
 */
 function dimensionality (arg0_input_array, arg1_dimension_array) {
@@ -89,6 +91,7 @@ function dimensionality (arg0_input_array, arg1_dimension_array) {
 /*
   flattenArray() - Flattens a nested array to be 1-deep.
   arg0_input_array: (Array) - The array to input.
+
   Returns: (Array)
 */
 function flattenArray (arg0_input_array) {
@@ -102,6 +105,7 @@ function flattenArray (arg0_input_array) {
 /*
   getCardinality() - Fetches the cardinality of an array/object/variable.
   arg0_variable: (Variable) - The variable to input.
+
   Returns: (Number)
 */
 function getCardinality (arg0_variable) {
@@ -121,6 +125,7 @@ function getCardinality (arg0_variable) {
 /*
   getRecursiveCardinality() - Fetches the total number of elements in an array, including sub-arrays.
   arg0_input_array: (Array) - The array to input.
+
   Returns: (Number)
 */
 function getRecursiveCardinality (arg0_input_array) {
@@ -135,6 +140,7 @@ function getRecursiveCardinality (arg0_input_array) {
 /*
   getList() - Returns a list/array from a variable.
   arg0_variable: (Variable) - The variable to return a list/array from.
+
   Returns: (Array)
 */
 function getList (arg0_variable) {
@@ -148,6 +154,7 @@ function getList (arg0_variable) {
 /*
   isArrayEmpty() - Checks whether an array is empty.
   arg0_input_array: (Array) - The array to input.
+
   Returns: (Boolean)
 */
 function isArrayEmpty (arg0_input_array) {
@@ -162,6 +169,7 @@ function isArrayEmpty (arg0_input_array) {
   truncateArray() - Truncates an array to a given length.
   arg0_input_array: (Array) - The array to input.
   arg1_length: (Number) - The length to truncate the array to.
+
   Returns: (Array)
 */
 function truncateArray (arg0_input_array, arg1_length) {
@@ -179,6 +187,7 @@ function truncateArray (arg0_input_array, arg1_length) {
 /*
   reverseArray() - Reverses an input array.
   arg0_input_array: (Array) - The array to reverse.
+
   Returns: (Array)
 */
 function reverseArray (arg0_input_array) {
@@ -196,6 +205,7 @@ function reverseArray (arg0_input_array) {
 /*
   uniqueArray() - Removes any duplicate elements from an input array.
   arg0_input_array: (Array) - The array to input.
+  
   Returns: (Array)
 */
 function uniqueArray (arg0_input_array) {

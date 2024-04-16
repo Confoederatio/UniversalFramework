@@ -1,6 +1,6 @@
 /*
   daysInMonths() - Fetches the number of days already passed since the beginning of the year.
-  arg0_date_object: (String/Object, Date) - The date object/timestamp to pass to the function.
+  arg0_date_object: (Object, Date) - The date object/timestamp to pass to the function.
 
   Returns: (Number)
 */
@@ -22,7 +22,7 @@ function daysInMonths (arg0_date_object) {
 
 /*
   getDateString() - Returns a formatted string from a date object.
-  arg0_date_object: (String/Object, Date) - The date object to pass to the function.
+  arg0_date_object: (Object, Date) - The date object to pass to the function.
   Returns: (String)
 */
 function getDateString (arg0_date_object) { //[WIP] - Finish function body
@@ -31,7 +31,7 @@ function getDateString (arg0_date_object) { //[WIP] - Finish function body
 
 /*
   getStandardYear() - Returns the standard numeric Gregorian year from a date object/timestamp.
-  arg0_date_object: (String/Object, Date) - The date object/timestamp to pass to the function.
+  arg0_date_object: (Object, Date) - The date object/timestamp to pass to the function.
 */
 function getStandardYear (arg0_date_object) { //[WIP] - Finish function body
 

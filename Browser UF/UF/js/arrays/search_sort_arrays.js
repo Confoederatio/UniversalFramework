@@ -97,7 +97,7 @@ function getArrayElements (arg0_array, arg1_options) {
   getArraySubstring() - Recursively fetches the element of an array containing a substring.
   arg0_array: (Array) - The array to pass to the function.
   arg1_string: (String) - The substring to search array elements for.
-  arg2_options:
+  arg2_options: (Object)
     recursive: (Boolean) - Optional. Where to traverse recursively. True by default.
 
   Returns: (Array<String, ...>)
@@ -138,6 +138,7 @@ function getArraySubstring (arg0_array, arg1_string, arg2_options) {
   arg1_index_array: (Array<Number, ...>) - The array of indices to fetch from the array
   arg2_options: (Object)
     return_values: (Boolean) - Optional. Whether to return array values instead of indices. False by default.
+    
   Returns: (Array)
 */
 function indexesOf (arg0_array, arg1_index_array, arg2_options) {
