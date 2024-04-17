@@ -30,7 +30,7 @@
         - color/colour
         - datalist
         - date
-        - date_range
+        - date_length
         - email
         - file
         - hidden
@@ -113,7 +113,7 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
   createInput() - Returns a string representing the HTML input element.
   arg0_options: (Object)
     id: (String) - The ID to associate this input with.
-    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'email'/'file'/'hidden'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
+    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
 
     icon: (String) - Optional. The path to the display icon image.
     name: (String) - Optional. The HTML string of the button to display.
@@ -124,6 +124,10 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
       <attribute_name>: <value> - The attribute to pass to the focus element.
     options: - Optional. Used for datalists only.
       <option_id>: <value> - The datalist option ID to pass to the focus element.
+
+    //Individual input type options.
+    //'date'
+      default_date: (Object) - The date to set defaults to if applicable.
 */
 function createInput (arg0_options) {
   //Convert from parameters
@@ -321,10 +325,80 @@ function createInput (arg0_options) {
     html_string.push(`</datalist>`);
   } else if (options.type == "date") {
     //High-intensity - create date framework first
+    //Day/month/year container
+    html_string.push(`<input id = "day-input" class = "day-input" placeholder = "1st">`);
+    html_string.push(`<input id = "month-input" class = "month-input" list = "months" placeholder = "January">`);
+    html_string.push(`
+      <datalist id = "months" name = "month">
+        <option value = "January">1</option>
+        <option value = "February">2</option>
+        <option value = "March">3</option>
+        <option value = "April">4</option>
+        <option value = "May">5</option>
+        <option value = "June">6</option>
+        <option value = "July">7</option>
+        <option value = "August">8</option>
+        <option value = "September">9</option>
+        <option value = "October">10</option>
+        <option value = "November">11</option>
+        <option value = "December">12</option>
+      </datalist>
+    `);
+    html_string.push(`<input id = "year-input" class = "year-input">`);
+    html_string.push(`
+      <select id = "year-type">
+        <option value = "AD">AD</option>
+        <option value = "BC">BC</option>
+      </select>
+    `);
+    //Hour-minute container
+    html_string.push(`
+      <input id = "hour-input" value = "00" placeholder = "00"> :
+      <input id = "minute-input" value = "00" placeholder = "00">
+    `);
+  } else if (options.type == "date_length") {
+    //Place date_length containers on separate lines for better readability
+    html_string.push(`
+      <div id = "date-container">
+        <input id = "years-input" placeholder = "2000" value = "2000"></input>
+        <input id = "months-input" placeholder = "January" value = "January"></input>
+        <input id = "days-input" placeholder = "1st" value = "1st"></input>
+      </div>
+      <div id = "clock-container">
+        <input id = "hours-input" placeholder = "00" value = "00"></input> :
+        <input id = "minutes-input" placeholder = "00" value = "00"></input>
+      </div>
+    `);
   } else if (options.type == "email") {
 
   } else if (options.type == "file") {
     //High-intensity
+  } else if (options.type == "image") {
+
+  } else if (options.type == "number") {
+
+  } else if (options.type == "password") {
+
+  } else if (options.type == "radio") {
+
+  } else if (options.type == "range") {
+
+  } else if (options.type == "reset") {
+
+  } else if (options.type == "search_select") {
+
+  } else if (options.type == "select") {
+
+  } else if (options.type == "submit") {
+
+  } else if (["tel", "telephone"].includes(options.type)) {
+
+  } else if (options.type == "text") {
+
+  } else if (options.type == "time") {
+
+  } else if (options.type == "url") {
+
   }
 
   //Close html_string div
