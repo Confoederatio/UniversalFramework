@@ -22,8 +22,8 @@ function addObject (arg0_object, arg1_value) {
     recursive: (Boolean) - Optional. Whether the operation is recursive. True by default
 
   Returns: (Object)
-    object: The modified version of the 1st object
-    ot_object: The modified version of the 2nd object
+    object: (Object) The modified version of the 1st object
+    ot_object: (Object) The modified version of the 2nd object
 */
 function addObjects (arg0_object, arg1_object, arg2_options) {
   //Convert from parameters
@@ -41,7 +41,7 @@ function addObjects (arg0_object, arg1_object, arg2_options) {
   arg0_object: (Object) - The object to pass.
   arg1_key: (String) - The key corresponding to the range to modify.
   arg2_min_max_argument: (String) - Optional. Either 'minimum'/'maximum'. 'both' by default.
-  arg3_value: (Number)
+  arg3_value: (Number) - The number to change these ranges by.
 
   Returns: (Object)
 */
@@ -100,8 +100,8 @@ function divideObject (arg0_object, arg1_value) {
     recursive: (Boolean) - Optional. Whether the operation is recursive. True by default
 
   Returns: (Object)
-    object: The modified version of the 1st object
-    ot_object: The modified version of the 2nd object
+    object: (Object) The modified version of the 1st object
+    ot_object: (Object) The modified version of the 2nd object
 */
 function divideObjects (arg0_object, arg1_object, arg2_options) {
   //Convert from parameters
@@ -344,7 +344,7 @@ function multiplyObjects (arg0_object, arg1_object, arg2_options) {
 
 /*
   operateObject() - Performs an operation on a single object, recursively.
-  arg0_object: (Object) - The object to pass to operateObjects()
+  arg0_object: (Object) - The object to pass to operateObject()
   arg1_equation: (String) - The string literal to use as an equation.
     'n' represents the corresponding element of the first object.
   arg2_options: (Object)
@@ -402,8 +402,8 @@ function operateObject (arg0_object, arg1_equation, arg2_options) {
     only_numbers: (Boolean) - Optional. Whether only numbers can be operated on. True by default
     recursive: (Boolean) - Optional. Whether the operation is recursive. True by default
   Returns: (Object)
-    object: The modified version of the 1st object
-    ot_object: The modified version of the 2nd object
+    object: (Object) The modified version of the 1st object
+    ot_object: (Object) The modified version of the 2nd object
 */
 function operateObjects (arg0_object, arg1_object, arg2_equation, arg3_options) {
   //Convert from parameters
@@ -541,6 +541,8 @@ function standardiseFraction (arg0_object) {
   arg0_object: (Object) - The object to pass.
   arg1_total: (Number) - The total figure to adjust the object to.
   arg2_round: (Boolean) - Whether to force rounding when standardising.
+
+  Returns: (Object)
 */
 function standardisePercentage (arg0_object, arg1_total, arg2_round) {
   //Convert from parameters
@@ -575,7 +577,7 @@ function standardisePercentage (arg0_object, arg1_total, arg2_round) {
 
 /*
   subtractObject() - Subtracts a value from an object, recursively.
-  arg0_object: The object to pass.
+  arg0_object: (Object) The object to pass.
   arg1_value: (Number) - The value to add to each variable in the object.
 
   Returns: (Object)

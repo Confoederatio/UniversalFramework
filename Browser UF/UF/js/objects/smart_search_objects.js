@@ -9,7 +9,7 @@
 
   Returns: (Function)
 */
-function createObjectSearch (arg0_options) { //[WIP] - To be tested
+function createObjectSearch (arg0_options) {
   //Convert from parameters
   var options = (arg0_options) ? arg0_options : {};
 
@@ -116,7 +116,7 @@ function createObjectSearch (arg0_options) { //[WIP] - To be tested
 
   Returns: (Function)
 */
-function createSmartSearch (arg0_options) { //[WIP] - To be tested
+function createSmartSearch (arg0_options) {
   //Convert options
   var options = (arg0_options) ? arg0_options : {};
 
@@ -217,7 +217,7 @@ function createSmartSearch (arg0_options) { //[WIP] - To be tested
 
   arg0_name: (String) - The .function_name of the smart search to delete.
 */
-function deleteSmartSearch (arg0_name) { //[WIP] - To be tested
+function deleteSmartSearch (arg0_name) {
   //Convert from parameters
   var function_name = arg0_name;
 

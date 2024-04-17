@@ -386,6 +386,8 @@ function randomNumber (arg0_min, arg1_max, arg2_do_not_round) {
   returnSafeNumber() - Returns a safe number.
   arg0_operation: (Number) - The variable, preferably a number to check for.
   arg1_default: (Number) - Optional. The default to pass. 0 by default.
+
+  Returns: (Number)
 */
 function returnSafeNumber (arg0_operation, arg1_default) {
   //Convert from parameters
@@ -457,6 +459,8 @@ function root (arg0_number, arg1_root) {
   round() - Rounds a number to n places.
   arg0_number: (Number) - The number to round.
   arg1_rounding_places: (Number) - The number of places to round by.
+
+  Returns: (Number)
 */
 function round (arg0_number, arg1_rounding_places) {
   //Convert from parameters

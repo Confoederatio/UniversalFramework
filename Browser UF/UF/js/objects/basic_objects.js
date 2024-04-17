@@ -235,9 +235,11 @@ function getSubobject (arg0_object, arg1_key, arg2_restrict_search) {
   getSubobjectKeys() - Fetches the keys in a subobject that match the given criteria.
   arg0_object: (Object) - The object to pass to the function.
   arg1_options: (Object)
-    exclude_keys: [], - A list of keys to exclude
-    include_objects: true/false, - Whether or not to include object keys
-    only_objects: true/false - Whether to only include objects
+    exclude_keys: (Array<String, ...>), - A list of keys to exclude
+    include_objects: (Boolean), - Optional. Whether or not to include object keys. False by default.
+    only_objects: (Boolean) - Optional. Whether to only include objects. False by default.
+
+  Returns: (Array<String, ...>)
 */
 function getSubobjectKeys (arg0_object, arg1_options) {
   //Convert from parameters

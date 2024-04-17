@@ -82,7 +82,7 @@ function aStarHeuristicCost (arg0_start_key, arg1_end_key) {
 }
 
 /*
-  getLowestFScoreNode() - Fethces the node with the lowest F-score.
+  getLowestFScoreNode() - Fetches the node with the lowest F-score.
   arg0_nodes: (Array<String, ...>) - The nodes to pass to the function.
   arg1_f_score: (Number) - The F-score to compare to.
 

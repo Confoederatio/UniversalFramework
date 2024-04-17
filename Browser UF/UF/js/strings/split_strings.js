@@ -142,6 +142,8 @@ function splitMarkdownString (arg0_input_string, arg1_options) {
   splitString() - Splits a string equally by character count.
   arg0_input_string: (String) - The string to pass to the function.
   arg1_length: (Number) - Optional. The number of characters to allow per page. 200 by default.
+
+  Returns: (Array<String, ...>)
 */
 function splitString (arg0_input_string, arg1_length) {
   //Convert from parameters
@@ -171,6 +173,8 @@ function splitString (arg0_input_string, arg1_length) {
   arg0_input_string: (String) - The string to pass to the function.
   arg1_length: (Number) - Optional. The number of max characters to display. 80 by default.
   arg2_do_not_show_dots: (Boolean) - Optional. Whether to show dots at the end. False by default.
+
+  Returns: (String)
 */
 function truncateString (arg0_input_string, arg1_length, arg2_do_not_show_dots) {
   //Convert from parameters

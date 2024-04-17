@@ -43,7 +43,7 @@ function addRanges (arg0_range, arg1_range) {
 
 /*
   divideRange() - Divides a range by another.
-  arg0_range: (Array<Number, Number>) - The 1st range.
+  arg0_range: (Array<Number, Number>) - The range to pass.
   arg1_number: (Number) - The number to divide by.
 
   Returns: (Array<Number, Number>)
@@ -143,7 +143,7 @@ function getMidpoint (arg0_range) {
 
 /*
   getRange() - Gets a range from a given variable.
-  arg0_range: (Array<Number, Number>) - The range to pass.
+  arg0_range: (Variable) - The range to pass.
 
   Returns: (Array<Number, Number>)
 */
@@ -213,7 +213,7 @@ function multiplyRanges (arg0_range, arg1_range) {
 
 /*
   rootRange() - Roots a range by a given number.
-  arg0_range: (Array<Number, Number>) - The 1st range to pass.
+  arg0_range: (Array<Number, Number>) - The range to pass.
   arg1_root: (Number) - The number to root a range by.
 
   Returns: (Array<Number, Number>)
