@@ -101,12 +101,24 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
 
     //This is an input field to append
     if (typeof local_option == "object") {
+      var local_input_html = createInput(local_option);
 
+      html_string.push(local_input_html);
     }
   }
 
   //Close html_string
   html_string.push(`</div>`);
+
+  //Fetch query_selector_el and set .innerHTML to html_string.join("");
+  if (options.anchor) {
+    var query_selector_el = document.querySelector(options.anchor)
+
+    query_selector_el.innerHTML = html_string.join("");
+  }
+
+  //Return statement
+  return html_string.join("");
 }
 
 /*
@@ -122,8 +134,8 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
 
     attributes: - Optional.
       <attribute_name>: <value> - The attribute to pass to the focus element.
-    options: - Optional. Used for datalists only.
-      <option_id>: <value> - The datalist option ID to pass to the focus element.
+    options: - Optional. Used for datalists/select only.
+      <option_id>: <value> - The datalist/select option ID to pass to the focus element.
 
     //Individual input type options.
     //'date'
@@ -148,7 +160,7 @@ function createInput (arg0_options) {
     //Create a contenteditable div with onchange handlers to strip formatting
     html_string.push(`<div id = "biuf-toolbar" class = "biuf-toolbar">`);
       //Onload handler
-      html_string.push(`<img src = "" onerror = "initBIUFToolbar('${options.id}');"`);
+      html_string.push(`<img src = "" onerror = "initBIUFToolbar('${options.id}');">`);
       html_string.push(`<button id = "bold-button" class = "bold-icon">B</button>`);
       html_string.push(`<button id = "italic-button" class = "italic-icon">I</button>`);
       html_string.push(`<button id = "underline-button" class = "underline-icon">U</button>`);
@@ -324,9 +336,12 @@ function createInput (arg0_options) {
       }
     html_string.push(`</datalist>`);
   } else if (options.type == "date") {
+    if (options.name)
+      html_string.push(options.name);
+
     //High-intensity - create date framework first
     //Day/month/year container
-    html_string.push(`<input id = "day-input" class = "day-input" placeholder = "1st">`);
+    html_string.push(`<input id = "day-input" class = "day-input" placeholder = "1st" size = "4">`);
     html_string.push(`<input id = "month-input" class = "month-input" list = "months" placeholder = "January">`);
     html_string.push(`
       <datalist id = "months" name = "month">
@@ -353,52 +368,87 @@ function createInput (arg0_options) {
     `);
     //Hour-minute container
     html_string.push(`
-      <input id = "hour-input" value = "00" placeholder = "00"> :
-      <input id = "minute-input" value = "00" placeholder = "00">
+      <input id = "hour-input" value = "00" placeholder = "00" size = "2"> :
+      <input id = "minute-input" value = "00" placeholder = "00" size = "2">
     `);
   } else if (options.type == "date_length") {
+    if (options.name)
+      html_string.push(options.name);
+
     //Place date_length containers on separate lines for better readability
     html_string.push(`
       <div id = "date-container">
         <input id = "years-input" placeholder = "2000" value = "2000"></input>
         <input id = "months-input" placeholder = "January" value = "January"></input>
-        <input id = "days-input" placeholder = "1st" value = "1st"></input>
+        <input id = "days-input" placeholder = "1st" value = "1st" size = "4"></input>
       </div>
       <div id = "clock-container">
-        <input id = "hours-input" placeholder = "00" value = "00"></input> :
-        <input id = "minutes-input" placeholder = "00" value = "00"></input>
+        <input id = "hours-input" placeholder = "00" value = "00" size = "2"></input> :
+        <input id = "minutes-input" placeholder = "00" value = "00" size = "2"></input>
       </div>
     `);
   } else if (options.type == "email") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`
+      <input type = "email" id = "email-input" pattern = ".+@example\.com" size = "30" ${objectToAttributes(options.attributes)}>
+    `);
   } else if (options.type == "file") {
-    //High-intensity
+    //High-intensity; file input [WIP]
   } else if (options.type == "image") {
-
+    //High-intensity; image input [WIP]
   } else if (options.type == "number") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "number" id = "number-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "password") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "password" id = "password-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "radio") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "radio" id = "radio-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "range") {
+    var name_string = (options.name) ? ` ${options.name}` : "";
 
+    html_string.push(`<input type = "range" id = "range-input"${name_string} ${objectToAttributes(options.attributes)}`);
   } else if (options.type == "reset") {
-
+    html_string.push(`<input type = "reset" id = "reset-button" value = "Reset">`);
   } else if (options.type == "search_select") {
-
+    //High-intensity; requires searchable list - scratch it up in Codepen
   } else if (options.type == "select") {
+    //Similar to datalist
+    html_string.push(`<select class = "select-menu" ${objectToAttributes(options.attributes)}>`);
+      //Add .options to select
+      var all_options = Object.keys(options.options);
 
+      //Iterate over all_options
+      for (var i = 0; i < all_options.length; i++) {
+        var local_value = options.options[all_options[i]];
+
+        //Push option to html_string
+        html_string.push(`<option value = "${all_options[i]}">${local_value}</option>`);
+      }
+    html_string.push(`</select>`);
   } else if (options.type == "submit") {
-
+    html_string.push(`<input type = "submit" value = "${(options.name) ? options.name : "Submit"}" ${objectToAttributes(options.attributes)}>`);
   } else if (["tel", "telephone"].includes(options.type)) {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`${(options.name) ? options.name + " " : ""}<input type = "tel" id = "telephone-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "text") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "text" id = "text-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "time") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "time" id = "time-input" ${objectToAttributes(options.attributes)}>`);
   } else if (options.type == "url") {
-
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "url" id = "url-input" placeholder = "http://example.com" ${objectToAttributes(options.attributes)}>`);
   }
 
   //Close html_string div
@@ -638,7 +688,7 @@ function createInput (arg0_options) {
     document.addEventListener("mouseup", function () {
       var selection = window.getSelection();
 
-      if (selection.toString() != "" && document.querySelector(`#${element_id}:focus`)) {
+      if (selection.toString() != "" && document.querySelector(`div#${biuf_element_id} #biuf-input:focus`)) {
         var range = selection.getRangeAt(0);
         var rect = range.getBoundingClientRect();
 
