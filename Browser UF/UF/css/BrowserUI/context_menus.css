@@ -1,6 +1,6 @@
 /* -- General Context Menu Styling -- */
 .context-menu {
-  border: 1px solid black;
+  border: 1px solid black; /* -- Temp styling -- */
   border-radius: 0.75rem;
 
   padding: 0.25rem;
