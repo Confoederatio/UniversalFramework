@@ -1,6 +1,33 @@
+/* -- General Context Menu Styling -- */
+.context-menu {
+  border: 1px solid black;
+  border-radius: 0.75rem;
+
+  padding: 0.25rem;
+}
+
+.context-menu td {
+  border: 1px solid black;
+  padding: 0.5rem;
+}
+
+.context-menu-cell {
+  .header {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .biuf-input {
+    border: 1px solid black;
+    margin-top: 0.2rem;
+  }
+}
+
 /* -- BIUF Inputs -- */
 .biuf-input {
   position: relative;
+
+  min-width: 10rem;
 }
 .biuf-toolbar {
   position: absolute;

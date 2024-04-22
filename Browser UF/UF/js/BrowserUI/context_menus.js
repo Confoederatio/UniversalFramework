@@ -53,6 +53,9 @@
       onclick: (String) - Optional. The JS code to execute on button click.
       tooltip: (String) - Optional. The HTML tooltip a user can see by hovering over this input.
 
+      height: (Number) - Optional. The row height of this element in a grid. 1 by default.
+      width: (Number) - Optional. The column width of this element in a grid. 1 by default.
+
       x: (Number) - Optional. The X position of the element in a grid. 0 by default.
       y: (Number) - Optional. The Y position of the element in a grid. n + 1 by default, where n = last row.
 */
@@ -96,16 +99,42 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
   }
 
   //Iterate over all_options; format them
+  var last_row = 0;
+
+  html_string.push(`<table>`);
+
   for (var i = 0; i < all_options.length; i++) {
     var local_option = options[all_options[i]];
 
-    //This is an input field to append
     if (typeof local_option == "object") {
-      var local_input_html = createInput(local_option);
+      var current_last_row = JSON.parse(JSON.stringify(last_row));
+      var local_y = (local_option.y != undefined) ? local_option.y : last_row + 1;
 
-      html_string.push(local_input_html);
+      //Set last_row if undefined
+      if (!local_option.y)
+        last_row++;
+      last_row = local_y;
+
+      //Open table row
+      if (current_last_row != last_row)
+        html_string.push(`<tr>`);
+
+        //This is an input field to append
+        if (typeof local_option == "object") {
+          var local_input_html = createInput(local_option);
+
+          html_string.push(`<td${(local_option.width) ? ` colspan = "${local_option.width}"` : ""}${(local_option.height) ? ` rowspan = "${local_option.height}"` : ""}>`);
+            html_string.push(local_input_html);
+          html_string.push(`</td>`);
+        }
+
+      //Close table row
+      if (current_last_row != last_row)
+        html_string.push(`</tr>`);
     }
   }
+
+  html_string.push(`</table>`);
 
   //Close html_string
   html_string.push(`</div>`);
@@ -138,6 +167,8 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
       <option_id>: <value> - The datalist/select option ID to pass to the focus element.
 
     //Individual input type options.
+    //'biuf'
+      default: (String) - Optional. The default string to input as a placeholder value. 'Name' by default
     //'date'
       default_date: (Object) - The date to set defaults to if applicable.
 */
@@ -157,6 +188,9 @@ function createInput (arg0_options) {
 
   //Input type handling
   if (options.type == "biuf") {
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+
     //Create a contenteditable div with onchange handlers to strip formatting
     html_string.push(`<div id = "biuf-toolbar" class = "biuf-toolbar">`);
       //Onload handler
@@ -167,7 +201,8 @@ function createInput (arg0_options) {
       html_string.push(`<button id = "clear-button" class = "clear-icon">T</button>`);
     html_string.push(`</div>`);
 
-    html_string.push(`<div id = "biuf-input" class = "biuf-input" contenteditable = "true" oninput = "handleBIUF(this);">`);
+    html_string.push(`<div id = "biuf-input" class = "biuf-input" contenteditable = "true" oninput = "handleBIUF(this);" ${objectToAttributes(options.options)}>`);
+      html_string.push((options.default) ? options.default : "Name");
     html_string.push(`</div>`);
   } else if (["rich_text", "wysiwyg"].includes(options.type)) {
     html_string.push(`<div id = "wysiwyg-editor" class = "wysiwyg-editor">`);
@@ -214,7 +249,7 @@ function createInput (arg0_options) {
             //Insert ordered list
             html_string.push(`<span class = "editor-button icon" data-action = "insertOrderedList" data-tag-name = "ol" title = "Insert ordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/numbered-list.png"></span>`);
             //Insert unordered list
-            html_string.push(`<span class = "editor-button icon" data-action "insertUnorderedList data-tag-name = "ul" title = "Insert unordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bulleted-list.png"></span>`);
+            html_string.push(`<span class = "editor-button icon" data-action = "insertUnorderedList" data-tag-name = "ul" title = "Insert unordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bulleted-list.png"></span>`);
             //Indent
             html_string.push(`<span class = "editor-button icon" data-action = "indent" title = "Indent"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/indent.png"></span>`);
             //Outdent
@@ -525,6 +560,9 @@ function createInput (arg0_options) {
     var selection = saveSelection();
     var submit = modal.querySelectorAll("button.done")[0];
 
+    //Set modal to visible
+    modal.style.display = "block";
+
     //Add link once done button is active
     submit.addEventListener("click", function (e) {
       e.preventDefault();
@@ -541,10 +579,10 @@ function createInput (arg0_options) {
       if (window.getSelection().toString()) {
         var local_a = document.createElement("a");
 
-        a.href = link_value;
+        local_a.href = link_value;
         if (new_tab)
-          a.target = "_blank";
-        window.getSelection().getRangeAt(0).surroundContents(a);
+          local_a.target = "_blank";
+        window.getSelection().getRangeAt(0).surroundContents(local_a);
       }
 
       //Hide modal, deregister modal events
@@ -813,7 +851,7 @@ function createInput (arg0_options) {
         selection.removeAllRanges();
 
         //Populate selection ranges
-        for (var i = 0, length = saved_selection.length; i < len; i++)
+        for (var i = 0, length = saved_selection.length; i < length; i++)
           selection.addRange(saved_selection[i]);
       } else if (document.selection && saved_selection.select) {
         saved_selection.select();
@@ -851,9 +889,9 @@ function createInput (arg0_options) {
       var local_button = buttons[i];
 
       //Don't remove active class on code toggle button
-      if (button.dataset.action == "toggle-view") continue;
+      if (local_button.dataset.action == "toggle-view") continue;
 
-      button.classList.remove("active");
+      local_button.classList.remove("active");
     }
 
     if (!childOf(window.getSelection().anchorNode.parentNode, editor))

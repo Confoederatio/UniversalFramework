@@ -10,7 +10,9 @@ var context_menu = createContextMenu({
     type: "biuf",
 
     x: 0,
-    y: 0
+    y: 0,
+
+    default: "Test"
   },
 
   biuf_input_two: {
@@ -18,8 +20,19 @@ var context_menu = createContextMenu({
     name: "BIUF Input Test Two",
     type: "biuf",
 
-    x: 0,
+    x: 1,
     y: 0
+  },
+
+  wysiwyg_input: {
+    id: "wysiwyg_input",
+    name: "WYSIWYG Editor",
+    type: "wysiwyg",
+
+    width: 2,
+
+    x: 1,
+    y: 1
   }
 });
 
