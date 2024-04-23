@@ -369,12 +369,12 @@ function createInput (arg0_options) {
       html_string.push(`<span class = "no-select">`);
         html_string.push(`<span class = "brightness-range-container">`);
           html_string.push(`<input type = "range" min = "0" max = "100" value = "100" id = "colour-picker-brightness-range" class = "colour-picker-brightness-range">`);
-          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness</span>`);
+          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness | 1</span>`);
         html_string.push(`</span>`);
 
         html_string.push(`<span class = "opacity-range-container">`);
           html_string.push(`<input type = "range" min = "0" max = "100" value = "50" id = "colour-picker-opacity-range" class = "colour-picker-opacity-range">`);
-          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity</span>`);
+          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity | 0.5</span>`);
         html_string.push(`</span>`);
       html_string.push(`</span>`);
     html_string.push(`</div>`);
