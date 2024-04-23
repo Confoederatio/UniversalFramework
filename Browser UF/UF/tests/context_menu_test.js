@@ -33,6 +33,15 @@ var context_menu = createContextMenu({
 
     x: 1,
     y: 1
+  },
+
+  button_input: {
+    id: "button_input",
+    name: "Button Test",
+    type: "button",
+
+    x: 2,
+    y: 1
   }
 });
 

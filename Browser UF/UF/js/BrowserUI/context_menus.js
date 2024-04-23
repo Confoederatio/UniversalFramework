@@ -99,40 +99,56 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
   }
 
   //Iterate over all_options; format them
-  var last_row = 0;
-
   html_string.push(`<table>`);
 
+  var current_row = 0;
+  var table_rows = [];
+
+  //1. Initialise table_rows
   for (var i = 0; i < all_options.length; i++) {
     var local_option = options[all_options[i]];
 
     if (typeof local_option == "object") {
-      var current_last_row = JSON.parse(JSON.stringify(last_row));
-      var local_y = (local_option.y != undefined) ? local_option.y : last_row + 1;
+      if (local_option.y != undefined) {
+        current_row = local_option.y;
+      } else {
+        current_row++;
+        local_option.y = current_row;
+      }
 
-      //Set last_row if undefined
-      if (!local_option.y)
-        last_row++;
-      last_row = local_y;
-
-      //Open table row
-      if (current_last_row != last_row)
-        html_string.push(`<tr>`);
-
-        //This is an input field to append
-        if (typeof local_option == "object") {
-          var local_input_html = createInput(local_option);
-
-          html_string.push(`<td${(local_option.width) ? ` colspan = "${local_option.width}"` : ""}${(local_option.height) ? ` rowspan = "${local_option.height}"` : ""}>`);
-            html_string.push(local_input_html);
-          html_string.push(`</td>`);
-        }
-
-      //Close table row
-      if (current_last_row != last_row)
-        html_string.push(`</tr>`);
+      //Initialise table_rows[current_row]:
+      table_rows[current_row] = [];
     }
   }
+
+  //2. Populate table_rows
+  for (var i = 0; i < all_options.length; i++) {
+    var local_option = options[all_options[i]];
+
+    if (typeof local_option == "object") {
+      var local_el_html = [];
+      var local_input_html = createInput(local_option);
+      var local_row = table_rows[local_option.y];
+      var local_x;
+
+      local_el_html.push(`<td${(local_option.width) ? ` colspan = "${local_option.width}"` : ""}${(local_option.height) ? ` rowspan = "${local_option.height}"` : ""}>`);
+        local_el_html.push(local_input_html);
+      local_el_html.push(`</td>`);
+
+      if (local_option.x != undefined) {
+        local_x = local_option.x;
+      } else {
+        local_x = local_row.length;
+      }
+
+      //Set local_row[local_x]
+      local_row[local_x] = local_el_html.join("");
+    }
+  }
+
+  //3. Push table_rows to html_string
+  for (var i = 0; i < table_rows.length; i++)
+    html_string.push(`<tr>${table_rows[i].join("")}</tr>`);
 
   html_string.push(`</table>`);
 
@@ -205,6 +221,10 @@ function createInput (arg0_options) {
       html_string.push((options.default) ? options.default : "Name");
     html_string.push(`</div>`);
   } else if (["rich_text", "wysiwyg"].includes(options.type)) {
+    //Div header
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+
     html_string.push(`<div id = "wysiwyg-editor" class = "wysiwyg-editor">`);
       //Onload handler
       html_string.push(`<img src = "" onerror = "initWYSIWYG('${options.id}');">`);
