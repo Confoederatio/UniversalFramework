@@ -158,7 +158,7 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
 
   //Fetch query_selector_el and set .innerHTML to html_string.join("");
   if (options.anchor) {
-    var query_selector_el = document.querySelector(options.anchor)
+    var query_selector_el = document.querySelector(options.anchor);
 
     query_selector_el.innerHTML = html_string.join("");
   }
@@ -661,8 +661,8 @@ function createInput (arg0_options) {
     var brightness_el = parent_el.querySelector(`#colour-picker-brightness-range`);
     var colour_brightness_el = parent_el.querySelector(`#colour-picker-brightness`);
     var colour_cursor_el = parent_el.querySelector(`#colour-picker-cursor`);
-    var colour_wheel_el = document.querySelector(`#colour-picker`);
-    var opacity_el = document.querySelector(`#colour-picker-opacity-range`);
+    var colour_wheel_el = parent_el.querySelector(`#colour-picker`);
+    var opacity_el = parent_el.querySelector(`#colour-picker-opacity-range`);
 
     var b_el = parent_el.querySelector(`#b`);
     var g_el = parent_el.querySelector(`#g`);

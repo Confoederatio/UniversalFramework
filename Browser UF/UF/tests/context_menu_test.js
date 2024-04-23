@@ -44,6 +44,15 @@ var context_menu = createContextMenu({
     y: 2
   },
 
+  colour_input_two: {
+    id: "colour_input_two",
+    name: "Colour Wheel 2",
+    type: "colour",
+
+    x: 4,
+    y: 2
+  },
+
   button_input: {
     id: "button_input",
     name: "Button Test",
