@@ -6,7 +6,8 @@ var createWindow = () => {
     height: 1080,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      webSecurity: false
     }
   });
 
@@ -14,6 +15,21 @@ var createWindow = () => {
 
   //Open Inspect Element
   win.webContents.openDevTools();
+
+  // Get the default session
+    const defaultSession = session.defaultSession;
+
+    // Set up CORS settings for the default session
+    defaultSession.webRequest.onHeadersReceived((details, callback) => {
+        callback({
+            responseHeaders: {
+                ...details.responseHeaders,
+                'Access-Control-Allow-Origin': ['*'],
+                'Access-Control-Allow-Methods': ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+                'Access-Control-Allow-Headers': ['Content-Type', 'Authorization']
+            }
+        });
+    });
 };
 
 //Launch app when ready

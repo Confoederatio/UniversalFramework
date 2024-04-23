@@ -1,3 +1,25 @@
+function closestPointInCircle (arg0_circle_x, arg1_circle_y, arg2_point_x, arg3_point_y, arg4_radius) {
+  //Convert from parameters
+  var cX = arg0_circle_x;
+  var cY = arg1_circle_y;
+  var pX = arg2_point_x;
+  var pY = arg3_point_y;
+  var r = arg4_radius;
+
+  //Declare local instance variables
+  var center_x = cX + r;
+  var center_y = cY + r;
+  var vX = pX - center_x;
+  var vY = pY - center_y;
+
+  var magV = Math.sqrt(vX*vX + vY*vY);
+  var aX = center_x + vX/magV*r;
+  var aY = center_y + vY/magV*r;
+
+  //Return statement
+  return [aX, aY];
+}
+
 /*
   isDescendant() - Checks whether an element belongs to a specific parent.
   arg0_parent_el: (HTMLElement) - The HTML element of the parent to check.
@@ -88,16 +110,36 @@ function onRangeChange (arg0_range_el, arg1_listener) {
 */
 function pointIsInCircle (arg0_circle_x, arg1_circle_y, arg2_point_x, arg3_point_y, arg4_radius) {
   //Convert from parameters
-  var a = arg0_circle_x;
-  var b = arg1_circle_y;
-  var x = arg2_point_x;
-  var y = arg3_point_y;
-  var r = arg4_radius;
+  var circle_x = arg0_circle_x;
+  var circle_y = arg1_circle_y;
+  var point_x = arg2_point_x;
+  var point_y = arg3_point_y;
+  var radius = arg4_radius;
 
   //Declare local instance variables
-  var dist_points = (a - x) * (a - x) + (b - y) * (b - y);
-  r *= r;
+  var distance_squared = (point_x - circle_x) ** 2 + (point_y - circle_y) ** 2;
 
   //Return statement
-  return (dist_points < r);
+  return (distance_squared <= radius ** 2);
+}
+
+//removeErrorHandlers() - Removes onerror handlers.
+function removeErrorHandlers() {
+  if (!global.original_error_handlers)
+    global.original_error_handlers = {};
+
+  const elements = document.querySelectorAll('[onerror]');
+  elements.forEach((element) => {
+      original_error_handlers[element] = element.getAttribute('onerror');
+      element.removeAttribute('onerror');
+  });
+}
+
+//restoreErrorHandlers() - Restores onerror handlers.
+function restoreErrorHandlers() {
+  for (const element in original_error_handlers)
+    if (original_error_handlers.hasOwnProperty(element))
+      //Check if the element is a valid HTML element
+      if (element instanceof HTMLElement)
+        element.setAttribute('onerror', original_error_handlers[element]);
 }

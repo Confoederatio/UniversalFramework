@@ -42,6 +42,15 @@ var context_menu = createContextMenu({
 
     x: 2,
     y: 1
+  },
+
+  colour_input: {
+    id: "colour_input",
+    name: "Colour Wheel",
+    type: "colour",
+
+    x: 3,
+    y: 2
   }
 });
 

@@ -8,6 +8,7 @@
   biuf
 */
 
+
 //Requires: html2canvas
 /*
   createContextMenu() - Creates a context menu within the DOM.
@@ -351,7 +352,7 @@ function createInput (arg0_options) {
       html_string.push(`<img src = "" onerror = "handleColourWheel('${options.id}');">`);
 
       //Colour picker HTML
-      html_string.push(`<img id = "colour-picker-hue" class = "colour-picker-hue" src = "https://i.postimg.cc/GtSFx653/colour-wheel.png">`);
+      html_string.push(`<img id = "colour-picker-hue" class = "colour-picker-hue" src = "./UF/gfx/colour_wheel.png">`);
       html_string.push(`<div id = "colour-picker-brightness" class = "colour-picker-brightness"></div>`);
 
       html_string.push(`<div id = "colour-picker-cursor" class = "colour-picker-cursor"></div>`);
@@ -367,13 +368,13 @@ function createInput (arg0_options) {
       //No select
       html_string.push(`<span class = "no-select">`);
         html_string.push(`<span class = "brightness-range-container">`);
-          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness</span>`);
           html_string.push(`<input type = "range" min = "0" max = "100" value = "100" id = "colour-picker-brightness-range" class = "colour-picker-brightness-range">`);
+          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness</span>`);
         html_string.push(`</span>`);
 
         html_string.push(`<span class = "opacity-range-container">`);
-          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity</span>`);
           html_string.push(`<input type = "range" min = "0" max = "100" value = "50" id = "colour-picker-opacity-range" class = "colour-picker-opacity-range">`);
+          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity</span>`);
         html_string.push(`</span>`);
       html_string.push(`</span>`);
     html_string.push(`</div>`);
@@ -660,13 +661,16 @@ function createInput (arg0_options) {
     var brightness_el = parent_el.querySelector(`#colour-picker-brightness-range`);
     var colour_brightness_el = parent_el.querySelector(`#colour-picker-brightness`);
     var colour_cursor_el = parent_el.querySelector(`#colour-picker-cursor`);
-    var colour_picker_el = parent_el;
     var colour_wheel_el = document.querySelector(`#colour-picker`);
     var opacity_el = document.querySelector(`#colour-picker-opacity-range`);
 
     var b_el = parent_el.querySelector(`#b`);
     var g_el = parent_el.querySelector(`#g`);
     var r_el = parent_el.querySelector(`#r`);
+
+    //Calculate rem_px
+    var root_font_size = window.getComputedStyle(document.documentElement).fontSize;
+    var rem_px = parseFloat(root_font_size.replace("px", ""));
 
     //colour_wheel_el onclick handler
     colour_wheel_el.onclick = function (e) {
@@ -675,10 +679,15 @@ function createInput (arg0_options) {
       var coord_y = e.clientY - bounding_rect.top;
 
       colour_cursor_el.style.left = `calc(${coord_x}px - 6px)`;
-      colour_cursor_el.style.top = `calc(${coord_y}px - 6px)`;
+      colour_cursor_el.style.top = `calc(${coord_y}px - 6px - 1rem)`;
+
+      //Apply post-rem offset
+      coord_y += rem_px*1;
+      coord_x += rem_px*1;
 
       //Get r,g,b value of pixel
-      html2canvas(colour_picker_el).then((canvas) => {
+      removeErrorHandlers();
+      html2canvas(parent_el, { logging: false }).then((canvas) => {
         var ctx = canvas.getContext("2d");
 
         var canvas_height = ctx.canvas.height;
@@ -690,8 +699,7 @@ function createInput (arg0_options) {
         r_el.value = pixel[0];
         g_el.value = pixel[1];
         b_el.value = pixel[2];
-
-        setEntityColour(entity_id);
+        restoreErrorHandlers()
       });
     };
 
@@ -704,8 +712,8 @@ function createInput (arg0_options) {
       updateBrightnessOpacityHeaders(parent_el_id);
     });
     onRangeChange(opacity_el, function (e) {
-      if (options.onclick) {
-        var local_expression = options.onclick;
+      if (e.onclick) {
+        var local_expression = e.onclick;
         var local_result = new Function(local_expression)(e);
       }
 
@@ -716,15 +724,15 @@ function createInput (arg0_options) {
     //RGB listeners
     r_el.onchange = function () {
       this.value = Math.max(Math.min(this.value, 255), 0);
-      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+      setColourWheelCursor(parent_el_id, [r_el.value, g_el.value, b_el.value]);
     };
     g_el.onchange = function () {
       this.value = Math.max(Math.min(this.value, 255), 0);
-      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+      setColourWheelCursor(parent_el_id, [r_el.value, g_el.value, b_el.value]);
     };
     b_el.onchange = function () {
       this.value = Math.max(Math.min(this.value, 255), 0);
-      setColourWheelCursor(entity_id, [r_el.value, g_el.value, b_el.value]);
+      setColourWheelCursor(parent_el_id, [r_el.value, g_el.value, b_el.value]);
     };
   }
 
@@ -934,6 +942,7 @@ function createInput (arg0_options) {
     var colour_brightness_el = parent_el.querySelector(`#colour-picker-brightness`);
     var colour_cursor_el = parent_el.querySelector(`#colour-picker-cursor`);
     var colour_picker_el = parent_el.querySelector(`.colour-picker-container`);
+    var colour_picker_hue_el = parent_el.querySelector(`.colour-picker-hue`);
     var max_brightness = 255;
 
     //Get closest r, g, b value in colour wheel and teleport cursor there
@@ -946,7 +955,9 @@ function createInput (arg0_options) {
     colour_brightness_el.style.opacity = `${1 - max_brightness}`;
 
     //Move colour_cursor_el
-    html2canvas(colour_picker_el).then((canvas) => {
+    removeErrorHandlers();
+
+    html2canvas(colour_picker_el, { logging: false }).then((canvas) => {
       var ctx = canvas.getContext("2d");
 
       var canvas_height = ctx.canvas.height;
@@ -960,7 +971,43 @@ function createInput (arg0_options) {
       //Iterate over image_data array
       for (var i = 0; i < image_data.length; i += 4) {
         var local_colour = [image_data[i], image_data[i + 1], image_data[i + 2]];
+
+        if (local_colour.join(", ") != "255, 255, 255") {
+          var distance_from_colour = deltaE(colour, local_colour);
+
+          if (distance_from_colour < closest_pixel[0]) {
+            //Calculate local_x, local_y
+            var local_x = (i/4) % canvas_width;
+            var local_y = Math.floor((i/4)/canvas_width);
+
+            closest_pixel = [distance_from_colour, local_x, local_y, i];
+          }
+        }
       }
+
+      //Set cursor colour
+      colour_cursor_el.style.background = `rgb(${colour[0]}, ${colour[1]}, ${colour[2]})`;
+
+      //Check if closest_pixel[1], closest_pixel[2] are inside circle
+      if (
+        pointIsInCircle(0, 0, closest_pixel[1], closest_pixel[2], circle_radius)
+      ) {
+        colour_cursor_el.style.left = `calc(${closest_pixel[1]}px - 6px*2)`;
+        colour_cursor_el.style.top = `calc(${closest_pixel[2]}px - 6px - 1rem)`;
+      } else {
+        //If not, use closest point to edge of circle instead
+        var bounding_rect = colour_picker_hue_el.getBoundingClientRect();
+        var cursor_coords = closestPointInCircle(0, 0, closest_pixel[1], closest_pixel[2], circle_radius);
+
+        var actual_x = (cursor_coords[0])*(bounding_rect.width/canvas_width);
+        var actual_y = (cursor_coords[1])*(bounding_rect.height/canvas_height);
+
+        colour_cursor_el.style.left = `calc(${actual_x}px - 6px)`;
+        colour_cursor_el.style.top = `calc(${actual_y}px - 6px - 1rem)`;
+      }
+
+      colour_cursor_el.style.visibility = "visible";
+      restoreErrorHandlers();
     });
   }
 
