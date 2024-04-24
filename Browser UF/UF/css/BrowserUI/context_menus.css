@@ -17,6 +17,22 @@
 }
 
 .context-menu-cell {
+  /* -- Default styling -- */
+  font-family: "Karla";
+
+  input {
+    font-family: "Barlow";
+
+    border: 0px solid rgba(0, 0, 0, 0);
+    border-bottom: 1px solid black;
+
+    transition: all 0.5s ease;
+  }
+  input:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(118, 188, 92);
+  }
+
   /* -- Main element formatting -- */
   .header {
     font-family: "Barlow";
@@ -24,10 +40,28 @@
     font-weight: 700;
   }
 
-  /* -- Custom input formatting -- */
+  /* -- BIUF formatting -- */
   .biuf-input {
     border: 1px solid black;
     margin-top: 0.2rem;
+  }
+
+  /* -- Button formatting -- */
+  .button {
+    border: 1px solid black;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    font-weight: 300;
+
+    transition: all 0.5s ease;
+  }
+  .button:hover {
+    background-color: black;
+    color: white;
+
+    cursor: pointer;
   }
 }
 
@@ -36,6 +70,10 @@
   position: relative;
 
   min-width: 10rem;
+  padding-bottom: 0.1rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-top: 0.1rem;
 }
 .biuf-toolbar {
   position: absolute;

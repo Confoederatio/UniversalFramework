@@ -171,7 +171,7 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
   createInput() - Returns a string representing the HTML input element.
   arg0_options: (Object)
     id: (String) - The ID to associate this input with.
-    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
+    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'html'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
 
     icon: (String) - Optional. The path to the display icon image.
     name: (String) - Optional. The HTML string of the button to display.
@@ -188,6 +188,8 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
       default: (String) - Optional. The default string to input as a placeholder value. 'Name' by default
     //'date'
       default_date: (Object) - The date to set defaults to if applicable.
+    //'html'
+      innerHTML: (String) - The HTML to append to this cell.
 */
 function createInput (arg0_options) {
   //Convert from parameters
@@ -451,6 +453,11 @@ function createInput (arg0_options) {
     `);
   } else if (options.type == "file") {
     //High-intensity; file input [WIP]
+  } else if (options.type == "html") {
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+    if (options.innerHTML)
+      html_string.push(options.innerHTML);
   } else if (options.type == "image") {
     //High-intensity; image input [WIP]
   } else if (options.type == "number") {
