@@ -52,6 +52,15 @@ var context_menu = createContextMenu({
     x: 3,
     y: 2
   },
+
+  checkbox_input: {
+    id: "checkbox_input",
+    name: "Checkbox",
+    type: "checkbox",
+
+    x: 4,
+    y: 2
+  }
 });
 
 console.log(context_menu);

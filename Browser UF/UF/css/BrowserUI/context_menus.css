@@ -63,6 +63,14 @@
 
     cursor: pointer;
   }
+
+  /* -- Checkbox formatting -- */
+  input[type="checkbox"] {
+    position: relative;
+    top: 0.125rem;
+
+    margin-right: 0.4rem;
+  }
 }
 
 /* -- BIUF Inputs -- */
