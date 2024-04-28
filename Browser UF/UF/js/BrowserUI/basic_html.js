@@ -1,3 +1,46 @@
+/*
+  arrayHasElement() - Checks if an array has an element.
+  arg0_array: (Array<HTMLElement>) - The array of elements to look through
+  arg1_query_selector: (String) - The query selector to check for
+
+  Returns: (Boolean)
+*/
+function arrayHasElement (arg0_array, arg1_query_selector) {
+  //Convert from parameters
+  var array = arg0_array;
+  var query_selector = arg1_query_selector;
+
+  //Declare local instance variables
+  var selected_elements = document.querySelectorAll(query_selector);
+
+  if (selected_elements)
+    for (var i = 0; i < array.length; i++)
+      for (var x = 0; x < selected_elements.length; x++)
+        if (array[i].outerHTML == selected_elements[x].outerHTML) return true;
+}
+
+/*
+  arrayHasElementAttribute() - Checks if an array of elements has an attribute.
+  arg0_array: (Array<HTMLElement>) - The array of elements to pass to the function.
+  arg1_attribute_type: (String) - The attribute to check for.
+  arg2_attribute_content: (String) - The attribute content to check for.
+
+  Returns: (Boolean)
+*/
+function arrayHasElementAttribute (arg0_array, arg1_attribute_type, arg2_attribute_content) {
+  //Convert from parameters
+  var array = arg0_array;
+  var attribute_type = arg1_attribute_type;
+  var attribute_content = arg2_attribute_content;
+
+  //Iterate over array
+  if (array)
+    for (var i = 0; i < array.length; i++)
+      try {
+        if (array[i].getAttribute(attribute_type) == attribute_content) return true;
+      } catch {}
+}
+
 function closestPointInCircle (arg0_circle_x, arg1_circle_y, arg2_point_x, arg3_point_y, arg4_radius) {
   //Convert from parameters
   var cX = arg0_circle_x;
@@ -18,6 +61,23 @@ function closestPointInCircle (arg0_circle_x, arg1_circle_y, arg2_point_x, arg3_
 
   //Return statement
   return [aX, aY];
+}
+
+/*
+  hideElement() - Hides an HTML element. Appends a 'hidden' class.
+  arg0_element: (HTMLElement) - The HTML element to pass.
+*/
+function hideElement (arg0_element) {
+  //Convert from parameters
+  var element = arg0_element;
+
+  //Declare local instance variables
+  var class_name = element.getAttribute("class");
+
+  if (!class_name.includes(" hidden"))
+    (class_name) ?
+      element.setAttribute("class", `${class_name} hidden`) :
+      element.setAttribute("class", " hidden");
 }
 
 /*
@@ -123,6 +183,30 @@ function pointIsInCircle (arg0_circle_x, arg1_circle_y, arg2_point_x, arg3_point
   return (distance_squared <= radius ** 2);
 }
 
+/*
+  removeClasses() - Removes a list of classes from an element.
+
+  arg0_element: (HTMLElement) - The HTML element to pass.
+  arg1_array: (Array<String>) - The array of classes to remove.
+*/
+function removeClasses (arg0_element, arg1_array) {
+  //Convert from parameters
+  var element = arg0_element;
+  var array = getList(arg1_array);
+
+  //Declare local instance variables
+  var element_class = element.getAttribute("class");
+
+  if (element_class) {
+    for (var i = 0; i < array.length; i++)
+      element_class = element_class.replace(array[i], "");
+    element.setAttribute("class", element_class);
+  }
+
+  //Return statement
+  return element_class;
+}
+
 //removeErrorHandlers() - Removes onerror handlers.
 function removeErrorHandlers() {
   if (!global.original_error_handlers)
@@ -142,4 +226,20 @@ function restoreErrorHandlers() {
       //Check if the element is a valid HTML element
       if (element instanceof HTMLElement)
         element.setAttribute('onerror', original_error_handlers[element]);
+}
+
+/*
+  showElement() - Shows an element by removing the 'hidden' class.
+
+  arg0_element: (HTMLElement) - The HTML element to pass.
+*/
+function showElement (arg0_element) {
+  //Convert from parameters
+  var element = arg0_element;
+
+  //Declare local instance variables
+  var class_name = element.getAttribute("class");
+
+  if (class_name)
+    element.setAttribute("class", class_name.replace(/ hidden/gm, ""));
 }
