@@ -34,6 +34,7 @@
         - date_length
         - email
         - file
+        - hierarchy
         - hidden
         - image
         - number
@@ -171,7 +172,7 @@ function createContextMenu (arg0_options) { //[WIP] - Finish function body.
   createInput() - Returns a string representing the HTML input element.
   arg0_options: (Object)
     id: (String) - The ID to associate this input with.
-    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'html'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
+    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'hierarchy'/'html'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
 
     icon: (String) - Optional. The path to the display icon image.
     name: (String) - Optional. The HTML string of the button to display.

@@ -1,3 +1,5 @@
+//Hierarchies - Requires Sortable.js to function.
+
 //Initialise Sidebar functions
 {
   /*

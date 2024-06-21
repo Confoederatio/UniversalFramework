@@ -62,5 +62,3 @@ var context_menu = createContextMenu({
     y: 2
   }
 });
-
-console.log(context_menu);
