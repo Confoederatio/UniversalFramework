@@ -81,6 +81,108 @@ function hideElement (arg0_element) {
 }
 
 /*
+  generateLine() - Generates an HTML line element between two elements.
+  arg0_element: (HTMLElement) - The 1st element to pass to the function.
+  arg1_element: (HTMLElement) - The 2nd element to pass to the function.
+  arg2_options: (Object)
+    colour: (String) - Optional. The colour to pass to the line element. 'white' by default.
+    thickness: (Number) - Optional. The thickness of the line to generate. 1 by default.
+*/
+function generateLine (arg0_element, arg1_element, arg2_options) {
+  //Convert from parameters
+  var element = arg0_element;
+  var ot_element = arg1_element;
+  var options = (arg2_options) ? arg2_options : {};
+
+  //Initialise options
+  if (!options.colour) options.colour = "black";
+  if (!options.thickness) options.thickness = 1;
+
+  //Declare local instance variables
+  var offset = getOffset(element);
+  var ot_offset = getOffset(ot_element);
+
+  var x_1 = offset.left + offset.width;
+  var y_1 = offset.top + offset.height;
+
+  var x_2 = ot_offset.left + ot_offset.width;
+  var y_2 = ot_offset.top;
+
+  var length = Math.sqrt(((x_2 - x_1)*(x_2 - x_1)) + ((y_2 - y_1)*(y_2 - y_1)));
+
+  var cx = ((x_1 + x_2)/2) - (length/2);
+  var cy = ((y_1 + y_2)/2) - (options.thickness/2);
+
+  var angle = Math.atan2((y_1 - y_2), (x_1 - x_2))*(180/Math.PI);
+  var html_line = `<div style = "padding: 0px; margin: 0px; height: ${options.thickness}px; background-color: ${options.colour}; line-height: 1px; position: absolute; left: ${cx}px; top: ${cy}px; width: ${length}px; transform: rotate(${angle}deg);"></div>`;
+
+  //Return statement
+  return html_line;
+}
+
+/*
+  generateTable() - Generates an empty table according to x and y dimensions, giving them valid IDs.
+  arg0_width: (Number) - The width of the table.
+  arg1_height: (Number) - The height of the table.
+  arg2_options: (Object) - The attributes of the table element.
+
+  Returns: (String)
+*/
+function generateTable (arg0_width, arg1_height, arg2_options) {
+  //Convert from parameters
+  var width = unzero(returnSafeNumber(arg0_width), 1);
+  var height = unzero(returnSafeNumber(arg1_height), 1);
+  var options = (arg2_options) ? arg2_options : {};
+
+  //Declare local instance variables
+  var table_html = [];
+
+  //Format table
+  table_html.push(`<table ${objectToAttributes(options)}>`);
+
+  //Iterate over height first
+  for (var i = 0; i < height; i++) {
+    table_html.push(`<tr id = "row-${i}">`);
+      for (var x = 0; x < width; x++)
+        table_html.push(`<td id = "${x}-${i}"></td>`);
+    table_html.push(`</tr>`);
+  }
+
+  //Close table formatting
+  table_html.push(`</table>`);
+
+  //Return statement
+  return table_html.join("");
+}
+
+/*
+  getOffset() - Returns the left/top/width/height offset of a given HTML element.
+  arg0_element: (HTMLElement) - HTML element to pass.
+
+  Returns: (Object)
+    left: (Number)
+    top: (Number)
+
+    height: (Number)
+    width: (Number)
+*/
+function getOffset (arg0_element) {
+  //Convert from parameters
+  var element = arg0_element;
+
+  //Declare local instance variables
+  var rect = element.getBoundingClientRect();
+
+  //Return statement
+  return {
+    left: rect.left + window.pageXOffset,
+    top: rect.top + window.pageYOffset,
+    width: (rect.width || el.offsetWidth),
+    height: (rect.height || el.offsetHeight)
+  };
+}
+
+/*
   isDescendant() - Checks whether an element belongs to a specific parent.
   arg0_parent_el: (HTMLElement) - The HTML element of the parent to check.
   arg1_child_el: (HTMLElement) - The HTML element of the child to check.

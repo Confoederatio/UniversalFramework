@@ -5,187 +5,229 @@
   /*
     initHierarchy() - Initialises a hierarchy within a given HTMLElement.
     arg0_element: (HTMLElement) - The context menu element representing the hierarchy.
-    arg1_context_menu_element: (HTMLElement) - The subcontext menu for the hierarchy to open/close, if it exists
-    arg2_storage_variable: (Object) - The storage object which to reference for storing groups/items.
+    arg1_hierarchy_key: (HTMLElement) - The subcontext menu for the hierarchy to open/close, if it exists
+    arg2_options: (Object)
+      create_new_group_selector: (String) - The query selector of the 'Create New Group' button
+      context_menu_selectors: (Array<String>) - An array of given context menu query selectors to handle
+      global_selectors: (Boolean)
   */
-  function initHierarchy (arg0_element, arg1_context_menu_element, arg2_storage_variable) { //[WIP] - Document
+  function initHierarchy (arg0_hierarchy_el, arg1_hierarchy_key, arg2_options) {
     //Convert from parameters
-    var sidebar_el = arg0_element;
-    var context_menu_el = arg1_context_menu_element;
-    var storage_variable = arg2_storage_variable;
+    var hierarchy_el = arg0_hierarchy_el;
+    var hierarchy_key = arg1_hierarchy_key;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Initialise variables
+    if (!global.main) global.main = {};
+    if (!global.main.hierarchies) global.main.hierarchies = {};
+    if (!global.main.hierarchies[hierarchy_key])
+      global.main.hierarchies[hierarchy_key] = {
+        hierarchy_el: hierarchy_el,
+        groups: {},
+        layers: {}
+      };
 
     //Declare local instance variables
-    var add_group_btn_el = sidebar_el.querySelector(`#add-group-button`);
+    var hierarchies_obj = global.main.hierarchies;
+    var hierarchy_obj = hierarchies_obj[hierarchy_key];
 
-    //Declare globals
-    if (!window.hierarchies)
-      window.hierarchies = [];
-    window[storage_variable] = {};
-    window.hierarchies.push(window[storage_variable]);
+    //Button handlers for hierarchy_el
+    var create_new_group_el = (options.create_new_group_selector) ?
+      options.create_new_group_selector :
+      hierarchy_el.querySelector(`#hierarchy-create-new-group`);
 
-    //Button handlers
-    add_group_btn_el.onclick = function () {
-      createGroup(sidebar_el);
+    create_new_group_el.onclick = function () {
+      createGroup();
     };
 
-    //Sidebar click handler
-    if (context_menu_el)
-      sidebar_el.onclick = function (e) {
-        //Context menu should be closed if the context menu itself or the button isn't a parent in the path
+
+    //Context menu handling for hierarchy
+    if (options.context_menu_selectors)
+      hierarchy_el.onclick = function (e) {
         if (
           !arrayHasElementAttribute(e.composedPath(), "id", "hierarchy-context-menu") &&
           !arrayHasElementAttribute(e.composedPath(), "class", "group-context-menu-icon")
         )
-          closeHierarchyContextMenu(context_menu_el);
+          closeHierarchyContextMenus(hierarchy_el, options.context_menu_selectors, {
+            global_selectors: options.global_selectors
+          });
       };
-
-    //Initialise sidebar functions
-    initialiseHierarchy(sidebar_el);
   }
 }
 
-//Hierarchy Context menu UI functions
+//Hierarchy Context Menu UI functions
 {
   /*
-    closeHierarchyContextMenu() - Invokes hideElement() on an HTMLElement representing a context menu.
-    arg0_context_menu_element: (HTMLElement) - The element to hide.
+    closeHierarchyContextMenus() - Closes multiple hierarchy context menus depending on selectors.
+    arg0_hierarchy_el: (HTMLElement) - The element containing the hierarchy.
+    arg1_context_menu_selectors: (Array<String>) - The array of context menu selectors which to handle.
+    arg2_options: (Object)
+      global_selectors: (Boolean)
   */
-  function closeSidebarSubcontextMenu () {
-    //Declare local instance variables
-    var hierarchy_subcontext_el = document.getElementById("hierarchy-context-menu-two");
-
-    hideElement(hierarchy_subcontext_el);
-  }
-
-  /*
-    printHierarchyContextMenu() - Displays a hierarchy context menu.
-    arg0_element: (HTMLElement) - The HTML element representing the hierarchy.
-    arg1_context_menu_element: (HTMLElement) - The div container to set the context menu element in.
-    arg2_group_id: (String) - The ID of the group for which to print the context menu.
-    arg3_html: (String) - The innerHTML to pass to the context menu.
-  */
-  function printSidebarSubcontextMenu (arg0_element, arg1_context_menu_element, arg2_group_id, arg3_html) {
+  function closeHierarchyContextMenus (arg0_hierarchy_el, arg1_context_menu_selectors, arg2_options) {
     //Convert from parameters
-    var hierarchy_el = arg0_context_menu_element;
-    var hierarchy_context_el = arg1_context_menu_element;
-    var group_id = arg2_group_id;
-    var html = arg3_html;
+    var hierarchy_el = arg0_hierarchy_el;
+    var context_menu_selectors = arg1_context_menu_selectors;
+    var options = (arg2_options) ? arg2_options : {};
 
-    //Declare local instance variables
-    var group_el = hierarchy_el.querySelector(`div.group[id="${group_id}"]`);
-    var offset_top = group_el.offsetTop - hierarchy_context_el.scrollTop;
+    //Close context menus by iterating over context_menu_selectors
+    for (var i = 0; i < context_menu_selectors.length; i++) {
+      var local_context_el;
 
-    //Check if group exists
-    if (group_el) {
-      showElement(hierarchy_context_el);
-      hierarchy_context_el.setAttribute("style", `top: calc(${offset_top}px);`);
+      local_context_el = (options.global_selectors) ?
+        hierarchy_el.querySelector(context_menu_selectors[i]) :
+        document.querySelector(context_menu_selectors[i]);
 
-      hierarchy_context_el.innerHTML = html;
+      //Close context menu
+      if (!local_context_el.getAttribute("class").includes("display-none"))
+        local_context_el.setAttribute("class",
+          local_context_el.getAttribute("class") + " display-none"
+        );
+      local_context_el.removeAttribute("group");
     }
   }
 }
 
-//[WIP] - Sloppy salvaged code to be brute-force debugged
-//Internal helper functions
+//Sidebar UI functions
 {
-  function closeSidebarContextMenu () { //DONE
-    //Declare local instance variables
-    var context_menu_el = document.querySelector(`#hierarchy-context-menu`);
+  /*
+    changeEntityName() - Changes an entity name in a hierarchy.
+  */
+  function changeEntityName (arg0_hierarchy_key, arg1_element) {
+    //Convert from parameters
+    var hierarchy_key = arg0_hierarchy_key;
+    var element = arg1_element;
 
-    //Close context menu
-    if (!context_menu_el.getAttribute("class").includes("display-none"))
-      context_menu_el.setAttribute("class",
-        context_menu_el.getAttribute("class") + " display-none"
-      );
-    context_menu_el.removeAttribute("group");
+    //Declare local instance variables
+    var entity_id = element.parentElement.id;
+    var entity_obj = getEntityInHierarchy(hierarchy_key, entity_id);
+
+    //Set name
+    if (entity_obj._latlngs) {
+      if (entity_obj.options)
+        setEntityNameFromInput(entity_id, element);
+    } else {
+      entity_obj.name = element.innerText;
+    }
   }
 
-  function createEntityElement (arg0_layer, arg1_entity_id) { //DONE
+  /*
+    createEntityElement() - Creates and returns an entity element.
+    arg0_hierarchy_key: (Object) - The hierarchy key to reference.
+    arg1_options: (Object)
+      id: (String)
+      name: (String)
+
+      information_el: (HTMLElement)
+      is_hidden: (Boolean)
+      selected_entities: (Array<String>)
+
+      onkeyup_function: (Function)
+  */
+  function createEntityElement (arg0_hierarchy_key, arg1_options) {
     //Convert from parameters
-    var layer = arg0_layer;
-    var entity_id = arg1_entity_id;
+    var hierarchy_key = arg0_hierarchy_key;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Initialise options
+    if (!options.selected_entities) options.selected_entities = [];
 
     //Declare local instance variables
-    var entity_obj = getEntity(entity_id, layer);
+    var entity_id = options.id;
+    var entity_name = options.name;
+    var header_el = document.createElement("input");
+    var is_hidden = options.is_hidden;
+    var local_el = document.createElement("div");
+    var selected_entities = (options.selected_entities) ? options.selected_entities : [];
 
-    if (entity_obj) {
-      var entity_id = entity_obj.options.className;
-      var header_el = document.createElement("input");
-      var is_hidden = isPolityHidden(entity_id, window.date);
-      var local_el = document.createElement("div");
+    var entity_class = `entity${(selected_entities.includes(entity_id)) ? " selected" : ""}`;
 
-      var entity_class = `entity${(window.sidebar_selected_entities.includes(entity_id)) ? " selected" : ""}`;
+    //Initialise local instance variables
+    if (is_hidden)
+      entity_class += ` extinct`;
 
-      //Initialise local instance variables
-      if (is_hidden)
-        entity_class += ` extinct`;
+    local_el.setAttribute("class", entity_class);
+    local_el.setAttribute("id", entity_id);
 
-      local_el.setAttribute("class", entity_class);
-      local_el.setAttribute("id", entity_id);
+    if (options.onkeyup_function) {
+      header_el.setAttribute("onkeyup", options.onkeyup_function);
+    } else {
+      header_el.setAttribute("onkeyup", `changeEntityName("${hierarchy_key}", this);`);
+    }
+    header_el.value = entity_name;
 
-      header_el.setAttribute("onkeyup", "updateAllGroups(true);");
-      header_el.value = getEntityName(entity_id, window.date);
+    //Append all formatted elements
+    local_el.appendChild(header_el);
+    local_el.onclick = function (e) {
+      editHierarchyElement(e);
 
-      //Append all formatted elements
-      local_el.appendChild(header_el);
-      local_el.onclick = function (e) {
-        editSidebarElement(e);
-
-        if (window.ctrl_pressed)
-          if (!window.sidebar_selected_entities.includes(entity_id)) {
-            window.sidebar_selected_entities.push(entity_id);
-          } else {
-            //Remove from selection
-            for (var i = 0; i < window.sidebar_selected_entities.length; i++)
-              if (window.sidebar_selected_entities[i] == entity_id)
-                window.sidebar_selected_entities.splice(i, 1);
-          }
-
-        //Append class if selected, remove selected class if not
-        if (window.sidebar_selected_entities.includes(entity_id)) {
-          if (!local_el.getAttribute("class").includes("selected"))
-            local_el.setAttribute("class", `${local_el.getAttribute("class")} selected`);
+      if (window.ctrl_pressed)
+        if (!selected_entities.includes(entity_id)) {
+          selected_entities.push(entity_id);
         } else {
-          local_el.setAttribute("class", local_el.getAttribute("class").replace(" selected", ""));
+          //Remove from selection
+          for (var i = 0; i < selected_entities.length; i++)
+            if (selected_entities[i] == entity_id)
+              selected_entities.splice(i, 1);
         }
 
-        //Update sidebar selection information last
-        updateSidebarSelectionInformation();
-      };
+      //Append class if selected, remove selected class if not
+      if (selected_entities.includes(entity_id)) {
+        if (!local_el.getAttribute("class").includes("selected"))
+          local_el.setAttribute("class", `${local_el.getAttribute("class")} selected`);
+      } else {
+        local_el.setAttribute("class", local_el.getAttribute("class").replace(" selected", ""));
+      }
 
-      //Return statement
-      return local_el;
-    }
+      //Update sidebar selection information last
+      if (options.information_el)
+        updateHierarchySelectionInformation(options.information_el, options);
+    };
+
+    //Return statement
+    return local_el;
   }
 
-  function createGroupElement (arg0_layer, arg1_group_id) { //DONE
+  /*
+    createGroupElement() - Creates a group element and returns it as part of a hierarchy.
+    arg0_hierarchy_key: (String) - The hierarchy key to reference.
+    arg1_layer: (String) - The layer name.
+    arg2_group_id: (String) - The Group ID to reference.
+
+    Returns: (HTMLElement)
+  */
+  function createGroupElement (arg0_hierarchy_key, arg1_layer, arg2_group_id) {
     //Convert from parameters
-    var layer = arg0_layer;
-    var group_id = arg1_group_id;
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
+    var group_id = arg2_group_id;
 
     //Declare local instance variables
     var ctx_menu_el = document.createElement("img");
     var group_class = `group`;
     var header_el = document.createElement("input");
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
     var local_el = document.createElement("div");
     var local_entities_el = document.createElement("div");
-    var local_groups = window[`${layer}_groups`];
-    var local_layer = window[`${layer}_layer`];
+    var local_groups = hierarchy_obj.groups[layer];
+    var local_layer = hierarchy_obj.layers[layer];
     var local_subgroups_el = document.createElement("div");
 
-    var group_obj = local_groups[group_id];
+    var groups_obj = hierarchy_obj.groups[layer];
+    var group_obj = groups_obj[group_id];
 
     //Initialise local instance variables
     {
-      if (group_obj.mask)
-        group_class += ` mask-${group_obj.mask}`;
+      if (group_obj)
+        if (group_obj.mask)
+          group_class += ` mask-${group_obj.mask}`;
     }
 
     //Set element formatting
     ctx_menu_el.setAttribute("class", "group-context-menu-icon");
     ctx_menu_el.setAttribute("draggable", "false");
     ctx_menu_el.setAttribute("src", "./gfx/interface/context_menu_icon.png");
-    ctx_menu_el.setAttribute("onclick", `toggleSidebarContextMenu('${group_id}');`);
+    ctx_menu_el.setAttribute("onclick", `toggleHierarchyContextMenu("#${hierarchy_key}", "${group_id}", "#hierarchy-context-menu");`); //[WIP]
 
     local_el.setAttribute("class", group_class);
     local_el.setAttribute("id", group_id);
@@ -200,15 +242,26 @@
     //Make sure local_group exists
     if (group_obj) {
       //Add header_el to local_el
-      header_el.setAttribute("onkeyup", "updateAllGroups(true);");
+      header_el.setAttribute("onkeyup", `updateAllGroups("${hierarchy_key}", true);`);
       header_el.value = group_obj.name;
 
       //Append all entities
       if (group_obj.entities)
         for (var i = 0; i < group_obj.entities.length; i++)
           try {
+            var local_entity = getEntityInLayer(hierarchy_key, layer, group_obj.entities[i]);
+            var local_entity_name;
+
+            //Initialise local_entity parameters
+            if (local_entity)
+              if (local_entity.options)
+                local_entity_name = (local_entity.options.entity_name) ? local_entity.options.entity_name : "Unnamed Entity";
+
             local_entities_el.appendChild(
-              createEntityElement(layer, group_obj.entities[i])
+              createEntityElement(hierarchy_key,  {
+                id: group_obj.entities[i],
+                name: local_entity_name
+              })
             );
           } catch (e) {
             console.warn(e);
@@ -222,7 +275,7 @@
       local_el.appendChild(local_entities_el);
 
       local_el.onclick = function (e) {
-        editSidebarElement(e);
+        editHierarchyElement(e);
       };
 
       //Return statement
@@ -230,7 +283,14 @@
     }
   }
 
-  function editSidebarElement (e) {
+  /*
+    editHierarchyElement() - Handles editing hierarchy elements.
+    arg0_e: (Event, Click)
+  */
+  function editHierarchyElement (arg0_e) {
+    //Convert from parameters
+    var e = arg0_e;
+
     //Declare local instance variables
     var context_menu_clicked = false;
     var name_field_el = document.querySelectorAll(`div:hover > input`);
@@ -244,9 +304,15 @@
       name_field_el[name_field_el.length - 1].focus();
   }
 
-  function generateGroupID () {
-    //Declare local instance variables
-    var sidebar_el = document.getElementById("hierarchy");
+  /*
+    generateHierarchyGroupID() - Generates a random hierarchy group ID.
+    arg0_hierarchy_el: (HTMLElement)
+
+    Returns: (String)
+  */
+  function generateHierarchyGroupID (arg0_hierarchy_el) {
+    //Convert from parameters
+    var hierarchy_el = arg0_hierarchy_el;
 
     //While loop to find ID, just in-case of conflicting random ID's:
     while (true) {
@@ -254,7 +320,7 @@
       var local_id = generateRandomID();
 
       //Check to see if ID is already taken in sidebar
-      var identical_groups_el = sidebar_el.querySelectorAll(`[id='${local_id}']`);
+      var identical_groups_el = hierarchy_el.querySelectorAll(`[id='${local_id}']`);
 
       if (identical_groups_el.length == 0) {
         return local_id;
@@ -263,49 +329,130 @@
     }
   }
 
-  function getRecursiveGroupElement (arg0_layer, arg1_group_id, arg2_el) {
+  function getEntityID (arg0_hierarchy_key, arg1_layer, arg2_entity_obj) {
     //Convert from parameters
-    var layer = arg0_layer;
-    var group_id = arg1_group_id;
-    var element = (arg2_el) ? arg2_el : createGroupElement(layer, group_id);
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
+    var entity_obj = arg2_entity_obj;
+
+    //Check if entity_obj is of a Leaflet type
+    if (entity_obj._latlngs) {
+      if (entity_obj.options.className)
+        return entity_obj.options.className;
+    } else {
+      if (entity_obj.id)
+        return entity_obj.id;
+    }
+  }
+
+  function getEntityInHierarchy (arg0_hierarchy_key, arg1_entity_id) {
+    //Convert from parameters
+    var hierarchy_key = arg0_hierarchy_key;
+    var entity_id = arg1_entity_id;
 
     //Declare local instance variables
-    var local_groups = window[`${layer}_groups`];
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+
+    var all_hierarchy_layers = Object.keys(hierarchy_obj.layers);
+
+    //Iterate over all_hierarchy_layers
+    for (var i = 0; i < all_hierarchy_layers.length; i++) {
+      var local_entity = getEntityInLayer(hierarchy_key, all_hierarchy_layers[i], entity_id);
+
+      if (local_entity)
+        return local_entity;
+    }
+  }
+
+  function getEntityInLayer (arg0_hierarchy_key, arg1_layer, arg2_entity_id) {
+    //Convert from parameters
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
+    var entity_id = arg2_entity_id;
+
+    //Declare local instance variables
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+    var local_layer = hierarchy_obj.layers[layer];
+
+    if (Array.isArray(local_layer)) {
+      for (var i = 0; i < local_layer.length; i++)
+        if (local_layer[i]._latlngs) {
+          //Leaflet handler
+          if (local_layer[i].options.className == entity_id)
+            return local_layer[i];
+        } else {
+          //Non-leaflet handler
+          if (local_layer[i].id == entity_id)
+            return local_layer[i];
+        }
+    } else {
+      //Return statement
+      return local_layer[entity_id];
+    }
+  }
+
+  /*
+    getRecursiveGroupElement() - Fetches a group element recursively, within a given subgroup (1st-order)
+    arg0_hierarchy_key: (String) - The hierarchy key to reference.
+    arg1_layer: (String) - The layer which to search for the recursive group element.
+    arg2_group_id: (String)
+    arg3_group_el: (HTMLElement) - Optional. Will create a new group element by default.
+
+    Returns: (HTMLElement)
+  */
+  function getRecursiveGroupElement (arg0_hierarchy_key, arg1_layer, arg2_group_id, arg3_group_el) {
+    //Convert from parameters
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
+    var group_id = arg2_group_id;
+    var group_el = (arg3_group_el) ? arg3_group_el : createGroupElement(hierarchy_key, layer, group_id);
+
+    //Declare local instance variables
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+    var local_groups = hierarchy_obj.groups[layer];
 
     var all_local_groups = Object.keys(local_groups);
     var local_group = local_groups[group_id];
 
     //Only keep going if group has subgroups
-
     if (local_group)
       if (local_group.subgroups)
         if (local_group.subgroups.length > 0)
-          for (var i = 0; i < local_group.subgroups.length; i++) {
-            var local_subgroup = local_groups[local_group.subgroups[i]];
-            var local_subgroup_el = getRecursiveGroupElement(layer, local_group.subgroups[i]);
+        for (var i = 0; i < local_group.subgroups.length; i++) {
+          var local_subgroup = local_groups[local_group.subgroups[i]];
+          var local_subgroup_el = getRecursiveGroupElement(hierarchy_key, layer, local_group.subgroups[i]);
 
-            //Append everything else
-            if (local_subgroup_el)
-              element.querySelector(`[id='${group_id}-subgroups']`).appendChild(local_subgroup_el);
-          }
+          //Append everything else
+          if (local_subgroup_el)
+            group_el.querySelector(`[id='${group_id}-subgroups']`).appendChild(local_subgroup_el);
+        }
 
     //Return statement
-    return element;
+    return group_el;
   }
 
-  function getUngroupedEntities (arg0_layer) {
+  /*
+    getUngroupedEntities() - Fetches ungrouped entities for a given layer in a hierarchy.
+    arg0_hierarchy_key: (String) - The hierarchy key to reference.
+    arg1_layer: (String)
+
+    Returns: (Array<String>)
+  */
+  function getUngroupedEntities (arg0_hierarchy_key, arg1_layer) {
     //Convert from parameters
-    var layer = arg0_layer;
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
 
     //Declare local instance variables
-    var local_groups = window[`${layer}_groups`];
-    var local_layer = window[`${layer}_layer`];
-
-    var all_local_groups = Object.keys(local_groups);
     var grouped_entities = [];
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+    var local_groups = hierarchy_obj.groups[layer];
+    var local_layer = hierarchy_obj.layers[layer];
     var ungrouped_entities = [];
 
     //Iterate over all_local_groups to push to grouped_entities
+    var all_local_groups = Object.keys(local_groups);
+
     for (var i = 0; i < all_local_groups.length; i++) {
       var local_group = local_groups[all_local_groups[i]];
 
@@ -316,15 +463,56 @@
     }
 
     //Iterate over all local_layer elements, check against grouped_entities
-    for (var i = 0; i < local_layer.length; i++)
-      if (!grouped_entities.includes(local_layer[i].options.className))
-        ungrouped_entities.push(local_layer[i].options.className);
+    if (layer)
+      for (var i = 0; i < local_layer.length; i++)
+        if (!grouped_entities.includes(local_layer[i].name))
+          ungrouped_entities.push(
+            getEntityID(hierarchy_key, layer, local_layer[i])
+          );
 
     //Return statement
     return ungrouped_entities;
   }
 
-  function onSidebarDragEnd (arg0_event) {
+  /*
+    initHierarchyLayer() - Initialises a hierarchy layer.
+    arg0_hierarchy_key: (String)
+    arg1_layer: (String)
+    arg2_options: (Object)
+      load_layer: (Object)
+      load_groups: (Object)
+
+      layer_is_leaflet_array: (Boolean)
+  */
+  function initHierarchyLayer (arg0_hierarchy_key, arg1_layer, arg2_options) {
+    //Convert from parameters
+    var hierarchy_key = arg0_hierarchy_key;
+    var layer = arg1_layer;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+
+    //Add to hierarchy_obj
+    if (!hierarchy_obj.groups[layer])
+      hierarchy_obj.groups[layer] = {};
+
+      if (options.load_groups)
+        hierarchy_obj.groups[layer] = options.load_groups;
+    if (!hierarchy_obj.layers[layer])
+      hierarchy_obj.layers[layer] = {};
+
+      if (options.layer_is_leaflet_array)
+        hierarchy_obj.is_leaflet = true;
+      if (options.load_layer)
+        hierarchy_obj.layers[layer] = options.load_layer;
+  }
+
+  /*
+    onHierarchyDragEnd() - Handles local dragend events for a hierarchy element. Internal reference function.
+    arg0_event: (Event, DragEnd)
+  */
+  function onHierarchyDragEnd (arg0_event) {
     //Convert from parameters
     var e = arg0_event;
 
@@ -453,7 +641,7 @@
       {
         var element_id = element_obj.id;
         var group_element = element_obj.parentElement.parentElement;
-        var group_obj = getGroup(group_element.id);
+        var group_obj = getGroup(element_id);
         var selector = "";
 
         //Entity handling
@@ -481,50 +669,35 @@
     }
   }
 
-  function refreshSidebar (arg0_do_not_refresh) {
-    //Convert from parameters
-    var do_not_refresh = arg0_do_not_refresh;
+  /*
+    refreshHierarchy() - Reloads the current DOM of a hierarchy element.
+    arg0_hierarchy_el: (HTMLElement)
+    arg1_hierarchy_key: (String) - The hierarchy key to reference.
+    arg2_do_not_refresh: (Boolean)
+  */
+  function refreshHierarchy (arg0_hierarchy_el, arg1_hierarchy_key, arg2_do_not_refresh) {
+    var hierarchy_el = arg0_hierarchy_el;
+    var hierarchy_key = arg1_hierarchy_key;
+    var do_not_refresh = arg2_do_not_refresh;
 
     //Declare local instance variables
-    var sidebar_el = document.getElementById("hierarchy");
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+
+    var all_layers = Object.keys(hierarchy_obj.layers);
 
     //Reset HTML
     if (!do_not_refresh)
-      sidebar_el.innerHTML = "";
+      hierarchy_el.innerHTML = "";
 
     //Create all layer elements
-    for (var i = 0; i < layers.length; i++) {
-      var layer_el = sidebar_el.querySelectorAll(`[id='${layers[i]}']`);
-
-      //Create a new layer container element if only if it doesn't already exist
-      if (layer_el.length == 0) {
-        var local_header_el = document.createElement("input");
-        var local_layer_el = document.createElement("div");
-
-        local_layer_el.setAttribute("id", layers[i]);
-        local_layer_el.setAttribute("class", "layer");
-        local_layer_el.setAttribute("onclick", `selectLayer('${layers[i]}');`);
-
-        //Append header
-        local_header_el.setAttribute("class", "layer-input");
-
-        local_header_el.value = layers[i];
-        local_layer_el.appendChild(local_header_el);
-
-        //Append to sidebar_el
-        sidebar_el.appendChild(local_layer_el);
-      }
-    }
-
-    //Iterate over all window.layers
-    for (var i = 0; i < layers.length; i++) {
-      var local_groups = window[`${layers[i]}_groups`];
-      var local_layer = window[`${layers[i]}_layer`];
-      var local_layer_el = sidebar_el.querySelector(`[id='${layers[i]}']`);
+    for (var i = 0; i < all_layers.length; i++) {
+      var local_groups = hierarchy_obj.groups[all_layers[i]];
+      var local_layer = hierarchy_obj.layers[all_layers[i]];
+      var local_layer_el = sidebar_el.querySelector(`[id='${all_layers[i]}']`);
 
       var all_local_groups = Object.keys(local_groups);
       var first_layer_groups = [];
-      var ungrouped_entities = getUngroupedEntities(layers[i]);
+      var ungrouped_entities = getUngroupedEntities(all_layers[i]);
 
       //Check for first layer groups
       for (var x = 0; x < all_local_groups.length; x++) {
@@ -537,7 +710,7 @@
 
       //Initialise first layer group HTML with entities
       for (var x = 0; x < first_layer_groups.length; x++) {
-        var local_group_el = getRecursiveGroupElement(layers[i], first_layer_groups[x]);
+        var local_group_el = getRecursiveGroupElement(all_layers[i], first_layer_groups[x]);
 
         if (!local_layer_el.querySelector(`[id='${first_layer_groups[x]}']`))
           local_layer_el.appendChild(local_group_el);
@@ -545,7 +718,7 @@
 
       //Append ungrouped entities to end of list
       for (var x = 0; x < ungrouped_entities.length; x++) {
-        var local_entity_el = createEntityElement(layers[i], ungrouped_entities[x]);
+        var local_entity_el = createEntityElement(all_layers[i], ungrouped_entities[x]);
 
         if (!local_layer_el.querySelector(`[id='${ungrouped_entities[x]}']`))
           local_layer_el.appendChild(local_entity_el);
@@ -553,44 +726,45 @@
     }
 
     //Make sidebar draggable
-    var all_listings = document.querySelectorAll("#hierarchy div");
+    var all_listings = hierarchy_el.querySelectorAll("div");
 
     for (var i = 0; i < all_listings.length; i++)
       Sortable.create(all_listings[i], {
         animation: 350,
-        group: "hierarchy",
+        group: hierarchy_key,
         fallbackOnBody: true,
         swapThreshold: 0.65,
 
         onEnd: function (e) {
-          onSidebarDragEnd(e);
+          onHierarchyDragEnd(e);
         }
       });
 
-    Sortable.create(sidebar_el, {
+    Sortable.create(hierarchy_el, {
       animation: 350,
-      group: "hierarchy",
+      group: hierarchy_key,
       fallbackOnBody: true,
       swapThreshold: 0.65,
 
       onEnd: function (e) {
-        onSidebarDragEnd(e);
+        onHierarchyDragEnd(e);
       }
     });
-
-    //Select current selected layer
-    selectLayer(selected_layer);
   }
 
-  function selectLayer (arg0_layer) {
-    //Convert from parameters
-    var layer = arg0_layer;
+  /*
+    selectLayer() - Selects a layer in a given hierarchy_el.
+    arg0_hierarchy_el: (HTMLElement)
+    arg1_layer: (String)
+  */
+  function selectLayer (arg0_hierarchy_el, arg1_layer) {
+    //Convert from prameters
+    var hierarchy_el = arg0_hierarchy_el;
+    var layer = arg1_layer;
 
     //Declare local instance variables
-    var sidebar_el = document.getElementById("hierarchy");
-
-    var all_selected_layers = sidebar_el.querySelectorAll(`.layer.selected`);
-    var selected_layer = sidebar_el.querySelectorAll(`[id='${layer}']`);
+    var all_selected_layers = hierarchy_el.querySelectorAll(`.layer.selected`);
+    var selected_layer = hierarchy_el.querySelectorAll(`[id='${layer}']`);
 
     //Deselect all currently selected layers
     for (var i = 0; i < all_selected_layers.length; i++)
@@ -607,64 +781,86 @@
     }
   }
 
-  function toggleSidebarContextMenu (arg0_group_id) {
+  /*
+    toggleHierarchyContextMenu() - Toggles hierarchy context menus based on their context selector.
+    arg0_hierarchy_el: (HTMLElement)
+    arg1_group_id: (String)
+    arg2_context_selector: (String)
+    arg3_function: (Function) - Optional.
+  */
+  function toggleHierarchyContextMenu (arg0_hierarchy_el, arg1_group_id, arg2_context_selector, arg3_function) {
     //Convert from parameters
-    var group_id = arg0_group_id;
+    var hierarchy_el = arg0_hierarchy_el;
+    var group_id = arg1_group_id;
+    var context_selector = arg2_context_selector;
+    var local_function = arg3_function;
+
+    //hierarchy_el string handler
+    if (typeof hierarchy_el == "string")
+      hierarchy_el = document.querySelector(hierarchy_el);
 
     //Declare local instance variables
-    var context_menu_el = document.querySelector(`#hierarchy-context-menu`);
-    var hierarchy_container_el = document.querySelector(`#hierarchy`);
-    var group_el = document.querySelector(`div.group[id="${group_id}"]`);
-    var offset_top = group_el.offsetTop - hierarchy_container_el.scrollTop;
+    var context_menu_els = document.querySelectorAll(context_selector);
+    var group_el = hierarchy_el.querySelector(`div.group[id="${group_id}"]`);
+    var offset_top = group_el.offsetTop - hierarchy_el.scrollTop;
 
-    var create_subgroup_btn = context_menu_el.querySelector(`#context-menu-create-subgroup-button`);
-    var delete_all_btn = context_menu_el.querySelector(`#context-menu-delete-all-button`);
-    var delete_group_btn = context_menu_el.querySelector("#context-menu-delete-group-button");
-    var set_mask_btn = context_menu_el.querySelector(`#context-menu-mask-group-button`);
+    //Iterate over all context_menu_els
+    for (var i = 0; i < context_menu_els.length; i++)
+      if (context_menu_els[0].getAttribute("class").includes("display-none"))
+        context_menu_els[0].setAttribute("class",
+          context_menu_els[0].getAttribute("class")
+            .replace(" instant-display-none", "")
+            .replace(" display-none", "")
+        );
+    context_menu_els[0].style.top = `${offset_top}px`;
 
-    //Toggleable open
-    if (context_menu_el.getAttribute("class").includes("display-none")) {
-      context_menu_el.setAttribute("class",
-        context_menu_el.getAttribute("class")
-          .replace(" instant-display-none", "")
-          .replace(" display-none", "")
-      );
-    }
-
-    //Set group attribute for context menu for obvious reasons
-    context_menu_el.setAttribute("group", group_id);
-    context_menu_el.setAttribute("style", `top: calc(${offset_top}px);`);
-
-    //Set button functionality
-    create_subgroup_btn.setAttribute("onclick", `createGroup('${group_id}');`);
-    delete_group_btn.setAttribute("onclick", `deleteGroup('${group_id}');`);
-    delete_all_btn.setAttribute("onclick", `deleteGroupRecursively('${group_id}');`);
-
-    set_mask_btn.onclick = function (e) {
-      printSidebarSubcontextMenu(e, group_id, "mask");
-    };
+    //Apply function
+    if (local_function)
+      local_function(context_menu_el);
   }
 
-  function updateAllGroups (arg0_do_not_refresh) {
+  /*
+    updateAllGroups() - Updates all groups in a given hierarchy_el.
+    arg0_hierarchy_el: (HTMLElement)
+    arg1_hierarchy_key: (String)
+    arg2_do_not_refresh: (Boolean)
+  */
+  function updateAllGroups (arg0_hierarchy_key, arg1_do_not_refresh) {
     //Convert from parameters
-    var do_not_refresh = arg0_do_not_refresh;
+    var hierarchy_key = arg0_hierarchy_key;
+    var do_not_refresh = arg1_do_not_refresh;
+
+    //Declare local instance variables
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
+
+    var all_layers = Object.keys(hierarchy_obj.layers);
+    var hierarchy_el = hierarchy_obj.hierarchy_el;
 
     //Iterate over all layers
-    for (var i = 0; i < layers.length; i++)
-      updateGroups(layers[i], do_not_refresh);
+    for (var i = 0; i < all_layers.length; i++)
+      updateGroups(hierarchy_key, hierarchy_el, all_layers[i], do_not_refresh);
   }
 
-  function updateGroups (arg0_layer, arg1_do_not_refresh) { //[WIP] - Add layer elements
+  /*
+    updateGroups() - Internal modular helper function for updateAllGroups().
+    arg0_hierarchy_key: (String)
+    arg1_hierarchy_el: (HTMLElement)
+    arg2_layer: (String)
+    arg3_do_not_refresh: (Boolean)
+  */
+  function updateGroups (arg0_hierarchy_key, arg1_hierarchy_el, arg2_layer, arg3_do_not_refresh) {
     //Convert from parameters
-    var layer = arg0_layer;
-    var do_not_refresh = arg1_do_not_refresh;
+    var hierarchy_key = arg0_hierarchy_key;
+    var hierarchy_el = arg1_hierarchy_el;
+    var layer = arg2_layer;
+    var do_not_refresh = arg3_do_not_refresh;
 
     //Declare local instance variables
     var first_layer_groups = [];
     var groups_obj = {};
-    var sidebar_el = document.getElementById("hierarchy");
+    var hierarchy_obj = main.hierarchies[hierarchy_key];
 
-    var all_groups = document.querySelectorAll("div.group");
+    var all_groups = hierarchy_el.querySelectorAll("div.group");
 
     //Iterate over all_groups
     for (var i = 0; i < all_groups.length; i++) {
@@ -673,7 +869,7 @@
       var local_id = all_groups[i].getAttribute("id");
       var local_subgroups = [];
 
-      var group_obj = getGroup(local_id);
+      var group_obj = getGroup(/*hierarchy_key, */local_id);
 
       var local_entities_el = all_groups[i].querySelector(`[id='${local_id}-entities']`);
       var local_subgroups_el = all_groups[i].querySelector(`[id='${local_id}-subgroups']`);
@@ -721,19 +917,30 @@
       groups_obj[local_id] = group_obj;
     }
 
-    //Set window[<layer>_groups] as groups_obj; refreshSidebar();
-    window[`${layer}_groups`] = groups_obj;
+    //Set hierarchy_obj.groups[<layer>] as groups_obj, refreshHierarchy();
+    hierarchy_obj.groups[layer] = groups_obj;
 
     if (!do_not_refresh)
-      refreshSidebar();
+      refreshHierarchy(hierarchy_el, do_not_refresh);
   }
 
-  function updateSidebarSelectionInformation () {
-    //Declare local instance variables
-    var selection_info_el = document.getElementById(`hierarchy-selection-info`);
+  /*
+    updateHierarchySelectionInformation() - Updates hierarchy selection information for a given hierarchy element.
+    arg0_information_el: (HTMLElement) - The element in which to display infromation in.
+    arg1_options: (Object)
+      selected_entities: (Array<Object>) - Contains all currently selected entities in the hierarchy.
+  */
+  function updateHierarchySelectionInformation (arg0_information_el, arg1_options) {
+    //Convert from parameters
+    var selection_info_el = arg0_information_el;
+    var options = (arg1_options) ? arg1_options : {};
 
-    selection_info_el.innerHTML = (window.sidebar_selected_entities.length > 0) ?
-      `${parseNumber(window.sidebar_selected_entities.length)} entities selected.` :
+    //Initialise options
+    if (!options.selected_entities) options.selected_entities = [];
+
+    //Set selection_info_el
+    selection_info_el.innerHTML = (options.selected_entities.length > 0) ?
+      `${parseNumber(options.selected_entities.length)} entities selected.` :
       "";
   }
 }
