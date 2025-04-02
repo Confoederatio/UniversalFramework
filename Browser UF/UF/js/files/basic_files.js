@@ -1,6 +1,11 @@
 //Basic files - Requires path and fs to function.
 
-//getAllFiles()
+/*
+  getAllFiles() - Fetches an array of all files in a given folder.
+  arg0_folder: (String) - The folder path.
+  
+  Returns: (Array<String, ...>)
+*/
 function getAllFiles (arg0_folder) {
   //Convert from parameters
   var folder = arg0_folder;
@@ -16,7 +21,8 @@ function getAllFiles (arg0_folder) {
         local_dir_array = (fs.statSync(folder + "/" + files[i]).isDirectory()) ? module.exports.getAllFiles(folder + "/" + files[i]) : file_array.push(path.join(folder, "/", files[i]));
 
         //Add files from local_dir_array to file_array
-        for (var x = 0; x < local_dir_array.length; x++) file_array.push(local_dir_array[x]);
+        for (var x = 0; x < local_dir_array.length; x++)
+          file_array.push(local_dir_array[x]);
       }
     } catch (e) {
       console.log(e);
@@ -26,23 +32,26 @@ function getAllFiles (arg0_folder) {
     return file_array;
 }
 
-//importFile()
+/*
+  importFile() - Imports a Node.js file.
+  arg0_require_obj: (String) - The file path to import.
+*/
 function importFile (arg0_require_obj) {
   //Convert from parameters
   var local_library = require(arg0_require_obj);
 
   //Add to global namespace
   var all_properties_in_library = Object.keys(local_library);
-  for (var i = 0; i < all_properties_in_library.length; i++) {
+
+  for (var i = 0; i < all_properties_in_library.length; i++)
     global[all_properties_in_library[i]] = local_library[all_properties_in_library[i]];
-  }
 }
 
 /*
   loadDirectory() - Loads the files in an immediate directory in chronological order.
-  options: {
+  arg0_folder: (String) - The directory to load.
+  arg1_options: (Object)
     reverse: (Boolean) - Optional. Whether to reverse it or not. True by default.
-  }
 */
 function loadDirectory (arg0_folder, arg1_options) {
   //Convert from parameters
@@ -109,7 +118,10 @@ function loadConfig () {
   }
 }
 
-//loadFile()
+/*
+  loadFile() - Loads a file, similar to import but with eval.
+  arg0_file: (String) - The file path to load.
+*/
 function loadFile (arg0_file) {
   //Convert from parameters
   var file_path = path.join(__dirname, "..", arg0_file);

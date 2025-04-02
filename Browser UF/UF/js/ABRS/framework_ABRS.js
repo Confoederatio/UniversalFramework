@@ -1,5 +1,8 @@
 //ABRS - Requires fs; JSONPack for JSON compression features
-//changeSaveDirectory()
+/*
+  changeSaveDirectory() - Changes the default save directory to a defined path.
+  arg0_path: (String) - The path string to change the save directory to.
+*/
 function changeSaveDirectory (arg0_path) {
   //Convert from parameters
   var path = arg0_path;
@@ -10,9 +13,8 @@ function changeSaveDirectory (arg0_path) {
 
 /*
   cleanCorruptFiles() - Cleans empty files and files that cannot be parsed to JSON.
-  options: {
+  arg0_options: (Object)
     log: (Boolean) - Optional. Whether to log the backup array. True by default.
-  }
 */
 function cleanCorruptFiles (arg0_options) {
   //Convert from parameters
@@ -34,9 +36,8 @@ function cleanCorruptFiles (arg0_options) {
 
 /*
   cleanEmptyFiles() - Removes empty files in a directory.
-  options: {
-    log: (Boolean) - Optional. Whether to log the backup array. True by default.
-  }
+  arg0_options: (Object)
+    log: (Boolean) - Optional. Whether to log the cleanup. True by default.
 */
 function cleanEmptyFiles (arg0_options) {
   //Convert from parameters
@@ -77,9 +78,8 @@ function cleanEmptyFiles (arg0_options) {
 
 /*
   cleanInvalidJSONFiles() - Removes corrupted JSON files from a directory.
-  options: {
-    log: (Boolean) - Optional. Whether to log the backup array. True by default
-  }
+  arg0_options: (Object)
+    log: (Boolean) - Optional. Whether to log the backup array. True by default.
 */
 function cleanInvalidJSONFiles (arg0_options) {
   //Convert from parameters
@@ -113,7 +113,12 @@ function cleanInvalidJSONFiles (arg0_options) {
   }
 }
 
-//cleanEscapeStrings()
+/*
+  cleanEscapeStrings() - Cleans escape strings from a given string.
+  arg0_string: (String) - The input string to pass to the function.
+
+  Returns: (String)
+*/
 function cleanEscapeStrings (arg0_string) {
   //Convert from parameters
   var string = arg0_string;
@@ -127,9 +132,8 @@ function cleanEscapeStrings (arg0_string) {
 
 /*
   loadBackupArray() - Loads a backup array in chronological order
-  options: {
+  arg0_options: (Object)
     log: (Boolean) - Optional. Whether to log the backup array. True by default.
-  }
 */
 function loadBackupArray (arg0_options) {
   //Convert from parameters
@@ -165,7 +169,7 @@ function loadBackupArray (arg0_options) {
 
 /*
   loadMostRecentSave() - Loads the most recent save in the current global.backup_array.
-  options: (Same as loadSave())
+  arg0_options: (Same as loadSave())
 */
 function loadMostRecentSave (arg0_options) {
   //Convert from parameters
@@ -180,7 +184,7 @@ function loadMostRecentSave (arg0_options) {
   loadSave(file_path, options);
 }
 
-//loadRequirements()
+//loadRequirements() - Loads requirements for ABRS
 function loadRequirements () {
   //Declare global requirements
   global.fs = require("fs");
@@ -189,11 +193,11 @@ function loadRequirements () {
 
 /*
   loadSave() - Loads a save from a file into global.main, or initialises a custom function for it.
-  options: {
+  arg0_file: (String) - The file name to attempt loading.
+  arg1_options: (Object)
     compressed_json: (Boolean) - Optional. Whether compressed JSON is enabled. True by default
     db_file: (String) - Optional. The database path. 'database.js' by default
     load_object_function: (String) - Optional. The string variable address for the current load object function. Undefined by default, meaning objects will be loaded into global.main
-  }
 */
 function loadSave (arg0_file, arg1_options) {
   //Convert from parameters
@@ -248,7 +252,10 @@ function loadSave (arg0_file, arg1_options) {
   }
 }
 
-//returnABRSDateString()
+/*
+  returnABRSDateString() - Returns the current date as an ABRS debug string.
+  Returns: (String)
+*/
 function returnABRSDateString () {
   //Declare local instance Variables
   var d = new Date();
@@ -262,9 +269,8 @@ function returnABRSDateString () {
 
 /*
   writeDB() - Writes the DB to a current file.
-  options: {
+  arg0_options: (Object)
     log: (Boolean) -  Optional. Whether to log the backup array. True by default.
-  }
 */
 function writeDB (arg0_file, arg1_options) {
   //Convert from parameters
@@ -288,11 +294,10 @@ function writeDB (arg0_file, arg1_options) {
 
 /*
   writeSave() - Writes a save to backups folder.
-  options: {
+  arg0_options: (Object)
     do_not_clean_escapes: (Boolean) - Optional. Whether to clear escapes. False by default.
     file_limit: (Number) - Optional. The amount of backups to keep
     save_object_function: (String) - The string variable address for the current save object function.
-  }
 */
 function writeSave (arg0_options) {
   //Convert from parameters

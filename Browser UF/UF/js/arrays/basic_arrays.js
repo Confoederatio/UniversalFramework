@@ -1,14 +1,15 @@
 /*
   createArray() - Creates an array from the following options.
-  options: {
-    domain: [5, 6], - Creates an integer array between min, max.
-    linear_sequence: [1, 10, 2],- Generates a linear sequence from linear_sequence[0] to linear_sequence[1] in steps of linear_sequence[2].
-    sequence: ["n*5", 10] - Generates a sequenced array according to a mathematical equation.
+  arg0_options: (Object)
+    domain: (Array<Number, Number>) - Creates an integer array between min, max.
+    linear_sequence: (Array<Number, Number, Number>) - Generates a linear sequence from linear_sequence[0] to linear_sequence[1] in steps of linear_sequence[2].
+    sequence: (Array<String>, Number) - Generates a sequenced array according to a mathematical equation.
       sequence[0] - Mathematical equation as a string literal. The current iteration when generating the sequence is referred to as 'n'.
       sequence[1] - The total number of iterations to repeat the sequence for.
-    repeat: [variable_array, 10], - Repeats an array x times.
-    repeat_each: [variable_array, 5] - Repeats each element of an array x times.
-  }
+    repeat: (Array<Array<...>, Number>) - Repeats an array x times.
+    repeat_each: (Array<Array<...>, Number>) - Repeats each element of an array x times.
+
+  Returns: (Array)
 */
 function createArray (arg0_options) {
   //Convert from parameters
@@ -60,6 +61,8 @@ function createArray (arg0_options) {
   dimensionality() - Formats an array with n dimensions with zero-indexed dimensionality.
   arg0_input_array: (Array) - The array to input
   arg1_dimension_array: (Array<Number, ...>) - An array providing the dimensions of the current array (what to break it down into), starting with the Y dimension.
+
+  Returns: (Array<Array, ...>)
 */
 function dimensionality (arg0_input_array, arg1_dimension_array) {
   //Convert from parameters
@@ -85,6 +88,12 @@ function dimensionality (arg0_input_array, arg1_dimension_array) {
   return return_array;
 }
 
+/*
+  flattenArray() - Flattens a nested array to be 1-deep.
+  arg0_input_array: (Array) - The array to input.
+
+  Returns: (Array)
+*/
 function flattenArray (arg0_input_array) {
   //Convert from parameters
   var input_array = getList(arg0_input_array);
@@ -93,7 +102,12 @@ function flattenArray (arg0_input_array) {
   return input_array.flat(Infinity);
 }
 
-//getCardinality() - Fetches the cardinality of an array/object/variable.
+/*
+  getCardinality() - Fetches the cardinality of an array/object/variable.
+  arg0_variable: (Variable) - The variable to input.
+
+  Returns: (Number)
+*/
 function getCardinality (arg0_variable) {
   //Convert from parameters
   var input_variable = arg0_variable;
@@ -108,7 +122,12 @@ function getCardinality (arg0_variable) {
   }
 }
 
-//getRecursiveCardinality() - Fetches the total number of elements in an array, including sub-arrays.
+/*
+  getRecursiveCardinality() - Fetches the total number of elements in an array, including sub-arrays.
+  arg0_input_array: (Array) - The array to input.
+
+  Returns: (Number)
+*/
 function getRecursiveCardinality (arg0_input_array) {
   //Convert from parameters
   var input_array = arg0_input_array;
@@ -118,7 +137,12 @@ function getRecursiveCardinality (arg0_input_array) {
     return input_array.flat().length;
 }
 
-//getList() - Returns a list/array from a variable.
+/*
+  getList() - Returns a list/array from a variable.
+  arg0_variable: (Variable) - The variable to return a list/array from.
+
+  Returns: (Array)
+*/
 function getList (arg0_variable) {
   //Convert from parameters
   var input_variable = arg0_variable;
@@ -127,7 +151,12 @@ function getList (arg0_variable) {
   return (Array.isArray(input_variable)) ? input_variable : [input_variable];
 }
 
-//isArrayEmpty() - Checks whether an array is empty
+/*
+  isArrayEmpty() - Checks whether an array is empty.
+  arg0_input_array: (Array) - The array to input.
+
+  Returns: (Boolean)
+*/
 function isArrayEmpty (arg0_input_array) {
   //Convert from parameters
   var input_array = getList(arg0_input_array);
@@ -136,6 +165,37 @@ function isArrayEmpty (arg0_input_array) {
   return (array.length == 0 || array.every((element) => element == undefined));
 }
 
+/*
+  moveElement() - Moves an element from one index to another.
+  arg0_array: (Array) - The array to input.
+  arg1_old_index: (Number) - The old index.
+  arg2_new_index: (Number) - The new index.
+*/
+function moveElement (arg0_array, arg1_old_index, arg2_new_index) {
+  //Convert from parameters
+  var array = arg0_array;
+  var old_index = arg1_old_index;
+  var new_index = arg2_new_index;
+
+  //Move element in array
+  if (new_index >= array.length) {
+    var local_index = new_index - array.length + 1;
+    while (local_index--)
+      array.push(undefined);
+  }
+  array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+
+  //Return statement
+  return array;
+}
+
+/*
+  truncateArray() - Truncates an array to a given length.
+  arg0_input_array: (Array) - The array to input.
+  arg1_length: (Number) - The length to truncate the array to.
+
+  Returns: (Array)
+*/
 function truncateArray (arg0_input_array, arg1_length) {
   //Convert from parameters
   var input_array = getList(arg0_input_array);
@@ -148,7 +208,12 @@ function truncateArray (arg0_input_array, arg1_length) {
   return input_array;
 }
 
-//reverseArray() - Reverses an input array.
+/*
+  reverseArray() - Reverses an input array.
+  arg0_input_array: (Array) - The array to reverse.
+
+  Returns: (Array)
+*/
 function reverseArray (arg0_input_array) {
   //Convert from parameters
   var input_array = arg0_input_array;
@@ -161,7 +226,12 @@ function reverseArray (arg0_input_array) {
   }
 }
 
-//uniqueArray() - Removes any duplicate elements from an input array.
+/*
+  uniqueArray() - Removes any duplicate elements from an input array.
+  arg0_input_array: (Array) - The array to input.
+
+  Returns: (Array)
+*/
 function uniqueArray (arg0_input_array) {
   //Convert from parameters
   var input_array = arg0_input_array;

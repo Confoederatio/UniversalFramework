@@ -1,8 +1,11 @@
 /*
   appendDataframes() - Appends two dataframes to one another.
-  options: {
-    default_value: (Variable) - What the default variable should be. Undefined by default.
-  }
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to input into the function.
+  arg1_dataframe: (Array<Array, ...>) - The dataframe to append.
+  arg2_options: (Object)
+    default_value: (Variable) - Optional. What the default variable should be. Undefined by default.
+
+  Returns: (Array<Array, ...>)
 */
 function appendDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
   //Convert from parameters
@@ -37,6 +40,12 @@ function appendDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
   return new_dataframe;
 }
 
+/*
+  convertDataframeToObject() - Converts a dataframe to an object.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to convert to an object
+
+  Returns: (Object)
+*/
 function convertDataframeToObject (arg0_dataframe) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -66,6 +75,12 @@ function convertDataframeToObject (arg0_dataframe) {
   return dataframe_obj;
 }
 
+/*
+  convertObjectToDataframe() - Converts a given object to a dataframe.
+  arg0_dataframe_obj: (Object) - The object to convert into a dataframe.
+
+  Returns: (Array<Array, ...>)
+*/
 function convertObjectToDataframe (arg0_dataframe_obj) {
   //Convert from parameters
   var dataframe_obj = arg0_dataframe_obj;
@@ -100,7 +115,12 @@ function convertObjectToDataframe (arg0_dataframe_obj) {
   return return_dataframe;
 }
 
-//getColumns() - Fetches the number of columns in a dataframe.
+/*
+  getColumns() - Fetches the number of columns in a dataframe.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
+  Returns: (Number)
+*/
 function getColumns (arg0_dataframe) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -119,7 +139,12 @@ function getColumns (arg0_dataframe) {
   return max_columns;
 }
 
-//getDimensions() - Returns the number of columns and rows.
+/*
+  getDimensions() - Returns the number of columns and rows.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
+  Returns: (Array<Number, Number>)
+*/
 function getDimensions (arg0_dataframe) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -128,7 +153,12 @@ function getDimensions (arg0_dataframe) {
   return [getColumns(dataframe), getRows(dataframe)];
 }
 
-//getRows() - Fetches the number of rows in a dataframe.
+/*
+  getRows() - Fetches the number of rows in a dataframe.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
+  Returns: (Number)
+*/
 function getRows (arg0_dataframe) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -137,7 +167,12 @@ function getRows (arg0_dataframe) {
   return dataframe.length;
 }
 
-//hasHeader() - Checks whether a dataframe has a true header.
+/*
+  hasHeader() - Checks whether a dataframe has a true header.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+
+  Returns: (Boolean)
+*/
 function hasHeader (arg0_dataframe) {
   //Convert from parameters
   var dataframe = getList(arg0_dataframe);
@@ -167,7 +202,10 @@ function hasHeader (arg0_dataframe) {
 
   Dataframes are a 2D array, typically with a header row.
 
-  options: {
+
+  arg0_dataframe: (Array<Array, ...>) - The 1st dataframe to pass to the function.
+  arg1_dataframe: (Array<Array, ...>) - The 2nd dataframe to pass to the function.
+  arg2_options: (Object)
     equation: (String) - The string literal to use as an equation (e.g. 'i + x*5'). If no equal sign is provided, this applies to every cell, regardless of column. Equations are split by semicolons.
 
     As an example, x$D = i$B, replaces the D column of the 2nd dataframe with the B column of the 1st.
@@ -175,7 +213,8 @@ function hasHeader (arg0_dataframe) {
         'i$Column' represents the selection of a 1st dataframe column named 'Column'.
       'x' represents the corresponding element of the second dataframe
         'x$Column' represents the selection of a 2nd dataframe column named 'Column'
-  }
+
+  Returns: (Array<Array, ...>)
 */
 function mergeDataframes (arg0_dataframe, arg1_dataframe, arg2_options) { //[WIP] - Finish function body
   //Convert from parameters
@@ -200,7 +239,9 @@ function mergeDataframes (arg0_dataframe, arg1_dataframe, arg2_options) { //[WIP
 
 /*
   operateDataframes() - Operates on two dataframes by applying an equation string.
-  options: {
+  arg0_dataframe: (Array<Array, ...>) - The 1st dataframe to operate on as i
+  arg1_dataframe: (Array<Array, ...>) - The 2nd dataframe to operate on as x
+  arg2_options: (Object)
     equation: (String) - The string literal to use as an equation (e.g. 'i + x*5'). If no equal sign is provided, this applies to every cell, regardless of column. Equations are split by semicolons.
 
     As an example, x$D = i$B, replaces the D column of the 2nd dataframe with the B column of the 1st.
@@ -210,7 +251,10 @@ function mergeDataframes (arg0_dataframe, arg1_dataframe, arg2_options) { //[WIP
         'x$Column' represents the selection of a 2nd dataframe column named 'Column'
 
     return_safe_number: (Boolean) - Optional. Whether to use returnSafeNumber(). True by default
-  }
+
+  Returns: (Object)
+    dataframe: (Array<Array, ...>) - The result of the 1st dataframe
+    ot_dataframe: (Array<Array, ...>) - The result of the 2nd dataframe
 */
 function operateDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
   //Convert from parameters
@@ -282,7 +326,12 @@ function operateDataframes (arg0_dataframe, arg1_dataframe, arg2_options) {
   };
 }
 
-//setHeader() - Sets the upper header variables.
+/*
+  setHeader() - Sets the upper header variables.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+  arg1_header_array: (Array<String, ...>) - The names of variables to set on the 0th row
+  Returns: (Array<Array, ...>)
+*/
 function setHeader (arg0_dataframe, arg1_header_array) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -297,9 +346,12 @@ function setHeader (arg0_dataframe, arg1_header_array) {
 
 /*
   selectColumn() - Selects a 2D array column (by header name).
-  options: {
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+  arg1_column_name: (String) - The name of the variable/column to select.
+  arg2_options: (Object)
     return_index: (Boolean) - Optional. Whether or not to return an index. False by default
-  }
+
+  Returns: (Array)
 */
 function selectColumn (arg0_dataframe, arg1_column_name, arg2_options) {
   //Convert from parameters
@@ -343,9 +395,12 @@ function selectColumn (arg0_dataframe, arg1_column_name, arg2_options) {
 
 /*
   selectRow() - Selects a 2D array row (by header name or index).
-  options: {
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+  arg1_row_index: (Number) - The row index to pass to the function.
+  arg2_options: (Object)
     exclude_header: (Boolean) - Optional. Whether to exclude the header. False by default
-  }
+
+  Returns: (Array)
 */
 function selectRow (arg0_dataframe, arg1_row_index, arg2_options) {
   //Convert from parameters
@@ -357,7 +412,14 @@ function selectRow (arg0_dataframe, arg1_row_index, arg2_options) {
   return (!options.exclude_header) ? dataframe[row_index] : dataframe[row_index + 1];
 }
 
-//setColumn() - Sets a 2D array column.
+/*
+  setColumn() - Sets a 2D array column.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+  arg1_column_name: (String) - The name of the variable/column to set.
+  arg2_values: (Array) - The list of values to set for this column.
+
+  Returns: (Array)
+*/
 function setColumn (arg0_dataframe, arg1_column_name, arg2_values) {
   //Convert from parameters
   var dataframe = arg0_dataframe;
@@ -377,7 +439,14 @@ function setColumn (arg0_dataframe, arg1_column_name, arg2_values) {
   });
 }
 
-//setRow() - Sets a 2D array row.
+/*
+  setRow() - Sets a 2D array row.
+  arg0_dataframe: (Array<Array, ...>) - The dataframe to pass to the function.
+  arg1_row_index: (Number) - The row index to pass to the function.
+  arg2_values: (Array) - The list of values to set for this row.
+
+  Returns: (Array)
+*/
 function setRow (arg0_dataframe, arg1_row_index, arg2_values) {
   //Convert from parameters
   var dataframe = arg0_dataframe;

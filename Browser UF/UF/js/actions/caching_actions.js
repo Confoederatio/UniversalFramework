@@ -1,13 +1,15 @@
 /*
   createAction() - Sets the action performed in the current timeline.
-  options: {
+  arg0_action_key: (String) - The key to assign to the action in question.
+  arg1_options: (Object)
     name: (String) - The human-readable name of the action.
 
     function: (String) - The function key which performs the action
     reverse_function: (String) - The function key which reverses the action
 
     <variable_name>: (Variable) - Other flags to transfer over to the action object.
-  }
+
+  Returns: (Object, Action)
 */
 function createAction (arg0_action_key, arg1_options) {
   //Convert from parameters
@@ -33,7 +35,12 @@ function createAction (arg0_action_key, arg1_options) {
   return global.actions[action_key];
 }
 
-//deleteAction() - Deletes an action from the action config
+/*
+  deleteAction() - Deletes an action from the action config.
+  arg0_action_key: (String) - The key of the action to delete.
+  
+  Returns: (Object, Action)
+*/
 function deleteAction (arg0_action_key) {
   //Convert from parameters
   var action_key = arg0_action_key;
