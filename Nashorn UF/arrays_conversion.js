@@ -1,7 +1,7 @@
 //Initialise functions
 {
 	/**
-	 * arrayToObject() - Casts an array to object.
+	 * arrayToObject() - Casts an array to object. 
 	 * @param {Array} arg0_input_array - The array to input.
 	 *
 	 * @returns {Object}
