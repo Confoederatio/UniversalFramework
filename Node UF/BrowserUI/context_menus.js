@@ -1,530 +1,530 @@
-module.exports = {
-  /*
-    UNTESTED ELEMENTS:
+/*
+  UNTESTED ELEMENTS:
 
-    - wysiwyg/rich_text
+  - wysiwyg/rich_text
 
-    TESTED ELEMENTS:
+  TESTED ELEMENTS:
 
-    biuf
-  */
+  biuf
+*/
 
-  //Requires: html2canvas
-  /*
-    createContextMenu() - Creates a context menu within the DOM.
+//Requires: html2canvas
+/*
+  createContextMenu() - Creates a context menu within the DOM.
 
-    arg0_options: (Object)
-      anchor: (String) - The query selector to pin a context menu to.
-      class: (String) - The class prefix to prepend.
-      id: (String) - The ID of the context menu.
-      name: (String) - Optional. Title of the context menu. Undefined; will not display by default.
-      maximum_height: (String) - Optional. The height after which a scrollbar should appear in CSS units.
-      maximum_width: (String) - Optional. Maximum width in CSS units.
+  arg0_options: (Object)
+    anchor: (String) - The query selector to pin a context menu to.
+    class: (String) - The class prefix to prepend.
+    id: (String) - The ID of the context menu.
+    name: (String) - Optional. Title of the context menu. Undefined; will not display by default.
+    maximum_height: (String) - Optional. The height after which a scrollbar should appear in CSS units.
+    maximum_width: (String) - Optional. Maximum width in CSS units.
 
-      <input_key>: (Object)
-        type: (String) - The type of HTML input to grab.
-          - biuf
-          - rich_text/wysiwyg
+    <input_key>: (Object)
+      type: (String) - The type of HTML input to grab.
+        - biuf
+        - rich_text/wysiwyg
 
-          - button
-          - checkbox
-          - color/colour
-          - datalist
-          - date
-          - date_length
-          - email
-          - file
-          - hierarchy
-          - hidden
-          - image
-          - number
-          - password
-          - radio
-          - range
-          - reset
-          - search_select
-          - select
-          - submit
-          - tel/telephone
-          - text
-          - time
-          - url/URL
-
-        icon: (String) - Optional. The path to the display icon image.
-        name: (String) - Optional. The HTML text of the button to display.
-        onclick: (String) - Optional. The JS code to execute on button click.
-        tooltip: (String) - Optional. The HTML tooltip a user can see by hovering over this input.
-
-        height: (Number) - Optional. The row height of this element in a grid. 1 by default.
-        width: (Number) - Optional. The column width of this element in a grid. 1 by default.
-
-        x: (Number) - Optional. The X position of the element in a grid. 0 by default.
-        y: (Number) - Optional. The Y position of the element in a grid. n + 1 by default, where n = last row.
-  */
-  createContextMenu: function (arg0_options) { //[WIP] - Finish function body.
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Initialise options
-    if (!options.class) options.class = "";
-
-    //Declare local instance variables
-    var all_options = Object.keys(options);
-    var default_keys = ["anchor", "class", "id", "maximum_height", "maximum_width"];
-    var html_string = [];
-    var table_columns = 0;
-    var table_rows = 0;
-
-    //Format CSS strings
-    var height_string = (options.maximum_height) ? `height: ${options.maximum_height}; overflow-y: auto;` : "";
-    var width_string = (options.maximum_width) ? `width: ${options.maximum_width}; overflow-x: hidden;` : "";
-
-    var parent_style = `${height_string}${width_string}`;
-
-    //Format html_string
-    html_string.push(`<div ${(options.id) ? `id = "${options.id}" ` : ""}class = "${(options.class) ? options.class + " " : ""}context-menu"${(parent_style.length > 0) ? ` style = "${parent_style}"` : ""}>`);
-
-    //Fetch table_columns; table_rows
-    for (var i = 0; i < all_options.length; i++) {
-      var local_option = options[all_options[i]];
-
-      //This is an input field; process .x, .y
-      if (typeof local_option == "object") {
-        if (local_option.x)
-          table_columns = Math.max(table_columns, local_option.x);
-        if (local_option.y) {
-          table_rows = Math.max(table_rows, local_option.y);
-        } else {
-          table_rows++;
-        }
-      }
-    }
-
-    //Iterate over all_options; format them
-    html_string.push(`<table>`);
-
-    var current_row = 0;
-    var table_rows = [];
-
-    //1. Initialise table_rows
-    for (var i = 0; i < all_options.length; i++) {
-      var local_option = options[all_options[i]];
-
-      if (typeof local_option == "object") {
-        if (local_option.y != undefined) {
-          current_row = local_option.y;
-        } else {
-          current_row++;
-          local_option.y = current_row;
-        }
-
-        //Initialise table_rows[current_row]:
-        table_rows[current_row] = [];
-      }
-    }
-
-    //2. Populate table_rows
-    for (var i = 0; i < all_options.length; i++) {
-      var local_option = options[all_options[i]];
-
-      if (typeof local_option == "object") {
-        var local_el_html = [];
-        var local_input_html = createInput(local_option);
-        var local_row = table_rows[local_option.y];
-        var local_x;
-
-        local_el_html.push(`<td${(local_option.width) ? ` colspan = "${local_option.width}"` : ""}${(local_option.height) ? ` rowspan = "${local_option.height}"` : ""}>`);
-          local_el_html.push(local_input_html);
-        local_el_html.push(`</td>`);
-
-        if (local_option.x != undefined) {
-          local_x = local_option.x;
-        } else {
-          local_x = local_row.length;
-        }
-
-        //Set local_row[local_x]
-        local_row[local_x] = local_el_html.join("");
-      }
-    }
-
-    //3. Push table_rows to html_string
-    for (var i = 0; i < table_rows.length; i++)
-      html_string.push(`<tr>${table_rows[i].join("")}</tr>`);
-
-    html_string.push(`</table>`);
-
-    //Close html_string
-    html_string.push(`</div>`);
-
-    //Fetch query_selector_el and set .innerHTML to html_string.join("");
-    if (options.anchor) {
-      var query_selector_el = document.querySelector(options.anchor);
-
-      query_selector_el.innerHTML = html_string.join("");
-    }
-
-    //Return statement
-    return html_string.join("");
-  },
-
-  /*
-    createInput() - Returns a string representing the HTML input element.
-    arg0_options: (Object)
-      id: (String) - The ID to associate this input with.
-      type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'hierarchy'/'html'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
+        - button
+        - checkbox
+        - color/colour
+        - datalist
+        - date
+        - date_length
+        - email
+        - file
+        - hierarchy
+        - hidden
+        - image
+        - number
+        - password
+        - radio
+        - range
+        - reset
+        - search_select
+        - select
+        - submit
+        - tel/telephone
+        - text
+        - time
+        - url/URL
 
       icon: (String) - Optional. The path to the display icon image.
-      name: (String) - Optional. The HTML string of the button to display.
-      onclick: (String) - Optional. The onclick/confirm attribute of the button.
+      name: (String) - Optional. The HTML text of the button to display.
+      onclick: (String) - Optional. The JS code to execute on button click.
       tooltip: (String) - Optional. The HTML tooltip a user can see by hovering over this input.
 
-      attributes: - Optional.
-        <attribute_name>: <value> - The attribute to pass to the focus element.
-      options: - Optional. Used for datalists/select only.
-        <option_id>: <value> - The datalist/select option ID to pass to the focus element.
+      height: (Number) - Optional. The row height of this element in a grid. 1 by default.
+      width: (Number) - Optional. The column width of this element in a grid. 1 by default.
 
-      //Individual input type options.
-      //'biuf'
-        default: (String) - Optional. The default string to input as a placeholder value. 'Name' by default
-      //'date'
-        default_date: (Object) - The date to set defaults to if applicable.
-      //'html'
-        innerHTML: (String) - The HTML to append to this cell.
-  */
-  createInput: function (arg0_options) {
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
+      x: (Number) - Optional. The X position of the element in a grid. 0 by default.
+      y: (Number) - Optional. The Y position of the element in a grid. n + 1 by default, where n = last row.
+*/
+global.createContextMenu = function (arg0_options) { //[WIP] - Finish function body.
+  //Convert from parameters
+  var options = (arg0_options) ? arg0_options : {};
 
-    //Intiialise options
-    if (!options.attributes) options.attributes = {};
-    if (!options.options) options.options = {};
+  //Initialise options
+  if (!options.class) options.class = "";
 
-    //Declare local instance variables
-    var html_string = [];
+  //Declare local instance variables
+  var all_options = Object.keys(options);
+  var default_keys = ["anchor", "class", "id", "maximum_height", "maximum_width"];
+  var html_string = [];
+  var table_columns = 0;
+  var table_rows = 0;
 
-    //Format html_string
-    html_string.push(`<div id = "${options.id}" class = "context-menu-cell">`);
+  //Format CSS strings
+  var height_string = (options.maximum_height) ? `height: ${options.maximum_height}; overflow-y: auto;` : "";
+  var width_string = (options.maximum_width) ? `width: ${options.maximum_width}; overflow-x: hidden;` : "";
 
-    //Input type handling
-    if (options.type == "biuf") {
-      if (options.name)
-        html_string.push(`<div class = "header">${options.name}</div>`);
+  var parent_style = `${height_string}${width_string}`;
 
-      //Create a contenteditable div with onchange handlers to strip formatting
-      html_string.push(`<div id = "biuf-toolbar" class = "biuf-toolbar">`);
-        //Onload handler
-        html_string.push(`<img src = "" onerror = "initBIUFToolbar('${options.id}');">`);
-        html_string.push(`<button id = "bold-button" class = "bold-icon">B</button>`);
-        html_string.push(`<button id = "italic-button" class = "italic-icon">I</button>`);
-        html_string.push(`<button id = "underline-button" class = "underline-icon">U</button>`);
-        html_string.push(`<button id = "clear-button" class = "clear-icon">T</button>`);
-      html_string.push(`</div>`);
+  //Format html_string
+  html_string.push(`<div ${(options.id) ? `id = "${options.id}" ` : ""}class = "${(options.class) ? options.class + " " : ""}context-menu"${(parent_style.length > 0) ? ` style = "${parent_style}"` : ""}>`);
 
-      html_string.push(`<div id = "biuf-input" class = "biuf-input" contenteditable = "true" oninput = "handleBIUF(this);" ${objectToAttributes(options.options)}>`);
-        html_string.push((options.default) ? options.default : "Name");
-      html_string.push(`</div>`);
-    } else if (["rich_text", "wysiwyg"].includes(options.type)) {
-      //Div header
-      if (options.name)
-        html_string.push(`<div class = "header">${options.name}</div>`);
+  //Fetch table_columns; table_rows
+  for (var i = 0; i < all_options.length; i++) {
+    var local_option = options[all_options[i]];
 
-      html_string.push(`<div id = "wysiwyg-editor" class = "wysiwyg-editor">`);
-        //Onload handler
-        html_string.push(`<img src = "" onerror = "initWYSIWYG('${options.id}');">`);
+    //This is an input field; process .x, .y
+    if (typeof local_option == "object") {
+      if (local_option.x)
+        table_columns = Math.max(table_columns, local_option.x);
+      if (local_option.y) {
+        table_rows = Math.max(table_rows, local_option.y);
+      } else {
+        table_rows++;
+      }
+    }
+  }
 
-        //Editor toolbar
-        {
-          html_string.push(`<div class = "toolbar">`);
-            //FIRST LINE
-            html_string.push(`<div class = "line">`);
+  //Iterate over all_options; format them
+  html_string.push(`<table>`);
 
-            //First box: Bold, Italic, Underline, Strikethrough
-            html_string.push(`<div class = "box">`);
-              //Bold
-              html_string.push(`<span class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bold.png"></span>`);
-              //Italic
-              html_string.push(`<span class = "editor-button icon small" data-action = "italic" data-tag-name = "i" title = "Italic"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/italic.png"></span>`);
-              //Underline
-              html_string.push(`<span class = "editor-button icon small" data-action = "underline" data-tag-name = "u" title = "Underline"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/underline.png"></span>`);
-              //Strikethrough
-              html_string.push(`<span class = "editor-button icon small" data-action = "strikeThrough" data-tag-name = "strike" title = "Strikethrough"><img src = "https://img.icons8.com/fluency-systems-filled/30/000000/strikethrough.png"></span>`);
-            html_string.push(`</div>`);
+  var current_row = 0;
+  var table_rows = [];
 
-            //Second box: Alignment, Lists, Indents, Hr
-            html_string.push(`<div class = "box">`);
-              html_string.push(`<span class = "editor-button icon has-submenu">`);
-                //Menu icon
-                html_string.push(`<img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png">`);
+  //1. Initialise table_rows
+  for (var i = 0; i < all_options.length; i++) {
+    var local_option = options[all_options[i]];
 
-                //1. Submenu
-                html_string.push(`<div class = "submenu">`);
-                  //Align left
-                  html_string.push(`<span class = "editor-button icon" data-action = "justifyLeft" data-style = "textAlign:left" title = "Align Left"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png"></span>`);
-                  //Align centre
-                  html_string.push(`<span class = "editor-button icon" data-action = "justifyCenter" data-style = "textAlign:center" title = "Align Centre"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-center.png"></span>`);
-                  //Align right
-                  html_string.push(`<span class = "editor-button icon" data-action = "justifyRight" data-style = "textAlign:right" title = "Align Right"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-right.png"></span>`);
-                  //Align justify
-                  html_string.push(`<span class = "editor-button icon" data-action = "formatBlock" data-style = "textAlign:justify" title = "Justify"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-justify.png"></span>`);
-                html_string.push(`</div>`);
-              html_string.push(`</span>`);
-
-              //Insert ordered list
-              html_string.push(`<span class = "editor-button icon" data-action = "insertOrderedList" data-tag-name = "ol" title = "Insert ordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/numbered-list.png"></span>`);
-              //Insert unordered list
-              html_string.push(`<span class = "editor-button icon" data-action = "insertUnorderedList" data-tag-name = "ul" title = "Insert unordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bulleted-list.png"></span>`);
-              //Indent
-              html_string.push(`<span class = "editor-button icon" data-action = "indent" title = "Indent"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/indent.png"></span>`);
-              //Outdent
-              html_string.push(`<span class = "editor-button icon" data-action = "outdent" title = "Outdent" data-required-tag = "li"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/outdent.png"></span>`);
-            html_string.push(`</div>`);
-
-          html_string.push(`</div>`);
-
-          //SECOND LINE
-          html_string.push(`<div class = "line">`);
-
-            //Third box: Undo, clear formatting
-            html_string.push(`<div class = "box">`);
-              //Undo
-              html_string.push(`<span class = "editor-button icon small" data-action = "undo" title = "Undo"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/undo--v1.png"></span>`);
-              //Remove formatting
-              html_string.push(`<span class = "editor-button icon small" data-action = "removeFormat" title = "Remove format"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/remove-format.png"></span>`);
-            html_string.push(`</div>`);
-
-            //Fourth box: Add link, remove link
-            html_string.push(`<div class = "box">`);
-              //Insert Link
-              html_string.push(`<span class = "editor-button icon small" data-action = "createLink" title = "Insert Link"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/add-link.png"></span>`);
-              //Unlink
-              html_string.push(`<span class = "editor-button icon small" data-action = "unlink" data-tag-name = "a" title = "Unlink"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/delete-link.png"></span>`);
-            html_string.push(`</div>`);
-
-            //Fifth box: Show HTML
-            html_string.push(`<div class = "box">`);
-              //Show HTML code
-              html_string.push(`<span class = "editor-button icon" data-action = "toggle-view" title = "Show HTML Code"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/source-code.png"></span>`);
-            html_string.push(`</div>`);
-          html_string.push(`</div>`);
-        html_string.push(`</div>`);
+    if (typeof local_option == "object") {
+      if (local_option.y != undefined) {
+        current_row = local_option.y;
+      } else {
+        current_row++;
+        local_option.y = current_row;
       }
 
-        //Content area
-        html_string.push(`<div class = "content-area">`);
-          html_string.push(`<div class = "visual-view" contenteditable></div>`);
-          html_string.push(`<textarea class = "html-view"></textarea>`);
+      //Initialise table_rows[current_row]:
+      table_rows[current_row] = [];
+    }
+  }
+
+  //2. Populate table_rows
+  for (var i = 0; i < all_options.length; i++) {
+    var local_option = options[all_options[i]];
+
+    if (typeof local_option == "object") {
+      var local_el_html = [];
+      var local_input_html = createInput(local_option);
+      var local_row = table_rows[local_option.y];
+      var local_x;
+
+      local_el_html.push(`<td${(local_option.width) ? ` colspan = "${local_option.width}"` : ""}${(local_option.height) ? ` rowspan = "${local_option.height}"` : ""}>`);
+        local_el_html.push(local_input_html);
+      local_el_html.push(`</td>`);
+
+      if (local_option.x != undefined) {
+        local_x = local_option.x;
+      } else {
+        local_x = local_row.length;
+      }
+
+      //Set local_row[local_x]
+      local_row[local_x] = local_el_html.join("");
+    }
+  }
+
+  //3. Push table_rows to html_string
+  for (var i = 0; i < table_rows.length; i++)
+    html_string.push(`<tr>${table_rows[i].join("")}</tr>`);
+
+  html_string.push(`</table>`);
+
+  //Close html_string
+  html_string.push(`</div>`);
+
+  //Fetch query_selector_el and set .innerHTML to html_string.join("");
+  if (options.anchor) {
+    var query_selector_el = document.querySelector(options.anchor);
+
+    query_selector_el.innerHTML = html_string.join("");
+  }
+
+  //Return statement
+  return html_string.join("");
+}
+
+/*
+  createInput() - Returns a string representing the HTML input element.
+  arg0_options: (Object)
+    id: (String) - The ID to associate this input with.
+    type: (String) - The input type to return the HTML of. 'biuf'/'rich_text'/'wysiwyg'/'button'/'checkbox'/'color'/'colour'/'datalist'/'date'/'date_length'/'email'/'file'/'hidden'/'hierarchy'/'html'/'image'/'number'/'password'/'radio'/'range'/'reset'/'search_select'/'select'/'submit'/'tel'/'text'/'time'/'url'
+
+    icon: (String) - Optional. The path to the display icon image.
+    name: (String) - Optional. The HTML string of the button to display.
+    onclick: (String) - Optional. The onclick/confirm attribute of the button.
+    tooltip: (String) - Optional. The HTML tooltip a user can see by hovering over this input.
+
+    attributes: - Optional.
+      <attribute_name>: <value> - The attribute to pass to the focus element.
+    options: - Optional. Used for datalists/select only.
+      <option_id>: <value> - The datalist/select option ID to pass to the focus element.
+
+    //Individual input type options.
+    //'biuf'
+      default: (String) - Optional. The default string to input as a placeholder value. 'Name' by default
+    //'date'
+      default_date: (Object) - The date to set defaults to if applicable.
+    //'html'
+      innerHTML: (String) - The HTML to append to this cell.
+*/
+global.createInput = function (arg0_options) {
+  //Convert from parameters
+  var options = (arg0_options) ? arg0_options : {};
+
+  //Intiialise options
+  if (!options.attributes) options.attributes = {};
+  if (!options.options) options.options = {};
+
+  //Declare local instance variables
+  var html_string = [];
+
+  //Format html_string
+  html_string.push(`<div id = "${options.id}" class = "context-menu-cell">`);
+
+  //Input type handling
+  if (options.type == "biuf") {
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+
+    //Create a contenteditable div with onchange handlers to strip formatting
+    html_string.push(`<div id = "biuf-toolbar" class = "biuf-toolbar">`);
+      //Onload handler
+      html_string.push(`<img src = "" onerror = "initBIUFToolbar('${options.id}');">`);
+      html_string.push(`<button id = "bold-button" class = "bold-icon">B</button>`);
+      html_string.push(`<button id = "italic-button" class = "italic-icon">I</button>`);
+      html_string.push(`<button id = "underline-button" class = "underline-icon">U</button>`);
+      html_string.push(`<button id = "clear-button" class = "clear-icon">T</button>`);
+    html_string.push(`</div>`);
+
+    html_string.push(`<div id = "biuf-input" class = "biuf-input" contenteditable = "true" oninput = "handleBIUF(this);" ${objectToAttributes(options.options)}>`);
+      html_string.push((options.default) ? options.default : "Name");
+    html_string.push(`</div>`);
+  } else if (["rich_text", "wysiwyg"].includes(options.type)) {
+    //Div header
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+
+    html_string.push(`<div id = "wysiwyg-editor" class = "wysiwyg-editor">`);
+      //Onload handler
+      html_string.push(`<img src = "" onerror = "initWYSIWYG('${options.id}');">`);
+
+      //Editor toolbar
+      {
+        html_string.push(`<div class = "toolbar">`);
+          //FIRST LINE
+          html_string.push(`<div class = "line">`);
+
+          //First box: Bold, Italic, Underline, Strikethrough
+          html_string.push(`<div class = "box">`);
+            //Bold
+            html_string.push(`<span class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bold.png"></span>`);
+            //Italic
+            html_string.push(`<span class = "editor-button icon small" data-action = "italic" data-tag-name = "i" title = "Italic"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/italic.png"></span>`);
+            //Underline
+            html_string.push(`<span class = "editor-button icon small" data-action = "underline" data-tag-name = "u" title = "Underline"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/underline.png"></span>`);
+            //Strikethrough
+            html_string.push(`<span class = "editor-button icon small" data-action = "strikeThrough" data-tag-name = "strike" title = "Strikethrough"><img src = "https://img.icons8.com/fluency-systems-filled/30/000000/strikethrough.png"></span>`);
+          html_string.push(`</div>`);
+
+          //Second box: Alignment, Lists, Indents, Hr
+          html_string.push(`<div class = "box">`);
+            html_string.push(`<span class = "editor-button icon has-submenu">`);
+              //Menu icon
+              html_string.push(`<img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png">`);
+
+              //1. Submenu
+              html_string.push(`<div class = "submenu">`);
+                //Align left
+                html_string.push(`<span class = "editor-button icon" data-action = "justifyLeft" data-style = "textAlign:left" title = "Align Left"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png"></span>`);
+                //Align centre
+                html_string.push(`<span class = "editor-button icon" data-action = "justifyCenter" data-style = "textAlign:center" title = "Align Centre"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-center.png"></span>`);
+                //Align right
+                html_string.push(`<span class = "editor-button icon" data-action = "justifyRight" data-style = "textAlign:right" title = "Align Right"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-right.png"></span>`);
+                //Align justify
+                html_string.push(`<span class = "editor-button icon" data-action = "formatBlock" data-style = "textAlign:justify" title = "Justify"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-justify.png"></span>`);
+              html_string.push(`</div>`);
+            html_string.push(`</span>`);
+
+            //Insert ordered list
+            html_string.push(`<span class = "editor-button icon" data-action = "insertOrderedList" data-tag-name = "ol" title = "Insert ordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/numbered-list.png"></span>`);
+            //Insert unordered list
+            html_string.push(`<span class = "editor-button icon" data-action = "insertUnorderedList" data-tag-name = "ul" title = "Insert unordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bulleted-list.png"></span>`);
+            //Indent
+            html_string.push(`<span class = "editor-button icon" data-action = "indent" title = "Indent"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/indent.png"></span>`);
+            //Outdent
+            html_string.push(`<span class = "editor-button icon" data-action = "outdent" title = "Outdent" data-required-tag = "li"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/outdent.png"></span>`);
+          html_string.push(`</div>`);
+
         html_string.push(`</div>`);
 
-        //Modal for hyperlinks
-        html_string.push(`<div class = "modal">`);
-          html_string.push(`<div class = "modal-bg"></div>`);
-          html_string.push(`<div class = "modal-wrapper">`);
-            html_string.push(`<div class = "close">✖</div>`);
-            html_string.push(`<div class = "modal-content" id = "modal-create-link">`);
-              html_string.push(`<h3>Insert Link</h3>`);
-              html_string.push(`<input type = "text" id = "link-value" placeholder = "Link (example: https://google.com/)">`);
-              html_string.push(`<div class = "row">`);
-                html_string.push(`<input type = "checkbox" id = "new-tab"`);
-                html_string.push(`<label for = "new-tab">Open in New Tab?</label>`);
-              html_string.push(`</div>`);
-              html_string.push(`<button class = "done">Done</button>`);
-            html_string.push(`</div>`);
+        //SECOND LINE
+        html_string.push(`<div class = "line">`);
+
+          //Third box: Undo, clear formatting
+          html_string.push(`<div class = "box">`);
+            //Undo
+            html_string.push(`<span class = "editor-button icon small" data-action = "undo" title = "Undo"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/undo--v1.png"></span>`);
+            //Remove formatting
+            html_string.push(`<span class = "editor-button icon small" data-action = "removeFormat" title = "Remove format"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/remove-format.png"></span>`);
+          html_string.push(`</div>`);
+
+          //Fourth box: Add link, remove link
+          html_string.push(`<div class = "box">`);
+            //Insert Link
+            html_string.push(`<span class = "editor-button icon small" data-action = "createLink" title = "Insert Link"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/add-link.png"></span>`);
+            //Unlink
+            html_string.push(`<span class = "editor-button icon small" data-action = "unlink" data-tag-name = "a" title = "Unlink"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/delete-link.png"></span>`);
+          html_string.push(`</div>`);
+
+          //Fifth box: Show HTML
+          html_string.push(`<div class = "box">`);
+            //Show HTML code
+            html_string.push(`<span class = "editor-button icon" data-action = "toggle-view" title = "Show HTML Code"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/source-code.png"></span>`);
           html_string.push(`</div>`);
         html_string.push(`</div>`);
       html_string.push(`</div>`);
-    } else if (options.type == "button") {
-      html_string.push(`<span${(options.onclick) ? ` onclick = "${options.onclick}"` : ""} class = "button">`);
-        if (options.icon)
-          html_string.push(`<img src = "${options.icon}">`);
-        if (options.name)
-          html_string.push(options.name);
-      html_string.push(`</span>`);
-    } else if (options.type == "checkbox") {
-      if (options.icon)
-        html_string.push(`<img src = "${options.icon}">`);
-
-      html_string.push(`<input type = "checkbox" ${objectToAttributes(options.attributes)}>`);
-
-      if (options.name)
-        html_string.push(`<span>${options.name}</span>`);
-    } else if (["color", "colour"].includes(options.type)) {
-      //High-intensity - take a page from Naissance colour wheels
-      html_string.push(`<div class = "colour-picker-container">`);
-        //Onload handler
-        html_string.push(`<img src = "" onerror = "handleColourWheel('${options.id}');">`);
-
-        //Colour picker HTML
-        html_string.push(`<img id = "colour-picker-hue" class = "colour-picker-hue" src = "./UF/gfx/colour_wheel.png">`);
-        html_string.push(`<div id = "colour-picker-brightness" class = "colour-picker-brightness"></div>`);
-
-        html_string.push(`<div id = "colour-picker-cursor" class = "colour-picker-cursor"></div>`);
-        html_string.push(`<div id = "colour-picker" class = "colour-picker-mask"></div>`);
-
-        //RGB inputs
-        html_string.push(`<div class = "rgb-inputs">`);
-          html_string.push(`R: <input type = "number" id = "r" value = "255"><br>`);
-          html_string.push(`G: <input type = "number" id = "g" value = "255"><br>`);
-          html_string.push(`B: <input type = "number" id = "b" value = "255"><br>`);
-        html_string.push(`</div>`);
-
-        //No select
-        html_string.push(`<span class = "no-select">`);
-          html_string.push(`<span class = "brightness-range-container">`);
-            html_string.push(`<input type = "range" min = "0" max = "100" value = "100" id = "colour-picker-brightness-range" class = "colour-picker-brightness-range">`);
-            html_string.push(`<span id = "brightness-header" class = "small-header">Brightness | 1</span>`);
-          html_string.push(`</span>`);
-
-          html_string.push(`<span class = "opacity-range-container">`);
-            html_string.push(`<input type = "range" min = "0" max = "100" value = "50" id = "colour-picker-opacity-range" class = "colour-picker-opacity-range">`);
-            html_string.push(`<span id = "opacity-header" class = "small-header">Opacity | 0.5</span>`);
-          html_string.push(`</span>`);
-        html_string.push(`</span>`);
-      html_string.push(`</div>`);
-    } else if (options.type == "datalist") {
-      html_string.push(`<datalist class = "datalist">`);
-        //Add .options to datalist
-        var all_options = Object.keys(options.options);
-
-        //Iterate over all_options
-        for (var i = 0; i < all_options.length; i++) {
-          var local_value = options.options[all_options[i]];
-
-          //Push option to html_string
-          html_string.push(`<option id = "${all_options[i]}" value = "${local_value}">`);
-        }
-      html_string.push(`</datalist>`);
-    } else if (options.type == "date") {
-      if (options.name)
-        html_string.push(options.name);
-
-      //High-intensity - create date framework first
-      //Day/month/year container
-      html_string.push(`<input id = "day-input" class = "day-input" placeholder = "1st" size = "4">`);
-      html_string.push(`<input id = "month-input" class = "month-input" list = "months" placeholder = "January">`);
-      html_string.push(`
-        <datalist id = "months" name = "month">
-          <option value = "January">1</option>
-          <option value = "February">2</option>
-          <option value = "March">3</option>
-          <option value = "April">4</option>
-          <option value = "May">5</option>
-          <option value = "June">6</option>
-          <option value = "July">7</option>
-          <option value = "August">8</option>
-          <option value = "September">9</option>
-          <option value = "October">10</option>
-          <option value = "November">11</option>
-          <option value = "December">12</option>
-        </datalist>
-      `);
-      html_string.push(`<input id = "year-input" class = "year-input">`);
-      html_string.push(`
-        <select id = "year-type">
-          <option value = "AD">AD</option>
-          <option value = "BC">BC</option>
-        </select>
-      `);
-      //Hour-minute container
-      html_string.push(`
-        <input id = "hour-input" value = "00" placeholder = "00" size = "2"> :
-        <input id = "minute-input" value = "00" placeholder = "00" size = "2">
-      `);
-    } else if (options.type == "date_length") {
-      if (options.name)
-        html_string.push(options.name);
-
-      //Place date_length containers on separate lines for better readability
-      html_string.push(`
-        <div id = "date-container">
-          <input id = "years-input" placeholder = "2000" value = "2000"></input>
-          <input id = "months-input" placeholder = "January" value = "January"></input>
-          <input id = "days-input" placeholder = "1st" value = "1st" size = "4"></input>
-        </div>
-        <div id = "clock-container">
-          <input id = "hours-input" placeholder = "00" value = "00" size = "2"></input> :
-          <input id = "minutes-input" placeholder = "00" value = "00" size = "2"></input>
-        </div>
-      `);
-    } else if (options.type == "email") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`
-        <input type = "email" id = "email-input" pattern = ".+@example\.com" size = "30" ${objectToAttributes(options.attributes)}>
-      `);
-    } else if (options.type == "file") {
-      //High-intensity; file input [WIP]
-    } else if (options.type == "html") {
-      if (options.name)
-        html_string.push(`<div class = "header">${options.name}</div>`);
-      if (options.innerHTML)
-        html_string.push(options.innerHTML);
-    } else if (options.type == "image") {
-      //High-intensity; image input [WIP]
-    } else if (options.type == "number") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "number" id = "number-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "password") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "password" id = "password-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "radio") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "radio" id = "radio-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "range") {
-      var name_string = (options.name) ? ` ${options.name}` : "";
-
-      html_string.push(`<input type = "range" id = "range-input"${name_string} ${objectToAttributes(options.attributes)}`);
-    } else if (options.type == "reset") {
-      html_string.push(`<input type = "reset" id = "reset-button" value = "Reset">`);
-    } else if (options.type == "search_select") {
-      //High-intensity; requires searchable list - scratch it up in Codepen
-    } else if (options.type == "select") {
-      //Similar to datalist
-      html_string.push(`<select class = "select-menu" ${objectToAttributes(options.attributes)}>`);
-        //Add .options to select
-        var all_options = Object.keys(options.options);
-
-        //Iterate over all_options
-        for (var i = 0; i < all_options.length; i++) {
-          var local_value = options.options[all_options[i]];
-
-          //Push option to html_string
-          html_string.push(`<option value = "${all_options[i]}">${local_value}</option>`);
-        }
-      html_string.push(`</select>`);
-    } else if (options.type == "submit") {
-      html_string.push(`<input type = "submit" value = "${(options.name) ? options.name : "Submit"}" ${objectToAttributes(options.attributes)}>`);
-    } else if (["tel", "telephone"].includes(options.type)) {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`${(options.name) ? options.name + " " : ""}<input type = "tel" id = "telephone-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "text") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "text" id = "text-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "time") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "time" id = "time-input" ${objectToAttributes(options.attributes)}>`);
-    } else if (options.type == "url") {
-      if (options.name)
-        html_string.push(options.name);
-      html_string.push(`<input type = "url" id = "url-input" placeholder = "http://example.com" ${objectToAttributes(options.attributes)}>`);
     }
 
-    //Close html_string div
+      //Content area
+      html_string.push(`<div class = "content-area">`);
+        html_string.push(`<div class = "visual-view" contenteditable></div>`);
+        html_string.push(`<textarea class = "html-view"></textarea>`);
+      html_string.push(`</div>`);
+
+      //Modal for hyperlinks
+      html_string.push(`<div class = "modal">`);
+        html_string.push(`<div class = "modal-bg"></div>`);
+        html_string.push(`<div class = "modal-wrapper">`);
+          html_string.push(`<div class = "close">✖</div>`);
+          html_string.push(`<div class = "modal-content" id = "modal-create-link">`);
+            html_string.push(`<h3>Insert Link</h3>`);
+            html_string.push(`<input type = "text" id = "link-value" placeholder = "Link (example: https://google.com/)">`);
+            html_string.push(`<div class = "row">`);
+              html_string.push(`<input type = "checkbox" id = "new-tab"`);
+              html_string.push(`<label for = "new-tab">Open in New Tab?</label>`);
+            html_string.push(`</div>`);
+            html_string.push(`<button class = "done">Done</button>`);
+          html_string.push(`</div>`);
+        html_string.push(`</div>`);
+      html_string.push(`</div>`);
     html_string.push(`</div>`);
+  } else if (options.type == "button") {
+    html_string.push(`<span${(options.onclick) ? ` onclick = "${options.onclick}"` : ""} class = "button">`);
+      if (options.icon)
+        html_string.push(`<img src = "${options.icon}">`);
+      if (options.name)
+        html_string.push(options.name);
+    html_string.push(`</span>`);
+  } else if (options.type == "checkbox") {
+    if (options.icon)
+      html_string.push(`<img src = "${options.icon}">`);
 
-    //Return statement
-    return html_string.join("");
-  },
+    html_string.push(`<input type = "checkbox" ${objectToAttributes(options.attributes)}>`);
 
-  //Internal UI helper functions
+    if (options.name)
+      html_string.push(`<span>${options.name}</span>`);
+  } else if (["color", "colour"].includes(options.type)) {
+    //High-intensity - take a page from Naissance colour wheels
+    html_string.push(`<div class = "colour-picker-container">`);
+      //Onload handler
+      html_string.push(`<img src = "" onerror = "handleColourWheel('${options.id}');">`);
+
+      //Colour picker HTML
+      html_string.push(`<img id = "colour-picker-hue" class = "colour-picker-hue" src = "./UF/gfx/colour_wheel.png">`);
+      html_string.push(`<div id = "colour-picker-brightness" class = "colour-picker-brightness"></div>`);
+
+      html_string.push(`<div id = "colour-picker-cursor" class = "colour-picker-cursor"></div>`);
+      html_string.push(`<div id = "colour-picker" class = "colour-picker-mask"></div>`);
+
+      //RGB inputs
+      html_string.push(`<div class = "rgb-inputs">`);
+        html_string.push(`R: <input type = "number" id = "r" value = "255"><br>`);
+        html_string.push(`G: <input type = "number" id = "g" value = "255"><br>`);
+        html_string.push(`B: <input type = "number" id = "b" value = "255"><br>`);
+      html_string.push(`</div>`);
+
+      //No select
+      html_string.push(`<span class = "no-select">`);
+        html_string.push(`<span class = "brightness-range-container">`);
+          html_string.push(`<input type = "range" min = "0" max = "100" value = "100" id = "colour-picker-brightness-range" class = "colour-picker-brightness-range">`);
+          html_string.push(`<span id = "brightness-header" class = "small-header">Brightness | 1</span>`);
+        html_string.push(`</span>`);
+
+        html_string.push(`<span class = "opacity-range-container">`);
+          html_string.push(`<input type = "range" min = "0" max = "100" value = "50" id = "colour-picker-opacity-range" class = "colour-picker-opacity-range">`);
+          html_string.push(`<span id = "opacity-header" class = "small-header">Opacity | 0.5</span>`);
+        html_string.push(`</span>`);
+      html_string.push(`</span>`);
+    html_string.push(`</div>`);
+  } else if (options.type == "datalist") {
+    html_string.push(`<datalist class = "datalist">`);
+      //Add .options to datalist
+      var all_options = Object.keys(options.options);
+
+      //Iterate over all_options
+      for (var i = 0; i < all_options.length; i++) {
+        var local_value = options.options[all_options[i]];
+
+        //Push option to html_string
+        html_string.push(`<option id = "${all_options[i]}" value = "${local_value}">`);
+      }
+    html_string.push(`</datalist>`);
+  } else if (options.type == "date") {
+    if (options.name)
+      html_string.push(options.name);
+
+    //High-intensity - create date framework first
+    //Day/month/year container
+    html_string.push(`<input id = "day-input" class = "day-input" placeholder = "1st" size = "4">`);
+    html_string.push(`<input id = "month-input" class = "month-input" list = "months" placeholder = "January">`);
+    html_string.push(`
+      <datalist id = "months" name = "month">
+        <option value = "January">1</option>
+        <option value = "February">2</option>
+        <option value = "March">3</option>
+        <option value = "April">4</option>
+        <option value = "May">5</option>
+        <option value = "June">6</option>
+        <option value = "July">7</option>
+        <option value = "August">8</option>
+        <option value = "September">9</option>
+        <option value = "October">10</option>
+        <option value = "November">11</option>
+        <option value = "December">12</option>
+      </datalist>
+    `);
+    html_string.push(`<input id = "year-input" class = "year-input">`);
+    html_string.push(`
+      <select id = "year-type">
+        <option value = "AD">AD</option>
+        <option value = "BC">BC</option>
+      </select>
+    `);
+    //Hour-minute container
+    html_string.push(`
+      <input id = "hour-input" value = "00" placeholder = "00" size = "2"> :
+      <input id = "minute-input" value = "00" placeholder = "00" size = "2">
+    `);
+  } else if (options.type == "date_length") {
+    if (options.name)
+      html_string.push(options.name);
+
+    //Place date_length containers on separate lines for better readability
+    html_string.push(`
+      <div id = "date-container">
+        <input id = "years-input" placeholder = "2000" value = "2000"></input>
+        <input id = "months-input" placeholder = "January" value = "January"></input>
+        <input id = "days-input" placeholder = "1st" value = "1st" size = "4"></input>
+      </div>
+      <div id = "clock-container">
+        <input id = "hours-input" placeholder = "00" value = "00" size = "2"></input> :
+        <input id = "minutes-input" placeholder = "00" value = "00" size = "2"></input>
+      </div>
+    `);
+  } else if (options.type == "email") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`
+      <input type = "email" id = "email-input" pattern = ".+@example\.com" size = "30" ${objectToAttributes(options.attributes)}>
+    `);
+  } else if (options.type == "file") {
+    //High-intensity; file input [WIP]
+  } else if (options.type == "html") {
+    if (options.name)
+      html_string.push(`<div class = "header">${options.name}</div>`);
+    if (options.innerHTML)
+      html_string.push(options.innerHTML);
+  } else if (options.type == "image") {
+    //High-intensity; image input [WIP]
+  } else if (options.type == "number") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "number" id = "number-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "password") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "password" id = "password-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "radio") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "radio" id = "radio-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "range") {
+    var name_string = (options.name) ? ` ${options.name}` : "";
+
+    html_string.push(`<input type = "range" id = "range-input"${name_string} ${objectToAttributes(options.attributes)}`);
+  } else if (options.type == "reset") {
+    html_string.push(`<input type = "reset" id = "reset-button" value = "Reset">`);
+  } else if (options.type == "search_select") {
+    //High-intensity; requires searchable list - scratch it up in Codepen
+  } else if (options.type == "select") {
+    //Similar to datalist
+    html_string.push(`<select class = "select-menu" ${objectToAttributes(options.attributes)}>`);
+      //Add .options to select
+      var all_options = Object.keys(options.options);
+
+      //Iterate over all_options
+      for (var i = 0; i < all_options.length; i++) {
+        var local_value = options.options[all_options[i]];
+
+        //Push option to html_string
+        html_string.push(`<option value = "${all_options[i]}">${local_value}</option>`);
+      }
+    html_string.push(`</select>`);
+  } else if (options.type == "submit") {
+    html_string.push(`<input type = "submit" value = "${(options.name) ? options.name : "Submit"}" ${objectToAttributes(options.attributes)}>`);
+  } else if (["tel", "telephone"].includes(options.type)) {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`${(options.name) ? options.name + " " : ""}<input type = "tel" id = "telephone-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "text") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "text" id = "text-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "time") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "time" id = "time-input" ${objectToAttributes(options.attributes)}>`);
+  } else if (options.type == "url") {
+    if (options.name)
+      html_string.push(options.name);
+    html_string.push(`<input type = "url" id = "url-input" placeholder = "http://example.com" ${objectToAttributes(options.attributes)}>`);
+  }
+
+  //Close html_string div
+  html_string.push(`</div>`);
+
+  //Return statement
+  return html_string.join("");
+}
+
+//Internal UI helper functions
+{
   //addParagraphTag() - Adds a paragraph tag when enter key is pressed
-  addParagraphTag: function (arg0_e) {
+  function addParagraphTag (arg0_e) {
     //Convert from parameters
     var e = arg0_e;
 
@@ -536,19 +536,19 @@ module.exports = {
       //Otherwise, add a p tag
       document.execCommand("formatBlock", false, "p");
     }
-  },
+  }
 
   //childOf() - Checks if passed child has passed parent
-  childOf: function (arg0_child_el, arg1_parent_el) {
+  function childOf (arg0_child_el, arg1_parent_el) {
     //Convert from parameters
     var child_el = arg0_child_el;
     var parent_el = arg1_parent_el;
 
     //Return statement
     return parent_el.contains(child_el);
-  },
+  }
 
-  execCodeAction: function (arg0_button_el, arg1_editor_el, arg2_visual_view_el, arg3_html_view_el) {
+  function execCodeAction (arg0_button_el, arg1_editor_el, arg2_visual_view_el, arg3_html_view_el) {
     //Convert from parameters
     var button_el = arg0_button_el;
     var editor_el = arg1_editor_el;
@@ -569,17 +569,17 @@ module.exports = {
 
       button_el.classList.add("active");
     }
-  },
+  }
 
-  execDefaultAction: function (arg0_action) {
+  function execDefaultAction (arg0_action) {
     //Convert from parameters
     var action = arg0_action;
 
     //Invoke execCommand
     document.execCommand(action, false);
-  },
+  }
 
-  execLinkAction: function (arg0_modal_el) {
+  function execLinkAction (arg0_modal_el) {
     //Convert from parameters
     var modal = arg0_modal_el;
 
@@ -634,9 +634,9 @@ module.exports = {
       submit.removeEventListener("click", arguments.callee);
       close.removeEventListener("click", arguments.callee);
     });
-  },
+  }
 
-  handleBIUF: function (arg0_e) {
+  function handleBIUF (arg0_e) {
     //Convert from parameters
     var biuf_el = arg0_e;
 
@@ -656,9 +656,9 @@ module.exports = {
       if (remove_node)
         remove_node.parentNode.removeChild(remove_node);
     }
-  },
+  }
 
-  handleColourWheel: function (arg0_parent_el_id) {
+  function handleColourWheel (arg0_parent_el_id) {
     //Convert from parameters
     var parent_el_id = arg0_parent_el_id;
 
@@ -741,9 +741,9 @@ module.exports = {
       this.value = Math.max(Math.min(this.value, 255), 0);
       setColourWheelCursor(parent_el_id, [r_el.value, g_el.value, b_el.value]);
     };
-  },
+  }
 
-  initBIUFToolbar: function (arg0_parent_el_id) {
+  function initBIUFToolbar (arg0_parent_el_id) {
     //Convert from parameters
     var biuf_element_id = arg0_parent_el_id;
 
@@ -786,9 +786,9 @@ module.exports = {
     underline_button.addEventListener("click", function () {
       document.execCommand("underline");
     });
-  },
+  }
 
-  initWYSIWYG: function (arg0_parent_el_id) {
+  function initWYSIWYG (arg0_parent_el_id) {
     //Convert from parameters
     var wysiwyg_parent_id = arg0_parent_el_id;
 
@@ -834,9 +834,9 @@ module.exports = {
         }
       });
     }
-  },
+  }
 
-  parentTagActive: function (arg0_el) {
+  function parentTagActive (arg0_el) {
     //Convert from parameters
     var element = arg0_el;
 
@@ -861,10 +861,10 @@ module.exports = {
 
     //Return statement
     return parentTagActive(element.parentNode);
-  },
+  }
 
   //pasteEvent() - Handles paste event by removing all HTML tags
-  pasteEvent: function (arg0_e) {
+  function pasteEvent (arg0_e) {
     //Convert from parameters
     var e = arg0_e;
 
@@ -873,9 +873,9 @@ module.exports = {
 
     e.preventDefault();
     document.execCommand("insertHTML", false, text);
-  },
+  }
 
-  restoreSelection: function (arg0_saved_selection) {
+  function restoreSelection (arg0_saved_selection) {
     //Convert from parameters
     var saved_selection = arg0_saved_selection;
 
@@ -891,9 +891,9 @@ module.exports = {
       } else if (document.selection && saved_selection.select) {
         saved_selection.select();
       }
-  },
+  }
 
-  saveSelection: function () {
+  function saveSelection () {
     if (window.getSelection) {
       var selection = window.getSelection();
 
@@ -911,9 +911,9 @@ module.exports = {
       //Return statement
       return document.selection.createRange();
     }
-  },
+  }
 
-  selectionChange: function (arg0_e, arg1_buttons, arg2_editor) {
+  function selectionChange (arg0_e, arg1_buttons, arg2_editor) {
     //Convert from parameters
     var e = arg0_e;
     var buttons = arg1_buttons;
@@ -934,9 +934,9 @@ module.exports = {
       return false;
 
     parentTagActive(window.getSelection().anchorNode.parentNode);
-  },
+  }
 
-  setColourWheelCursor: function (arg0_parent_el_id, arg1_colour, arg2_do_not_change) {
+  function setColourWheelCursor (arg0_parent_el_id, arg1_colour, arg2_do_not_change) {
     //Convert from parameters
     var parent_el_id = arg0_parent_el_id;
     var colour = arg1_colour;
@@ -1016,9 +1016,9 @@ module.exports = {
       colour_cursor_el.style.visibility = "visible";
       restoreErrorHandlers();
     });
-  },
+  }
 
-  updateBrightnessOpacityHeaders: function (arg0_parent_el_id) {
+  function updateBrightnessOpacityHeaders (arg0_parent_el_id) {
     //Convert from parameters
     var parent_el_id = arg0_parent_el_id;
 
@@ -1039,4 +1039,4 @@ module.exports = {
     if (opacity_header_el)
       opacity_header_el.innerHTML = `Opacity | ${opacity_value/100}`;
   }
-};
+}

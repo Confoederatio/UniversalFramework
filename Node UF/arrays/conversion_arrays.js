@@ -1,11 +1,11 @@
-module.exports = {
+{
   /*
     arrayToObject() - Casts an array to object.
     arg0_array: (Array) - The array to input.
 
     Returns: (Object)
   */
-  arrayToObject: function (arg0_array) {
+  global.arrayToObject = function (arg0_array) {
     //Convert from parameters
     var array = arg0_array;
 
@@ -18,7 +18,7 @@ module.exports = {
 
     //Return statement
     return return_object;
-  },
+  }
 
   /*
     objectToArray() - Casts an object to array.
@@ -26,7 +26,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  objectToArray: function (arg0_input_object) {
+  global.objectToArray = function (arg0_input_object) {
     //Convert from parameters
     var input_object = arg0_input_object;
 
@@ -41,4 +41,4 @@ module.exports = {
     //Return statement
     return return_array;
   }
-};
+}

@@ -1,5 +1,5 @@
 //Requires puppeteer, puppeteer-extra-plugin-stealth
-module.exports = {
+{
   /*
     addMarginsToScreenshot() - Adds margins to a screenshot using an HTML5 canvas.
     arg0_screnshot_buffer: (Object, ImageBuffer) - The current screenshot buffer.
@@ -14,7 +14,7 @@ module.exports = {
 
     Returns: (Object, ImageBuffer)
   */
-  addMarginsToScreenshot: async function (arg0_screnshot_buffer, arg1_options) {
+  global.addMarginsToScreenshot = async function (arg0_screnshot_buffer, arg1_options) {
     //Convert from parameters
     var screenshot_buffer = arg0_screnshot_buffer;
     var options = (arg1_options) ? arg1_options : {};
@@ -43,9 +43,9 @@ module.exports = {
 
     //Return the final image buffer
     return canvas.toBuffer();
-  },
+  }
 
-  adjustSliderToMin: async function (arg0_el) {
+  global.adjustSliderToMin = async function (arg0_el) {
     //Convert from parameters
     var slider_el = arg0_el;
 
@@ -56,28 +56,28 @@ module.exports = {
     //Create an actions object; move slider to the minimum value
     var actions = browser_instance.actions({ bridge: true });
     await actions.dragAndDrop(slider, { x: x_offset, y: 0 }).perform();
-  },
+  }
 
-  clickElement: async function (arg0_el) {
+  global.clickElement = async function (arg0_el) {
     //Convert from parameters
     var local_el = arg0_el;
 
     //Click element
     try { await local_el.click(); } catch {}
-  },
+  }
 
   /*
     getBrowserInstance() - Fetches browser instance.
     arg0_options: (Object)
       initialise_gpt: (String) - Either 'chat_gpt'/'gemini'/'gemini_flash'
   */
-  getBrowserInstance: async function (arg0_options) {
+  global.getBrowserInstance = async function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
     //Guard clause if already connected
     if (global.browser_instance)
-      if (await module.exports.isPageConnected(global.browser_instance)) {
+      if (await isPageConnected(global.browser_instance)) {
         return global.browser_instance;
       } else {
         console.log(`Page isn't connected. Restarting browser instance.`);
@@ -94,9 +94,9 @@ module.exports = {
 
     //Return statement
     return global.browser_instance;
-  },
+  }
 
-  getPlaintextFromSelectors: async function (arg0_url, arg1_selectors) {
+  global.getPlaintextFromSelectors = async function (arg0_url, arg1_selectors) {
     //Convert from parameters
     var url = arg0_url;
     var selectors = getList(arg1_selectors);
@@ -125,9 +125,9 @@ module.exports = {
     } else {
       return "";
     }
-  },
+  }
 
-  getWebsiteHTML: async function (arg0_url) {
+  global.getWebsiteHTML = async function (arg0_url) {
     //Convert from parameters
     var url = arg0_url;
 
@@ -155,7 +155,7 @@ module.exports = {
 
     //Return statement
     return fetch_html;
-  },
+  }
 
   /*
     getWebsiteLinks()
@@ -167,7 +167,7 @@ module.exports = {
       attempts: (Number) - Optional. Number of current attempts. 1 by default.
       max_attempts: (Number) - Optional. 15 by default.
   */
-  getWebsiteLinks: async function (arg0_url, arg1_options) {
+  global.getWebsiteLinks = async function (arg0_url, arg1_options) {
     //Convert from parameters
     var url = arg0_url;
     var options = (arg1_options) ? arg1_options : {};
@@ -235,24 +235,24 @@ module.exports = {
       options.attempts++;
 
       await sleep(random_delay);
-      return await module.exports.getWebsiteLinks(url, options);
+      return await getWebsiteLinks(url, options);
     }
 
     //Return statement
     return unique(links);
-  },
+  }
 
-  getWebsitePlaintext: async function (arg0_url) {
+  global.getWebsitePlaintext = async function (arg0_url) {
     //Convert from parameters
     var url = arg0_url;
 
     //Declare local instance variables
-    var fetch_html = await module.exports.getWebsiteHTML(url);
+    var fetch_html = await getWebsiteHTML(url);
 
     //Return statement
     if (fetch_html)
-      return module.exports.stripHTML(fetch_html);
-  },
+      return stripHTML(fetch_html);
+  }
 
   /*
     generatePlaintext() - Generates a plaintext string dump from Plaintext CURL JSON.
@@ -275,7 +275,7 @@ module.exports = {
 
     Returns: (String)
   */
-  generatePlaintext: async function (arg0_options) {
+  global.generatePlaintext = async function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -291,19 +291,19 @@ module.exports = {
 
     //Iterate over scrape_urls and parse websites
     for (var i = 0; i < scrape_urls.length; i++)
-      string += await module.exports.generatePlaintextRecursively(JSON.parse(JSON.stringify(scrape_urls[i])));
+      string += await generatePlaintextRecursively(JSON.parse(JSON.stringify(scrape_urls[i])));
 
     //Cache to /cache if options.cache is true
     if (options.cache) {
       var cache_file_name = `${options.cache_folder}${options.cache_prefix}${returnABRSDateString()}.txt`;
 
       //Write file
-      module.exports.writeTextFile(cache_file_name, string);
+      writeTextFile(cache_file_name, string);
     }
 
     //Return statement
     return string;
-  },
+  }
 
   /*
     generatePlaintextRecursively() - Helper function for generatePlaintext().
@@ -322,7 +322,7 @@ module.exports = {
           include: (Array<String>) - Optional. CSS selectors to be included. If specified, only included selectors will have HTML added for plaintext processing.
           scrape_iframes: (Boolean) - Optional. Whether to scrape iframe contents by fetching and loading their href. False by default.
   */
-  generatePlaintextRecursively: async function (arg0_options) {
+  global.generatePlaintextRecursively = async function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -338,7 +338,7 @@ module.exports = {
     //Declare local instance variables
     var selectors = options.selectors[options.depth];
     var string = ``;
-    var website_html = await module.exports.getWebsiteHTML(options.url);
+    var website_html = await getWebsiteHTML(options.url);
 
     var dom = new JSDOM.JSDOM(website_html);
     var website_body = dom.window.document.body;
@@ -360,7 +360,7 @@ module.exports = {
 
           if (local_href)
             //Replace iframe with inner HTML contents
-            all_iframe_els[i].outerHTML = await module.exports.getWebsiteHTML(local_href);
+            all_iframe_els[i].outerHTML = await getWebsiteHTML(local_href);
         } catch {}
     }
 
@@ -389,11 +389,11 @@ module.exports = {
     }
 
     for (var i = 0; i < include_els_html.length; i++)
-      string += module.exports.stripHTML(include_els_html[i]) + "\n";
+      string += stripHTML(include_els_html[i]) + "\n";
 
     //5. Recursive depth handler
     if (options.depth < options.recursive_depth) {
-      var current_website_links = await module.exports.getWebsiteLinks(options.url, {
+      var current_website_links = await getWebsiteLinks(options.url, {
           allowed_domains: options.recursive_links,
           exclude_domains: options.recursive_exclude_links
       });
@@ -410,7 +410,7 @@ module.exports = {
           new_options.url = current_website_links[i];
           new_options.depth++;
 
-          var local_page_plaintext = await module.exports.generatePlaintextRecursively(new_options);
+          var local_page_plaintext = await generatePlaintextRecursively(new_options);
 
           if (local_page_plaintext)
             string += local_page_plaintext;
@@ -420,9 +420,9 @@ module.exports = {
     //6. Return string
     //Return statement
     return string;
-  },
+  }
 
-  getElement: async function (arg0_browser_instance, arg1_query_selector) {
+  global.getElement = async function (arg0_browser_instance, arg1_query_selector) {
     //Convert from parameters
     var browser_instance = arg0_browser_instance;
     var query_selector = arg1_query_selector;
@@ -436,9 +436,9 @@ module.exports = {
 
     //Return statement
     return element;
-  },
+  }
 
-  initialiseChrome: async function () {
+  global.initialiseChrome = async function () {
     //Open chrome browser first
     exec(settings.chrome_launch_cmd);
     await sleep(1500);
@@ -456,9 +456,9 @@ module.exports = {
 
     //Return statement
     return pages[0];
-  },
+  }
 
-  isPageConnected: async function (arg0_browser_instance) {
+  global.isPageConnected = async function (arg0_browser_instance) {
     //Convert from parameters
     var chrome_instance = arg0_browser_instance;
 
@@ -469,7 +469,7 @@ module.exports = {
     } catch (e) {
       return false;
     }
-  },
+  }
 
   /*
     screenshotHTML() - Takes screenshots from a current Puppeteer browser instance.
@@ -486,7 +486,7 @@ module.exports = {
       margin_top: (Number) - Optional. 20 by default.
       margin_right: (Number) - Optional. 20 by default.
   */
-  screenshotHTML: async function (arg0_browser_instance, arg1_path, arg2_options) {
+  global.screenshotHTML = async function (arg0_browser_instance, arg1_path, arg2_options) {
     //Convert from parameters
     var browser_instance = arg0_browser_instance;
     var path = arg1_path;
@@ -586,17 +586,17 @@ module.exports = {
       log.error(`Error taking A4 screenshots: ${e}`);
       console.log(e);
     }
-  },
+  }
 
-  sleep: function (arg0_ms) {
+  global.sleep = function (arg0_ms) {
     //Convert from parameters
     var ms = arg0_ms;
 
     //Return statement
     return new Promise(resolve => setTimeout(resolve, ms));
-  },
+  }
 
-  stripHTML: function (arg0_html) {
+  global.stripHTML = function (arg0_html) {
     //Convert from parameters
     var html = arg0_html;
 
@@ -624,9 +624,9 @@ module.exports = {
       //Return statement
       return pt_formatted.trim();
     }
-  },
+  }
 
-  waitForStableContent: async function (arg0_browser_instance, arg1_selector, arg2_interval) {
+  global.waitForStableContent = async function (arg0_browser_instance, arg1_selector, arg2_interval) {
     //Convert from parameters
     var chrome_instance = arg0_browser_instance;
     var selector = arg1_selector;
@@ -660,9 +660,9 @@ module.exports = {
       { polling: interval, timeout: 0 },
       selector
     );
-  },
+  }
 
-  writeTextFile: function (arg0_filepath, arg1_text) {
+  global.writeTextFile = function (arg0_filepath, arg1_text) {
     //Convert from parameters
     var file_path = arg0_filepath;
     var text = arg1_text;
@@ -674,5 +674,4 @@ module.exports = {
       console.log(e);
     }
   }
-
-};
+}

@@ -1,4 +1,4 @@
-module.exports = {
+{
   /*
     aStar() - Performs the A* algorithm between a starting point and destination within an object graph.
     arg0_graph: (Object)
@@ -7,7 +7,7 @@ module.exports = {
 
     Returns: (Array<String, ...>)
   */
-  aStar: function (arg0_graph, arg1_start_key, arg2_end_key) {
+  global.aStar = function (arg0_graph, arg1_start_key, arg2_end_key) {
     //Convert from parameters
     var graph = arg0_graph;
     var start = arg1_start_key;
@@ -70,17 +70,17 @@ module.exports = {
 
     //Return statement
     return path;
-  },
+  }
 
   //aStarHeuristicCost() - Currently a placeholder function. Returns 0.
-  aStarHeuristicCost: function (arg0_start_key, arg1_end_key) {
+  global.aStarHeuristicCost = function (arg0_start_key, arg1_end_key) {
     //Convert from parameters
     var start = arg0_start_key;
     var goal = arg1_end_key;
 
     //Return statement; placeholder
     return 0;
-  },
+  }
 
   /*
     getLowestFScoreNode() - Fetches the node with the lowest F-score.
@@ -89,7 +89,7 @@ module.exports = {
 
     Returns: (String)
   */
-  getLowestFScoreNode: function (arg0_nodes, arg1_f_score) {
+  global.getLowestFScoreNode = function (arg0_nodes, arg1_f_score) {
     //Convert from parameters
     var nodes = arg0_nodes;
     var f_score = arg1_f_score;
@@ -104,7 +104,7 @@ module.exports = {
 
     //Return statement
     return lowest;
-  },
+  }
 
   /*
     getReverseNeighbours() - Fetches the reverse neighbours in a path graph.
@@ -113,7 +113,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  getReverseNeighbours: function (arg0_graph, arg1_node) {
+  global.getReverseNeighbours = function (arg0_graph, arg1_node) {
     //Convert from parameters
     var graph = arg0_graph;
     var node = arg1_node;
@@ -133,7 +133,7 @@ module.exports = {
 
     //Return statement
     return reverse_neighbours;
-  },
+  }
 
   /*
     reconstructPath() - Internal helper function for reconstructing a path.
@@ -142,7 +142,7 @@ module.exports = {
 
     Returns: (Array<String, ...>)
   */
-  reconstructPath: function (arg0_came_from, arg1_current) {
+  global.reconstructPath = function (arg0_came_from, arg1_current) {
     //Convert from parameters
     var came_from = arg0_came_from;
     var current = arg1_current;
@@ -159,4 +159,4 @@ module.exports = {
     //Return statement
     return total_path;
   }
-};
+}

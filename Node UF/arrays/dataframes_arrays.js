@@ -1,4 +1,4 @@
-module.exports = {
+{
   /*
     appendDataframes() - Appends two dataframes to one another.
     arg0_dataframe: (Array<Array, ...>) - The dataframe to input into the function.
@@ -8,7 +8,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  appendDataframes: function (arg0_dataframe, arg1_dataframe, arg2_options) {
+  global.appendDataframes = function (arg0_dataframe, arg1_dataframe, arg2_options) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var ot_dataframe = arg1_dataframe;
@@ -39,7 +39,7 @@ module.exports = {
 
     //Return statement
     return new_dataframe;
-  },
+  }
 
   /*
     convertDataframeToObject() - Converts a dataframe to an object.
@@ -47,7 +47,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  convertDataframeToObject: function (arg0_dataframe) {
+  global.convertDataframeToObject = function (arg0_dataframe) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
 
@@ -74,7 +74,7 @@ module.exports = {
 
     //Return statement
     return dataframe_obj;
-  },
+  }
 
   /*
     convertObjectToDataframe() - Converts a given object to a dataframe.
@@ -82,7 +82,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  convertObjectToDataframe: function (arg0_dataframe_obj) {
+  global.convertObjectToDataframe = function (arg0_dataframe_obj) {
     //Convert from parameters
     var dataframe_obj = arg0_dataframe_obj;
 
@@ -114,7 +114,7 @@ module.exports = {
 
     //Return statement
     return return_dataframe;
-  },
+  }
 
   /*
     getColumns() - Fetches the number of columns in a dataframe.
@@ -122,7 +122,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getColumns: function (arg0_dataframe) {
+  global.getColumns = function (arg0_dataframe) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
 
@@ -138,7 +138,7 @@ module.exports = {
 
     //Return statement
     return max_columns;
-  },
+  }
 
   /*
     getDimensions() - Returns the number of columns and rows.
@@ -146,13 +146,13 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  getDimensions: function (arg0_dataframe) {
+  global.getDimensions = function (arg0_dataframe) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
 
     //Return statement
     return [getColumns(dataframe), getRows(dataframe)];
-  },
+  }
 
   /*
     getRows() - Fetches the number of rows in a dataframe.
@@ -160,13 +160,13 @@ module.exports = {
 
     Returns: (Number)
   */
-  getRows: function (arg0_dataframe) {
+  global.getRows = function (arg0_dataframe) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
 
     //Return statement
     return dataframe.length;
-  },
+  }
 
   /*
     hasHeader() - Checks whether a dataframe has a true header.
@@ -174,7 +174,7 @@ module.exports = {
 
     Returns: (Boolean)
   */
-  hasHeader: function (arg0_dataframe) {
+  global.hasHeader = function (arg0_dataframe) {
     //Convert from parameters
     var dataframe = getList(arg0_dataframe);
 
@@ -196,7 +196,7 @@ module.exports = {
 
     //Return statement
     return has_header;
-  },
+  }
 
   /*
     mergeDataframes() - Merges two dataframes; with the second dataframe's columns being appended to the first dataframe post-operation. Mathematical operations can be applied here as a system of equations. Dataframes may have different dimensions, non-corresponding values are assumed to be zero or undefined.
@@ -217,7 +217,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  mergeDataframes: function (arg0_dataframe, arg1_dataframe, arg2_options) { //[WIP] - Finish function body
+  global.mergeDataframes = function (arg0_dataframe, arg1_dataframe, arg2_options) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var ot_dataframe = arg1_dataframe;
@@ -236,7 +236,7 @@ module.exports = {
 
     //Return statement
     return return_dataframe;
-  },
+  }
 
   /*
     operateDataframes() - Operates on two dataframes by applying an equation string.
@@ -257,7 +257,7 @@ module.exports = {
       dataframe: (Array<Array, ...>) - The result of the 1st dataframe
       ot_dataframe: (Array<Array, ...>) - The result of the 2nd dataframe
   */
-  operateDataframes: function (arg0_dataframe, arg1_dataframe, arg2_options) {
+  global.operateDataframes = function (arg0_dataframe, arg1_dataframe, arg2_options) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var ot_dataframe = arg1_dataframe;
@@ -325,7 +325,7 @@ module.exports = {
       dataframe: dataframe,
       ot_dataframe: ot_dataframe
     };
-  },
+  }
 
   /*
     setHeader() - Sets the upper header variables.
@@ -333,7 +333,7 @@ module.exports = {
     arg1_header_array: (Array<String, ...>) - The names of variables to set on the 0th row
     Returns: (Array<Array, ...>)
   */
-  setHeader: function (arg0_dataframe, arg1_header_array) {
+  global.setHeader = function (arg0_dataframe, arg1_header_array) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var headers = getList(arg1_header_array);
@@ -343,7 +343,7 @@ module.exports = {
 
     //Return statement
     return dataframe;
-  },
+  }
 
   /*
     selectColumn() - Selects a 2D array column (by header name).
@@ -354,7 +354,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  selectColumn: function (arg0_dataframe, arg1_column_name, arg2_options) {
+  global.selectColumn = function (arg0_dataframe, arg1_column_name, arg2_options) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var column_name = arg1_column_name.toString().toLowerCase();
@@ -392,7 +392,7 @@ module.exports = {
 
     //Return statement
     return return_array;
-  },
+  }
 
   /*
     selectRow() - Selects a 2D array row (by header name or index).
@@ -403,7 +403,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  selectRow: function (arg0_dataframe, arg1_row_index, arg2_options) {
+  global.selectRow = function (arg0_dataframe, arg1_row_index, arg2_options) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var row_index = arg1_row_index;
@@ -411,7 +411,7 @@ module.exports = {
 
     //Return statement
     return (!options.exclude_header) ? dataframe[row_index] : dataframe[row_index + 1];
-  },
+  }
 
   /*
     setColumn() - Sets a 2D array column.
@@ -421,7 +421,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  setColumn: function (arg0_dataframe, arg1_column_name, arg2_values) {
+  global.setColumn = function (arg0_dataframe, arg1_column_name, arg2_values) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var column_name = arg1_column_name;
@@ -438,7 +438,7 @@ module.exports = {
     return dataframe.filter((row) => {
       row.some(element => element !== undefined && element !== null);
     });
-  },
+  }
 
   /*
     setRow() - Sets a 2D array row.
@@ -448,7 +448,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  setRow: function (arg0_dataframe, arg1_row_index, arg2_values) {
+  global.setRow = function (arg0_dataframe, arg1_row_index, arg2_values) {
     //Convert from parameters
     var dataframe = arg0_dataframe;
     var row_index = arg1_row_index;
@@ -464,4 +464,5 @@ module.exports = {
     //Return statement
     return dataframe;
   }
-};
+
+}

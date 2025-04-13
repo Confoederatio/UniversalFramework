@@ -1,4 +1,5 @@
-module.exports = {
+//Initialise functions
+{
   /*
     cleanObject() - Removes both zero values and undefined/null values from an object by default.
     arg0_object: (Object) - The object to pass.
@@ -8,7 +9,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  cleanObject: function (arg0_object, arg1_options) {
+  global.cleanObject = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -39,7 +40,42 @@ module.exports = {
 
     //Return statement
     return cleaned_object;
-  },
+  };
+
+  /**
+   * cubicSplineInterpolationObject() - Performs a cubic spline interpolation operation on an object.
+   * @param {Object} arg0_object - The object to perform the cubic spline interpolation on.
+   * @param {Object} [arg1_options]
+   *  @param {Array<number>} [arg1_options.years] - Optional. The years to interpolate over if possible.
+   * 
+   * @return {Object}
+   */
+  global.cubicSplineInterpolationObject = function (arg0_object, arg1_options) {
+    //Convert from parameters
+    var object = arg0_object;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var sorted_indices = sortYearValues(object);
+    var values = sorted_indices.values;
+    var years = sorted_indices.years;
+
+    //Initialise options post-local instance variables
+    options.years = (options.years) ? 
+      getList(options.years) : years;
+
+    //Iterate over all years in domain
+    for (var i = 0; i < options.years.length; i++)
+      if (options.years[i] <= returnSafeNumber(years[years.length - 1])) {
+        let current_year = options.years[i];
+
+        if (current_year <= returnSafeNumber(years[years.length - 1]))
+          object[current_year] = cubicSplineInterpolation(years, values, current_year);
+      }
+
+    //Return statement
+    return object;
+  };
 
   /*
     flattenObject() - Moves all keys into the 1st nesting.
@@ -47,7 +83,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  flattenObject: function (arg0_object) {
+  global.flattenObject = function (arg0_object) {
     //Convert from parameters
     var object = arg0_object;
 
@@ -60,7 +96,7 @@ module.exports = {
       var local_subobj = object[all_object_keys[i]];
 
       if (typeof local_subobj == "object") {
-        flattened_subobj = module.exports.flattenObject(local_subobj);
+        flattened_subobj = flattenObject(local_subobj);
 
         var all_flattened_keys = Object.keys(flattened_subobj);
 
@@ -88,7 +124,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  };
 
   /*
     getDepth() - Returns object depth as a number.
@@ -97,7 +133,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getDepth: function (arg0_object, arg1_depth) {
+  global.getDepth = function (arg0_object, arg1_depth) {
     //Convert from parameters
     var object = arg0_object;
     var depth = (arg1_depth) ? arg1_depth : 1;
@@ -107,14 +143,14 @@ module.exports = {
       if (!object.hasOwnProperty(key)) continue;
 
       if (typeof object[key] == "object") {
-        var level = module.exports.getDepth(object[key]) + 1;
+        var level = getDepth(object[key]) + 1;
         depth = Math.max(depth, level);
       }
     }
 
     //Return statement
     return depth;
-  },
+  };
 
   /*
     getObjectKey() - Fetches object value from a string (e.g. 'test.one.two')
@@ -123,7 +159,7 @@ module.exports = {
 
     Returns: (Variable)
   */
-  getObjectKey: function (arg0_object, arg1_key) {
+  global.getObjectKey = function (arg0_object, arg1_key) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
@@ -149,7 +185,7 @@ module.exports = {
 
     //Return statement
     return return_value;
-  },
+  };
 
   /*
     getObjectList() - Returns object as an array list.
@@ -157,7 +193,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  getObjectList: function (arg0_object_list) {
+  global.getObjectList = function (arg0_object_list) {
     //Convert from parameters
     var list_obj = arg0_object_list;
 
@@ -175,7 +211,7 @@ module.exports = {
     } else {
       return [];
     }
-  },
+  };
 
   /*
     getSubobject() - Fetches a subobject.
@@ -185,7 +221,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  getSubobject: function (arg0_object, arg1_key, arg2_restrict_search) {
+  global.getSubobject = function (arg0_object, arg1_key, arg2_restrict_search) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
@@ -220,7 +256,7 @@ module.exports = {
 
         //Restrict search for certain arguments
         if (explore_object) {
-          var has_subobj = module.exports.getSubobject(local_subobj, new_key, restrict_search);
+          var has_subobj = getSubobject(local_subobj, new_key, restrict_search);
 
           if (has_subobj) {
             //Return statement
@@ -230,7 +266,7 @@ module.exports = {
         }
       }
     }
-  },
+  };
 
   /*
     getSubobjectKeys() - Fetches the keys in a subobject that match the given criteria.
@@ -242,7 +278,7 @@ module.exports = {
 
     Returns: (Array<String, ...>)
   */
-  getSubobjectKeys: function (arg0_object, arg1_options) {
+  global.getSubobjectKeys = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -263,7 +299,7 @@ module.exports = {
         if (!options.exclude_keys.includes(all_object_keys[i]))
           all_keys.push(all_object_keys[i]);
 
-        var all_subkeys = module.exports.getSubobjectKeys(local_subobj, options);
+        var all_subkeys = getSubobjectKeys(local_subobj, options);
 
         if (options.include_objects || options.only_objects)
           if (!options.exclude_keys.includes(all_object_keys[i]))
@@ -281,7 +317,7 @@ module.exports = {
 
     //Return statement
     return all_keys;
-  },
+  };
 
   /*
     mergeObjects() - Merges two objects together.
@@ -294,7 +330,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  mergeObjects: function (arg0_object, arg1_object, arg2_options) {
+  global.mergeObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters - merge_obj overwrites onto merged_obj
     var merged_obj = JSON.parse(JSON.stringify(arg0_object));
     var merge_obj = JSON.parse(JSON.stringify(arg1_object));
@@ -332,7 +368,25 @@ module.exports = {
 
     //Return statement
     return merged_obj;
-  },
+  }
+
+  global.modifyValue = function (arg0_object, arg1_key, arg2_number, arg3_delete_negative) {
+    //Convert from parameters
+    var object = arg0_object;
+    var key = arg1_key;
+    var number = parseFloat(arg2_number);
+    var delete_negative = arg3_delete_negative;
+
+    //Set value
+    object[key] = (object[key]) ? object[key] + number : number;
+
+    if (delete_negative)
+      if (object[key] <= 0)
+        delete object[key];
+
+    //Return statement
+    return object[key];
+  };
 
   /*
     removeZeroes() - Removes zero values from an object.
@@ -340,7 +394,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  removeZeroes: function (arg0_object) {
+  global.removeZeroes = function (arg0_object) {
     //Convert from parameters
     var object = JSON.parse(JSON.stringify(arg0_object));
 
@@ -355,12 +409,12 @@ module.exports = {
         if (local_subobj == 0)
           delete object[all_object_keys[i]];
       if (typeof local_subobj == "object")
-        object[all_object_keys[i]] = module.exports.removeZeroes(local_subobj);
+        object[all_object_keys[i]] = removeZeroes(local_subobj);
     }
 
     //Return statement
     return object;
-  },
+  };
 
   /*
     sortObject() - Sorts an object.
@@ -368,7 +422,7 @@ module.exports = {
     arg1_options: (Object)
       type: (String) - Optional. The order to sort the object in. 'ascending'/'descending'. 'descending' by default.
   */
-  sortObject: function (arg0_object, arg1_options) {
+  global.sortObject = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -388,5 +442,22 @@ module.exports = {
         return (mode == "descending") ? b - a : a - b;
       })
     );
-  }
-};
+  };
+
+  global.sortYearValues = function (arg0_object) {
+    //Convert from parameters
+    var object = arg0_object;
+
+    //Declare local instance variables
+    var values = Object.values(object).map((value) => value);
+    var years = Object.keys(object).map((year) => parseInt(year));
+
+    //Ensure values; years are sorted properly
+    var sorted_indices = years.map((_, i) => i).sort((a, b) => years[a] - years[b]);
+      values = sorted_indices.map(i => values[i]);
+      years = sorted_indices.map(i => years[i]);
+
+    //Return statement
+    return { values: values, years: years };
+  };
+}

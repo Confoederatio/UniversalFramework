@@ -1,4 +1,5 @@
-module.exports = {
+//Initialise functions
+{
   /*
     addRange()/modifyRange() - Adds a number to a range.
     arg0_range: (Array<Number, Number>) - The range to add to.
@@ -6,7 +7,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  addRange: function (arg0_range, arg1_number) {
+  global.addRange = function (arg0_range, arg1_number) {
     //Convert from parameters
     var range = arg0_range;
     var number = arg1_number;
@@ -20,7 +21,7 @@ module.exports = {
 
     //Return statement
     return range;
-  },
+  }
 
   /*
     addRanges() - Adds a range by another.
@@ -29,7 +30,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  addRanges: function (arg0_range, arg1_range) {
+  global.addRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -40,7 +41,7 @@ module.exports = {
 
     //Return statement
     return return_range.sort();
-  },
+  }
 
   /*
     divideRange() - Divides a range by another.
@@ -49,7 +50,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  divideRange: function (arg0_range, arg1_number) {
+  global.divideRange = function (arg0_range, arg1_number) {
     //Convert from parameters
     var range = arg0_range;
     var number = arg1_number;
@@ -63,7 +64,7 @@ module.exports = {
 
     //Return statement
     return range;
-  },
+  }
 
   /*
     divideRanges() - Divides a range by another.
@@ -72,7 +73,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  divideRanges: function (arg0_range, arg1_range) {
+  global.divideRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -83,7 +84,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     exponentiateRange() - Exponentiates a range by another.
@@ -92,7 +93,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  exponentiateRange: function (arg0_range, arg1_power) {
+  global.exponentiateRange = function (arg0_range, arg1_power) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var power = arg1_power;
@@ -106,7 +107,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     exponentiateRanges() - Expnentiates a range by another.
@@ -115,7 +116,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  exponentiateRanges: function (arg0_range, arg1_range) {
+  global.exponentiateRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -126,7 +127,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     getMidpoint() - Fetches the midpoint of a range.
@@ -134,13 +135,13 @@ module.exports = {
 
     Returns: (Number)
   */
-  getMidpoint: function (arg0_range) {
+  global.getMidpoint = function (arg0_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
 
     //Return statement
     return (range[0] + range[1])/2;
-  },
+  }
 
   /*
     getRange() - Gets a range from a given variable.
@@ -148,7 +149,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  getRange: function (arg0_range) {
+  global.getRange = function (arg0_range) {
     //Convert from parameters
     var range = arg0_range;
 
@@ -170,11 +171,7 @@ module.exports = {
 
     //Return statement
     return JSON.parse(JSON.stringify(range_array.sort()));
-  },
-
-  modifyRange: function (arg0_range, arg1_number) {
-    return module.exports.modifyRange(arg0_range, arg1_range);
-  },
+  }
 
   /*
     multiplyRange() - Multiplies a range by a number.
@@ -183,7 +180,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  multiplyRange: function (arg0_range, arg1_number) {
+  global.multiplyRange = function (arg0_range, arg1_number) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var number = arg1_number;
@@ -194,7 +191,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     multiplyRanges() - Multiplies a range by another.
@@ -203,7 +200,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  multiplyRanges: function (arg0_range, arg1_range) {
+  global.multiplyRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -214,7 +211,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     rootRange() - Roots a range by a given number.
@@ -223,7 +220,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  rootRange: function (arg0_range, arg1_root) {
+  global.rootRange = function (arg0_range, arg1_root) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var root = returnSafeNumbre(arg1_root);
@@ -234,7 +231,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     rootRanges() - Roots ranges by one another.
@@ -243,7 +240,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  rootRanges: function (arg0_range, arg1_range) {
+  global.rootRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -254,7 +251,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     subtractRange() - Subtracts a number from a range.
@@ -262,7 +259,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  subtractRange: function (arg0_range, arg1_number) {
+  global.subtractRange = function (arg0_range, arg1_number) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var number = arg1_number;
@@ -273,7 +270,7 @@ module.exports = {
 
     //Return statement
     return range.sort();
-  },
+  }
 
   /*
     subtractRanges() - Subtracts a range from another.
@@ -282,7 +279,7 @@ module.exports = {
 
     Returns: (Array<Number, Number>)
   */
-  subtractRanges: function (arg0_range, arg1_range) {
+  global.subtractRanges = function (arg0_range, arg1_range) {
     //Convert from parameters
     var range = getRange(arg0_range);
     var ot_range = getRange(arg1_range);
@@ -294,4 +291,9 @@ module.exports = {
     //Return statement
     return range.sort();
   }
-};
+}
+
+//KEEP AT BOTTOM! Initialise function aliases
+{
+  global.modifyRange = addRange;
+}

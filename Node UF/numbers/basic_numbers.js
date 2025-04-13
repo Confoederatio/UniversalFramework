@@ -1,10 +1,11 @@
-module.exports = {
+//Initialise functions
+{
   /*
     alphabetiseNumber() - Alphabetises a number based on a0-j9.
     arg0_string: (String) - The string of the number to numerise; if applicable.
     Returns: (String)
   */
-  alphabetiseNumber: function (arg0_string) {
+  global.alphabetiseNumber = function (arg0_string) {
     //Convert from parameters
     var string = arg0_strin.toString();
 
@@ -22,7 +23,7 @@ module.exports = {
 
   	//Return statement
   	return alphabetised_string;
-  },
+  }
 
   /*
     arabicise() - Arabicises a Roman numeral string.
@@ -30,7 +31,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  arabicise: function (arg0_number) {
+  global.arabicise = function (arg0_number) {
     //Convert from parameters
     var number = arg0_number;
 
@@ -55,7 +56,7 @@ module.exports = {
 
     //Return statement
     return result;
-  },
+  }
 
   /*
     degreesToRadians() - Converts degrees to radians.
@@ -63,13 +64,13 @@ module.exports = {
 
     Returns: (Number)
   */
-  degreesToRadians: function (arg0_degrees) {
+  global.degreesToRadians = function (arg0_degrees) {
     //Convert from parameters
     var degrees = arg0_degrees;
 
     //Return statement
     return degrees*(Math.PI/180);
-  },
+  }
 
   /*
     deordinalise() - Deordinalises a string.
@@ -77,7 +78,7 @@ module.exports = {
 
     Returns: (String)
   */
-  deordinalise: function (arg0_string) {
+  global.deordinalise = function (arg0_string) {
     //Convert from parameters
     var string = arg0_string;
 
@@ -90,7 +91,7 @@ module.exports = {
 
   	//Return string as number
   	return parseInt(string);
-  },
+  }
 
   /*
     exp() - Exponentiates a number.
@@ -99,14 +100,14 @@ module.exports = {
 
     Returns: (Number)
   */
-  exp: function (arg0_number, arg1_number) {
+  global.exp = function (arg0_number, arg1_number) {
     //Convert from parameters
     var base = arg0_number;
     var power = arg1_number;
 
     //Return statement
     return Math.pow(base, power);
-  },
+  }
 
   /*
     factorial() - Calculates the factorial of a number.
@@ -114,7 +115,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  factorial: function (arg0_number) {
+  global.factorial = function (arg0_number) {
     //Convert from parameters
     var number = parseInt(arg0_number);
 
@@ -132,7 +133,7 @@ module.exports = {
 
     //Return statement
     return f_array[number] = factorial(number - 1)*number;
-  },
+  }
 
   /*
     generateRandomID() - Generates a random ID.
@@ -140,7 +141,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  generateRandomID: function (arg0_object) {
+  global.generateRandomID = function (arg0_object) {
     //Convert from parameters
     var input_object = arg0_object;
 
@@ -161,16 +162,30 @@ module.exports = {
     } else {
       return random_id;
     }
-  },
+  }
+
+  global.geometricMean = function (arg0_values) {
+    //Convert from parameters
+    var values = getList(arg0_values);
+
+    //Guard clause if array is empty
+    if (values.length === 0) return 0;
+
+    //Declare local instance variables
+    var product = values.reduce((acc, val) => acc*val, 1);
+
+    //Return statement
+    return Math.pow(product, 1/values.length);
+  };
 
   /*
-    log() - Calculates log/natural log
+    logarithm() - Calculates log/natural log
     arg0_x: (Number) - The x to calculate the log for.
     arg1_y: (Number) - The y to calculate the log for.
 
     Returns: (Number)
   */
-  log: function (arg0_x, arg1_y) {
+  global.logarithm = function (arg0_x, arg1_y) {
     //Convert from parameters
     var x = arg0_x;
     var y = arg1_y;
@@ -179,7 +194,7 @@ module.exports = {
     return (x != undefined && y != undefined) ?
       Math.log(y)/Math.log(x) :
       Math.log(x);
-  },
+  }
 
   /*
     logFactorial() - Calculates the log of a factorial
@@ -187,7 +202,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  logFactorial: function (arg0_number) {
+  global.logFactorial = function (arg0_number) {
     //Convert from parameters
     var number = arg0_number;
 
@@ -202,14 +217,14 @@ module.exports = {
 
       return result;
     }
-  },
+  }
 
   /*
     max() - Fetches the maximum value inside a variable.
     arg0_variable: (Array<Number, ...>) - The array to calculate the max. val for
     Returns: (Number)
   */
-  max: function (arg0_variable) {
+  global.max = function (arg0_variable) {
     //Convert from parameters
     var list_variable = getList(arg0_variable);
 
@@ -225,14 +240,14 @@ module.exports = {
 
     //Return statement
     return maximum;
-  },
+  }
 
   /*
     min() - Fetches the minimum value inside a variable.
     arg0_variable: (Array<Number, ...>) - The array to calculate the min. val for
     Returns: (Number)
   */
-  min: function (arg0_variable) {
+  global.min = function (arg0_variable) {
     //Convert from parameters
     var list_variable = getList(arg0_variable);
 
@@ -248,7 +263,7 @@ module.exports = {
 
     //Return statement
     return minimum;
-  },
+  }
 
   /*
     numeriseAlphabet() - Numerises an alphabetical string, assuming a0-j9.
@@ -256,7 +271,7 @@ module.exports = {
 
     Returns: (String)
   */
-  numeriseAlphabet: function (arg0_string) {
+  global.numeriseAlphabet = function (arg0_string) {
     //Convert from parameters
   	var string = arg0_string.toString();
 
@@ -276,7 +291,7 @@ module.exports = {
 
   	//Return statement
   	return alphabetised_string;
-  },
+  }
 
   /*
     oldDeordinalise() - Strip ordinals from a string and convert it to a number (e.g. '2nd' = 2).
@@ -284,7 +299,7 @@ module.exports = {
 
     Returns: (String)
   */
-  oldDeordinalise: function (arg0_string) {
+  global.oldDeordinalise = function (arg0_string) {
     //Convert from parameters
     var deordinalised_string = arg0_string;
 
@@ -322,14 +337,14 @@ module.exports = {
 
     //Return statement
   	return deordinalised_string.join(" ").trim();
-  },
+  }
 
   /*
     ordinalise() - Ordinalises a number.
     arg0_number: (Number) - The input number to pass.
     Returns: (String)
   */
-  ordinalise: function (arg0_number) {
+  global.ordinalise = function (arg0_number) {
     //Convert from parameters
     var i = arg0_number;
 
@@ -347,20 +362,39 @@ module.exports = {
     if (j == 3 && k != 13)
       return `${negative_suffix}${i}rd`;
     return `${negative_suffix}${i}th`;
-  },
+  }
+
+  global.parseNumber = function (arg0_number, arg1_options) {
+    //Convert from parameters
+    var number = returnSafeNumber(arg0_number);
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Return statement
+    return (
+      (options.display_prefix) ?
+        (number > 0) ? "+" : ""
+      : ""
+    ) + Intl.NumberFormat('de').format(
+      (typeof number == "number") ?
+          (options.display_float) ?
+            parseInt(number*100*100)/100/100 :
+            parseInt(number) :
+        parseInt(number)
+    );
+  };
 
   /*
     radiansToDegrees() - Converts radians to degrees.
     arg0_radians: (Number) - The number of radians to pass.
     Returns: (Number)
   */
-  radiansToDegrees: function (arg0_radians) {
+  global.radiansToDegrees = function (arg0_radians) {
     //Convert from parameters
     var radians = arg0_radians;
 
     //Return statement
     return (radians*180)/Math.PI;
-  },
+  }
 
   /*
     randomNumber() - Generates a random number between min and max.
@@ -370,7 +404,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  randomNumber: function (arg0_min, arg1_max, arg2_do_not_round) {
+  global.randomNumber = function (arg0_min, arg1_max, arg2_do_not_round) {
     //Convert from parameters
     var min = arg0_min;
     var max = arg1_max;
@@ -381,7 +415,7 @@ module.exports = {
 
     //Return statement
     return (!do_not_round) ? Math.round(random_number) : random_number;
-  },
+  }
 
   /*
     returnSafeNumber() - Returns a safe number.
@@ -390,7 +424,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  returnSafeNumber: function (arg0_operation, arg1_default) {
+  global.returnSafeNumber = function (arg0_operation, arg1_default) {
     //Convert from parameters
     var operation = arg0_operation;
     var default_number = (arg1_default) ? arg1_default : 0;
@@ -399,7 +433,7 @@ module.exports = {
     return (!isNaN(operation) && isFinite(operation) && operation != undefined && operation != null) ?
       operation :
       default_number;
-  },
+  }
 
   /*
     romanise() - Romanises an arabic number and returns it as a string.
@@ -407,7 +441,7 @@ module.exports = {
 
     Returns: (String)
   */
-  romanise: function (arg0_number) {
+  global.romanise = function (arg0_number) {
     //Convert from parameters
     var number = arg0_number;
 
@@ -428,7 +462,7 @@ module.exports = {
 
     //Return statement
     return roman_string;
-  },
+  }
 
   /*
     root() - Nth roots a number.
@@ -437,7 +471,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  root: function (arg0_number, arg1_root) {
+  global.root = function (arg0_number, arg1_root) {
     //Convert from parameters
     var number = arg0_number;
     var root = arg1_root;
@@ -454,7 +488,7 @@ module.exports = {
       if (Math.abs(number - root) < 1 && (number > 0 == root > 0))
         return negate ? -possible : possible;
     } catch {}
-  },
+  }
 
   /*
     round() - Rounds a number to n places.
@@ -463,7 +497,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  round: function (arg0_number, arg1_rounding_places) {
+  global.round = function (arg0_number, arg1_rounding_places) {
     //Convert from parameters
     var number = arg0_number;
     var rounding_places = arg1_rounding_places;
@@ -473,7 +507,7 @@ module.exports = {
 
     //Return statement
     return Math.round(number*multiplier)/multiplier;
-  },
+  }
 
   /*
     sigfig() - Rounds a number to n significant figures.
@@ -482,7 +516,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  sigfig: function (arg0_number, arg1_sigfigs) {
+  global.sigfig = function (arg0_number, arg1_sigfigs) {
     //Convert from parameters
     var number = arg0_number;
     var sigfigs = arg1_sigfigs;
@@ -496,7 +530,7 @@ module.exports = {
 
     //Return statement
     return Math.round(number*multiplier)/multiplier;
-  },
+  }
 
   /*
     splitNumber() - Splits a number randomly into multiple parts.
@@ -505,17 +539,17 @@ module.exports = {
 
     Returns: (Array<Number, ...>)
   */
-  splitNumber: function (arg0_number, arg1_parts) {
+  global.splitNumber = function (arg0_number, arg1_parts) {
     //Convert from parameters
     var number = arg0_number;
     var parts = arg1_parts;
 
     //Return statement
-    return [...module.exports.splitNumberParts(number, parts)];
-  },
+    return [...splitNumberParts(number, parts)];
+  }
 
   //splitNumberParts() - Internal helper function for splitNumber()
-  splitNumberParts: function* (arg0_number, arg1_parts) {
+  global.splitNumberParts = function* (arg0_number, arg1_parts) {
     //Convert from parameters
     var number = arg0_number;
     var parts = arg1_parts;
@@ -531,7 +565,7 @@ module.exports = {
     }
 
     yield number - sum_parts;
-  },
+  }
 
   /*
     unzero() - Makes sure to unzero a figure. Useful to avoid dividing by 0. 1 by default.
@@ -540,7 +574,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  unzero: function (arg0_number, arg1_default) {
+  global.unzero = function (arg0_number, arg1_default) {
     //Convert from parameters
     var number = returnSafeNumber(arg0_number);
     var default_number = (arg1_default) ? arg1_default : 1;
@@ -548,4 +582,30 @@ module.exports = {
     //Return statement
     return (number != 0) ? number : default_number;
   }
-};
+
+  global.weightedGeometricMean = function (arg0_values) {
+    //Convert from parameters
+    var values = getList(arg0_values);
+
+    //Guard clause if no values are present
+    if (values.length === 0) return 0;
+
+    //Declare local instance variables
+    var negatives = values.filter(v => v < 0).map(Math.abs);
+    var positives = values.filter(v => v > 0);
+
+    //Guard clause if there are only zeroes
+    if (negatives.length + positives.length === 0) return 0;
+
+    let negative_gm = negatives.length > 0 ? geometricMean(negatives) : 0;
+    let positive_gm = positives.length > 0 ? geometricMean(positives) : 0;
+
+    //Return statement; weighted geometric mean
+    return (positives.length/values.length)*positive_gm - (negatives.length/values.length)*negative_gm;
+  };
+}
+
+//KEEP AT BOTTOM! Initialise function aliases
+{
+  global.random = Math.random;
+}

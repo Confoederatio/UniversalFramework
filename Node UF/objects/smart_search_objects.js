@@ -1,4 +1,4 @@
-module.exports = {
+{
   /*
     createObjectSearch() - Creates a function to search an object regularly using a substring. Similar to createSmartSearch(), but creates a 'relevancy index' for each potential entry and affixes them to a return object.
 
@@ -10,7 +10,7 @@ module.exports = {
 
     Returns: (Function)
   */
-  createObjectSearch: function (arg0_options) {
+  global.createObjectSearch = function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -103,7 +103,7 @@ module.exports = {
 
     //Return statement
     return global[options.function_name];
-  },
+  }
 
   /*
     createSmartSearch() - Defines a smart search function off of which various attributes are checked in a specific order, both soft and hard.
@@ -117,7 +117,7 @@ module.exports = {
 
     Returns: (Function)
   */
-  createSmartSearch: function (arg0_options) {
+  global.createSmartSearch = function (arg0_options) {
     //Convert options
     var options = (arg0_options) ? arg0_options : {};
 
@@ -211,18 +211,18 @@ module.exports = {
 
     //Return statement
     return global[options.function_name];
-  },
+  }
 
   /*
     deleteSmartSearch() - Deletes a smart search function.
 
     arg0_name: (String) - The .function_name of the smart search to delete.
   */
-  deleteSmartSearch: function (arg0_name) {
+  global.deleteSmartSearch = function (arg0_name) {
     //Convert from parameters
     var function_name = arg0_name;
 
     //Delete from global
     delete global[function_name];
   }
-};
+}

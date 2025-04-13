@@ -1,17 +1,31 @@
 //Colours framework
-module.exports = {
+{
   /*
     componentToHex() - Fetches the hex of a single component.
     c: (Number) - The individual r/g/b component to pass to the function.
 
     Returns: (String)
   */
-  componentToHex: function (c) {
+  global.componentToHex = function (c) {
     var hex = c.toString(16);
 
     //Return statement
     return hex.length == 1 ? "0" + hex : hex;
-  },
+  }
+
+  global.decodeRGBAAsNumber = function (arg0_rgba) {
+    //Convert from parameters
+    var rgba = arg0_rgba;
+
+    //Declare local instance variables
+    var r = rgba[0];
+    var g = rgba[1];
+    var b = rgba[2];
+    var a = rgba[3];
+
+    //Return statement (rebuild 32-bit integer)
+    return ((r << 24) | (g << 16) | (b << 8) | a) >>> 0;
+  };
 
   /*
     deltaE() - Calculates the deltaE between two RGB values
@@ -20,7 +34,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  deltaE: function (rgbA, rgbB) {
+  global.deltaE = function (rgbA, rgbB) {
     var labA = RGB2Lab(rgbA);
     var labB = RGB2Lab(rgbB);
     var deltaL = labA[0] - labB[0];
@@ -40,17 +54,17 @@ module.exports = {
 
     //Return statement
     return i < 0 ? 0 : Math.sqrt(i);
-  },
+  }
 
   /*
     generateRandomColour() - Generates a random RGB colour.
 
     Returns: (Array<Number, Number, Number>)
   */
-  generateRandomColour: function () {
+  global.generateRandomColour = function () {
     //Return statement
     return [randomNumber(0, 255), randomNumber(0, 255), randomNumber(0, 255)];
-  },
+  }
 
   /*
     getColourDistance() - Fetches the absolute colour distance between two colours.
@@ -59,7 +73,7 @@ module.exports = {
     arg1_rgb: (Array<Number, Number, Number>) - The 2nd RGB code to pass.
     Returns: (Number)
   */
-  getColourDistance: function (arg0_rgb, arg1_rgb) {
+  global.getColourDistance = function (arg0_rgb, arg1_rgb) {
     //Convert from parameters
     var colour_one = arg0_rgb;
     var colour_two = arg1_rgb;
@@ -73,7 +87,21 @@ module.exports = {
 
     //Return statement
     return distance;
-  },
+  }
+
+  global.encodeNumberAsRGBA = function (arg0_number) {
+    //Convert from parameters
+    var number = returnSafeNumber(Math.round(arg0_number));
+
+    //Declare local instance variables
+    var r = (number >> 24) & 0xFF; //Extract highest 8 bits
+    var g = (number >> 16) & 0xFF; //Extract next 8 bits
+    var b = (number >> 8) & 0xFF;  //Extract next 8 bits
+    var a = number & 0xFF;         //Extract lowest 8 bits
+
+    //Return statement
+    return [r, g, b, a];
+  };
 
   /*
     hexToRGB() - Converts a hex to RGB.
@@ -81,7 +109,7 @@ module.exports = {
 
     Returns: (Array<Number, Number, Number>)
   */
-  hexToRGB: function (hex) {
+  global.hexToRGB = function (hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
     //Return statement
@@ -90,7 +118,7 @@ module.exports = {
       parseInt(result[2], 16),
       parseInt(result[3], 16)
     ] : undefined;
-  },
+  }
 
   /*
     RGBToHex() - Converts an RGB value to hex.
@@ -100,7 +128,7 @@ module.exports = {
 
     Returns: (String)
   */
-  RGBToHex: function (r, g, b) {
+  global.RGBToHex = function (r, g, b) {
     //Convert from parameters
     if (Array.isArray(r)) { //This is an RGB array instead
       g = r[1];
@@ -110,7 +138,7 @@ module.exports = {
 
     //Return statement
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-  },
+  }
 
   /*
     RGB2Lab() - Converts an RGB value to lab distance.
@@ -118,7 +146,7 @@ module.exports = {
 
     Returns: (Array<Number, Number, Number>)
   */
-  RGB2Lab: function (rgb) {
+  global.RGB2Lab = function (rgb) {
     let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, x, y, z;
     r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
     g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
@@ -133,4 +161,4 @@ module.exports = {
     //Return statement
     return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
   }
-};
+}

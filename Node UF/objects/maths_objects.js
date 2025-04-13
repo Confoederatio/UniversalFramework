@@ -1,4 +1,5 @@
-module.exports = {
+//Initialise functions
+{
   /*
     addObject() - Adds a value to an object, recursively.
     arg0_object: (Object) - The object to pass.
@@ -6,14 +7,14 @@ module.exports = {
 
     Returns: (Object)
   */
-  addObject: function (arg0_object, arg1_value) {
+  global.addObject = function (arg0_object, arg1_value) {
     //Convert from parameters
     var object = arg0_object;
     var value = arg1_value;
 
     //Return statement
     return operateObject(object, `n + ${value}`);
-  },
+  }
 
   /*
     addObjects() - Adds values between two objects, recursively.
@@ -26,7 +27,7 @@ module.exports = {
       object: (Object) The modified version of the 1st object
       ot_object: (Object) The modified version of the 2nd object
   */
-  addObjects: function (arg0_object, arg1_object, arg2_options) {
+  global.addObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var ot_object = arg1_object;
@@ -34,7 +35,7 @@ module.exports = {
 
     //Return statement
     return operateObjects(object, ot_object, `i = i + x;`, options);
-  },
+  }
 
   /*
     changeObjectRange() - Changes object ranges, non-recursively, for a given key.
@@ -46,7 +47,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  changeObjectRange: function (arg0_object, arg1_key, arg2_min_max_argument, arg3_value) {
+  global.changeObjectRange = function (arg0_object, arg1_key, arg2_min_max_argument, arg3_value) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
@@ -75,7 +76,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  }
 
   /*
     divideObject() - Divides an object by a value, recursively.
@@ -84,14 +85,14 @@ module.exports = {
 
     Returns: (Object)
   */
-  divideObject: function (arg0_object, arg1_value) {
+  global.divideObject = function (arg0_object, arg1_value) {
     //Convert from parameters
     var object = arg0_object;
     var value = arg1_value;
 
     //Return statement
     return operateObject(object, `n/${value}`);
-  },
+  }
 
   /*
     divideObjects() - Divides two objects, recursively.
@@ -104,7 +105,7 @@ module.exports = {
       object: (Object) The modified version of the 1st object
       ot_object: (Object) The modified version of the 2nd object
   */
-  divideObjects: function (arg0_object, arg1_object, arg2_options) {
+  global.divideObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var ot_object = arg1_object;
@@ -112,7 +113,7 @@ module.exports = {
 
     //Return statement
     return operateObjects(object, ot_object, `i = i/x`, options);
-  },
+  }
 
   /*
     getObjectMaximum() - Fetches the maximum value within an object.
@@ -123,7 +124,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getObjectMaximum: function (arg0_object, arg1_options) {
+  global.getObjectMaximum = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -159,7 +160,7 @@ module.exports = {
 
     //Return statement
     return local_maximum;
-  },
+  }
 
   /*
     getObjectMinimum() - Fetches the minimum value within an object.
@@ -170,7 +171,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getObjectMinimum: function (arg0_object, arg1_options) {
+  global.getObjectMinimum = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -203,7 +204,7 @@ module.exports = {
 
     //Return statement
     return local_minimum;
-  },
+  }
 
   /*
     getObjectSum() - Fetches the object sum, recursively.
@@ -213,7 +214,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getObjectSum: function (arg0_object, arg1_options) {
+  global.getObjectSum = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -239,7 +240,7 @@ module.exports = {
 
     //Return statement
     return total_sum;
-  },
+  }
 
   /*
     invertFractionObject() - Inverts a fraction object, fetching the reciprocal of percentage values.
@@ -247,7 +248,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  invertFractionObject: function (arg0_object) {
+  global.invertFractionObject = function (arg0_object) {
     //Convert from parameters
     var object = JSON.parse(JSON.stringify(arg0_object));
 
@@ -263,7 +264,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  }
 
   /*
   modifyObjectRange() - Modifies ranges in an object recursively, by operating on objects
@@ -274,7 +275,7 @@ module.exports = {
 
   Returns: (Object)
   */
-  modifyObjectRange: function (arg0_object, arg1_value, arg2_options) {
+  global.modifyObjectRange = function (arg0_object, arg1_value, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var value = returnSafeNumber(arg1_value);
@@ -304,7 +305,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  }
 
   /*
     multiplyObject() - Multiplies an object by a value, recursively.
@@ -313,14 +314,14 @@ module.exports = {
 
     Returns: (Object)
   */
-  multiplyObject: function (arg0_object, arg1_value) {
+  global.multiplyObject = function (arg0_object, arg1_value) {
     //Convert from parameters
     var object = arg0_object;
     var value = arg1_value;
 
     //Return statement
     return operateObject(object, `n*${value}`);
-  },
+  }
 
   /*
     multiplyObjects() - Multiplies an object recursively.
@@ -333,7 +334,7 @@ module.exports = {
       object: The modified version of the 1st object
       ot_object: The modified version of the 2nd object
   */
-  multiplyObjects: function (arg0_object, arg1_object, arg2_options) {
+  global.multiplyObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var ot_object = arg1_object;
@@ -341,7 +342,7 @@ module.exports = {
 
     //Return statement
     return operateObjects(object, ot_object, `i = i*x`, options);
-  },
+  }
 
   /*
     operateObject() - Performs an operation on a single object, recursively.
@@ -354,7 +355,7 @@ module.exports = {
       recursive: (Boolean) - Optional. Whether the operation is recursive. True by default.
     Returns: (Object)
   */
-  operateObject: function (arg0_object, arg1_equation, arg2_options) {
+  global.operateObject = function (arg0_object, arg1_equation, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var equation = arg1_equation;
@@ -388,7 +389,7 @@ module.exports = {
 
     //Return statement
     return processed_object;
-  },
+  }
 
   /*
     operateObjects() - Performs an operation on two objects together, recursively.
@@ -406,7 +407,7 @@ module.exports = {
       object: (Object) The modified version of the 1st object
       ot_object: (Object) The modified version of the 2nd object
   */
-  operateObjects: function (arg0_object, arg1_object, arg2_equation, arg3_options) {
+  global.operateObjects = function (arg0_object, arg1_object, arg2_equation, arg3_options) {
     //Convert from parameters
     var object = arg0_object;
     var ot_object = arg1_object;
@@ -506,7 +507,7 @@ module.exports = {
       object: processed_object,
       ot_object: processed_ot_object
     };
-  },
+  }
 
   /*
     standardiseFraction() - Standardises the object to maximum = 1, with each other value being adjusted to a value.
@@ -514,13 +515,13 @@ module.exports = {
 
     Returns: (Object)
   */
-  standardiseFraction: function (arg0_object) {
+  global.standardiseFraction = function (arg0_object) {
     //Convert from parameters
     var object = JSON.parse(JSON.stringify(arg0_object));
 
     //Declare local instance variables
     var all_object_keys = Object.keys(object);
-    var object_maximum = module.exports.getObjectMaximum(object);
+    var object_maximum = getObjectMaximum(object);
 
     //Iterate over all_object_keys
     for (var i = 0; i < all_object_keys.length; i++) {
@@ -535,7 +536,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  }
 
   /*
     standardisePercentage() - Standardises the object to a given total.
@@ -545,7 +546,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  standardisePercentage: function (arg0_object, arg1_total, arg2_round) {
+  global.standardisePercentage = function (arg0_object, arg1_total, arg2_round) {
     //Convert from parameters
     var object = JSON.parse(JSON.stringify(arg0_object));
     var total = (arg1_total) ? arg1_total : 1;
@@ -574,7 +575,7 @@ module.exports = {
 
     //Return statement
     return object;
-  },
+  }
 
   /*
     subtractObject() - Subtracts a value from an object, recursively.
@@ -583,14 +584,14 @@ module.exports = {
 
     Returns: (Object)
   */
-  subtractObject: function (arg0_object, arg1_value) {
+  global.subtractObject = function (arg0_object, arg1_value) {
     //Convert from parameters
     var object = arg0_object;
     var value = arg1_value;
 
     //Return statement
     return operateObject(object, `n - ${value}`);
-  },
+  }
 
   /*
     subtractObjects() - Subtracts one object from another, recursively.
@@ -603,7 +604,7 @@ module.exports = {
       object: The modified version of the 1st object
       ot_object: The modified version of the 2nd object
   */
-  subtractObjects: function (arg0_object, arg1_object, arg2_options) {
+  global.subtractObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters
     var object = arg0_object;
     var ot_object = arg1_object;
@@ -612,4 +613,4 @@ module.exports = {
     //Return statement
     return operateObjects(object, ot_object, `i = i - x`, options);
   }
-};
+}
