@@ -1,4 +1,4 @@
-module.exports = {
+{
   /*
     createArray() - Creates an array from the following options.
     arg0_options: (Object)
@@ -12,7 +12,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  createArray: function (arg0_options) {
+  global.createArray = function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -56,7 +56,7 @@ module.exports = {
 
     //Return statement
     return return_array;
-  },
+  }
 
   /*
     dimensionality() - Formats an array with n dimensions with zero-indexed dimensionality.
@@ -65,7 +65,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  dimensionality: function (arg0_input_array, arg1_dimension_array) {
+  global.dimensionality = function (arg0_input_array, arg1_dimension_array) {
     //Convert from parameters
     var input_array = getList(arg0_input_array);
     var dimension_array = getList(arg1_dimension_array);
@@ -87,7 +87,38 @@ module.exports = {
 
     //Return statement
     return return_array;
-  },
+  };
+
+  /**
+   * findDomain() - Finds the closest valid domain in an array for a given value.
+   * @param {Array<number>} arg0_input_array - The array to search.
+   * @param {number} arg1_value - The value to find the closest valid domain for.
+   * 
+   * @returns {Array<number, number>}
+   */
+  global.findDomain = function (arg0_input_array, arg1_value) {
+    //Convert from parameters
+    var input_array = getList(arg0_input_array);
+    var value = returnSafeNumber(arg1_value);
+    
+    //Guard clause if input_array has less than 2 elements
+    if (input_array.length < 2) return;
+
+    //Declare local instance variables
+    var sorted_array = [...new Set(input_array)].sort((a, b) => a - b);
+
+    //Return statement
+    //Return cases if value is outside domain
+    if (value <= sorted_array[0]) 
+      return [sorted_array[0], sorted_array[1]];
+    if (value >= sorted_array[sorted_array.length - 1]) 
+      return [sorted_array[sorted_array.length - 2], sorted_array[sorted_array.length - 1]];
+
+    //Iterate over all elements in sorted_array
+    for (var i = 0; i < sorted_array.length - 1; i++)
+      if (value >= sorted_array[i] && value <= sorted_array[i + 1])
+        return [sorted_array[i], sorted_array[i + 1]];
+  };
 
   /*
     flattenArray() - Flattens a nested array to be 1-deep.
@@ -95,13 +126,13 @@ module.exports = {
 
     Returns: (Array)
   */
-  flattenArray: function (arg0_input_array) {
+  global.flattenArray = function (arg0_input_array) {
     //Convert from parameters
     var input_array = getList(arg0_input_array);
 
     //Return statement
     return input_array.flat(Infinity);
-  },
+  };
 
   /*
     getCardinality() - Fetches the cardinality of an array/object/variable.
@@ -109,7 +140,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getCardinality: function (arg0_variable) {
+  global.getCardinality = function (arg0_variable) {
     //Convert from parameters
     var input_variable = arg0_variable;
 
@@ -121,7 +152,7 @@ module.exports = {
     } else {
       return 1;
     }
-  },
+  }
 
   /*
     getRecursiveCardinality() - Fetches the total number of elements in an array, including sub-arrays.
@@ -129,18 +160,14 @@ module.exports = {
 
     Returns: (Number)
   */
-  getRecursiveCardinality: function (arg0_input_array) {
+  global.getRecursiveCardinality = function (arg0_input_array) {
     //Convert from parameters
     var input_array = arg0_input_array;
 
     //Return statement
     if (Array.isArray(input_array))
       return input_array.flat().length;
-  },
-
-  getArray: function (arg0_variable) {
-    return module.exports.getList(arg0_variable);
-  },
+  }
 
   /*
     getList() - Returns a list/array from a variable.
@@ -148,13 +175,13 @@ module.exports = {
 
     Returns: (Array)
   */
-  getList: function (arg0_variable) {
+  global.getList = function (arg0_variable) {
     //Convert from parameters
     var input_variable = arg0_variable;
 
     //Return statement
     return (Array.isArray(input_variable)) ? input_variable : [input_variable];
-  },
+  }
 
   /*
     isArrayEmpty() - Checks whether an array is empty.
@@ -162,13 +189,53 @@ module.exports = {
 
     Returns: (Boolean)
   */
-  isArrayEmpty: function (arg0_input_array) {
+  global.isArrayEmpty = function (arg0_input_array) {
     //Convert from parameters
     var input_array = getList(arg0_input_array);
 
     //Return statement
     return (array.length == 0 || array.every((element) => element == undefined));
-  },
+  };
+
+  /**
+   * mergeArray() - Given two arrays, return the concatenation.
+   * @param {Array} arg0_input_array 
+   * @param {Array} arg1_array 
+   * 
+   * @returns {Array}
+   */
+  global.mergeArrays = function (arg0_input_array, arg1_array) {
+    //Convert from parameters
+    var input_array = getList(arg0_input_array);
+    var array = getList(arg1_array);
+
+    //Return statement
+    return input_array.concat(array);
+  };
+
+  /*
+    moveElement() - Moves an element from one index to another.
+    arg0_array: (Array) - The array to input.
+    arg1_old_index: (Number) - The old index.
+    arg2_new_index: (Number) - The new index.
+  */
+  global.moveElement = function (arg0_array, arg1_old_index, arg2_new_index) {
+    //Convert from parameters
+    var array = arg0_array;
+    var old_index = arg1_old_index;
+    var new_index = arg2_new_index;
+
+    //Move element in array
+    if (new_index >= array.length) {
+      var local_index = new_index - array.length + 1;
+      while (local_index--)
+        array.push(undefined);
+    }
+    array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+
+    //Return statement
+    return array;
+  }
 
   /*
     truncateArray() - Truncates an array to a given length.
@@ -177,7 +244,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  truncateArray: function (arg0_input_array, arg1_length) {
+  global.truncateArray = function (arg0_input_array, arg1_length) {
     //Convert from parameters
     var input_array = getList(arg0_input_array);
     var length = returnSafeNumber(arg1_length);
@@ -187,7 +254,7 @@ module.exports = {
 
     //Return statement
     return input_array;
-  },
+  }
 
   /*
     reverseArray() - Reverses an input array.
@@ -195,7 +262,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  reverseArray: function (arg0_input_array) {
+  global.reverseArray = function (arg0_input_array) {
     //Convert from parameters
     var input_array = arg0_input_array;
 
@@ -205,7 +272,7 @@ module.exports = {
     } else {
       return input_array;
     }
-  },
+  }
 
   /*
     uniqueArray() - Removes any duplicate elements from an input array.
@@ -213,7 +280,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  uniqueArray: function (arg0_input_array) {
+  global.uniqueArray = function (arg0_input_array) {
     //Convert from parameters
     var input_array = arg0_input_array;
 
@@ -252,4 +319,9 @@ module.exports = {
       return item;
     });
   }
-};
+
+  //KEEP AT BOTTOM! Initialise function aliases
+  {
+    global.getArray = getList;
+  }
+}

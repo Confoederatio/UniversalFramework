@@ -1,17 +1,17 @@
-module.exports = {
+{
   /*
     absoluteValueArray() - Performs an absolute value operation on every valid element in an array, recursively.
     arg0_array: (Array) - The array to pass to the function.
 
     Returns: (Array)
   */
-  absoluteValueArray: function (arg0_array) {
+  global.absoluteValueArray = function (arg0_array) {
     //Convert from parameters
     var array = getList(arg0_array);
 
     //Return statement
     return operateArray(array, `Math.abs(n)`);
-  },
+  }
 
   /*
     absoluteValueArrays() - Absolute value the distance between two arrays, recursively.
@@ -22,7 +22,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  absoluteValueArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.absoluteValueArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -30,7 +30,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `Math.abs(i - x)`, options);
-  },
+  }
 
   /*
     addArray() - Performs an addition operation on every valid element in an array, recursively.
@@ -38,14 +38,14 @@ module.exports = {
 
     Returns: (Array)
   */
-  addArray: function (arg0_array, arg1_number) {
+  global.addArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `n + ${number}`);
-  },
+  }
 
   /*
     addArrays() - Adds two arrays together recursively.
@@ -56,7 +56,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  addArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.addArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -64,7 +64,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `i + x`, options);
-  },
+  }
 
   /*
     addMatrices() - Adds 2 matrices represented as 2D arrays together
@@ -73,7 +73,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  addMatrices: function (arg0_matrix, arg1_matrix) {
+  global.addMatrices = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var ot_matrix = arg1_matrix;
@@ -94,7 +94,7 @@ module.exports = {
 
     //Return statement
     return result;
-  },
+  }
 
   /*
     appendArrays() - Concatenates two arrays and returns it
@@ -103,14 +103,14 @@ module.exports = {
 
     Returns: (Array)
   */
-  appendArrays: function (arg0_array, arg1_array) {
+  global.appendArrays = function (arg0_array, arg1_array) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
 
     //Return statement
     return array.concat(ot_array);
-  },
+  }
 
   /*
     arrayIsOfType() - Whether an array is purely of a given type.
@@ -119,7 +119,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  arrayIsOfType: function (arg0_array, arg1_type) {
+  global.arrayIsOfType = function (arg0_array, arg1_type) {
     //Convert from parameters
     var array = getList(arg0_array);
     var type = arg1_type;
@@ -134,7 +134,7 @@ module.exports = {
 
     //Return statement
     return (!check_failed);
-  },
+  }
 
   /*
     augmentMatrices() - Combine the columns of two matrices to form a new matrix.
@@ -143,7 +143,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  augmentMatrices: function (arg0_matrix, arg1_matrix) {
+  global.augmentMatrices = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var ot_matrix = arg1_matrix;
@@ -156,7 +156,7 @@ module.exports = {
 
     //Return statement
     return return_matrix;
-  },
+  }
 
   /*
     choleskyDecompositionMatrix() - Performs a Cholesky decomposition on a matrix
@@ -164,7 +164,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  choleskyDecompositionMatrix: function (arg0_matrix) {
+  global.choleskyDecompositionMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -193,7 +193,56 @@ module.exports = {
 
     //Return statement
     return lower_triangular_matrix;
-  },
+  };
+
+  global.cubicSplineInterpolation = function (arg0_x_values, arg1_y_values, arg2_x_to_interpolate) {
+    //Convert from parameters
+    var x_values = getList(arg0_x_values);
+    var y_values = getList(arg1_y_values);
+      y_values = y_values.map((y) => (y > 0) ? Math.log(y) : Math.log(1e-6));
+    var x_to_interpolate = parseInt(arg2_x_to_interpolate);
+
+    //Declare local instance variables
+    var interpolation = new cubic_spline(x_values, y_values);
+    var log_interpolated = interpolation.at(x_to_interpolate);
+    var max_value = Math.max(...y_values.map((y) => Math.exp(y)));
+
+    var interpolated_value = Math.exp(log_interpolated);
+
+    //Find bounding values (before & after)
+    var prev_known_value = -Infinity;
+    var next_known_value = Infinity;
+    var prev_known_year = null;
+    var next_known_year = null;
+
+    //Iterate over all x_values to find bounding years and values
+    for (var i = 0; i < x_values.length; i++) {
+      if (x_values[i] < x_to_interpolate) {
+        prev_known_year = x_values[i];
+        prev_known_value = Math.exp(y_values[i]);
+      } else if (x_values[i] > x_to_interpolate) {
+        next_known_year = x_values[i];
+        next_known_value = Math.exp(y_values[i]);
+        break;
+      }
+    }
+
+    //If we have valid bounding values, perform linear interpolation
+    if (prev_known_year !== null && next_known_year !== null && 
+        prev_known_value !== -Infinity && next_known_value !== Infinity) {
+      interpolated_value = prev_known_value + 
+        ((x_to_interpolate - prev_known_year) / (next_known_year - prev_known_year)) * 
+        (next_known_value - prev_known_value);
+    }
+
+    //Cap within bounds (prevents overshoot)
+    if (prev_known_value !== -Infinity && next_known_value !== Infinity) {
+      interpolated_value = Math.max(prev_known_value, Math.min(interpolated_value, next_known_value));
+    }
+
+    //Return statement
+    return interpolated_value;
+  };
 
   /*
     divideArray() - Performs a division operation on every valid element in an array, recursively.
@@ -201,14 +250,14 @@ module.exports = {
 
     Returns: (Array)
   */
-  divideArray: function (arg0_array, arg1_number) {
+  global.divideArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `n/${number}`);
-  },
+  }
 
   /*
     divideArrays() - Divides two arrays together recursively.
@@ -219,7 +268,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  divideArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.divideArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -227,7 +276,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `i/x`, options);
-  },
+  }
 
   /*
     exponentiateArray() - Performs an exponent operation on every valid element in an array, recursively.
@@ -235,14 +284,14 @@ module.exports = {
 
     Returns: (Array)
   */
-  exponentiateArray: function (arg0_array, arg1_number) {
+  global.exponentiateArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `Math.pow(n, ${number})`);
-  },
+  }
 
   /*
     exponentiateArrays() - Exponentiates two arrays recursively.
@@ -253,7 +302,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  exponentiateArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.exponentiateArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -261,7 +310,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `Math.pow(i, x)`, options);
-  },
+  }
 
   /*
     gaussEliminationMatrix() - Performs Gauss elimination on a matrix.
@@ -269,7 +318,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  gaussEliminationMatrix: function (arg0_matrix) {
+  global.gaussEliminationMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -308,7 +357,7 @@ module.exports = {
 
     //Return statement
     return solution;
-  },
+  }
 
   /*
     gaussJacobiMatrix() - Performs Gauss-Jacobi on a matrix.
@@ -318,7 +367,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  gaussJacobiMatrix: function (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
+  global.gaussJacobiMatrix = function (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var tolerance = (arg1_tolerance) ? arg1_tolerance : 1e-6;
@@ -350,7 +399,7 @@ module.exports = {
 
     //Return statement
     return solution;
-  },
+  }
 
   /*
     gaussJordanMatrix() - Performs Gauss-Jordan on a matrix.
@@ -358,7 +407,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  gaussJordanMatrix: function (arg0_matrix) {
+  global.gaussJordanMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -394,7 +443,7 @@ module.exports = {
 
     //Return statement
     return matrix.map(row => row[matrix.length]);
-  },
+  }
 
   /*
     gaussSeidelMatrix() - Performs Gauss-Seidel on a matrix.
@@ -404,7 +453,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  gaussSeidelMatrix: function (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
+  global.gaussSeidelMatrix = function (arg0_matrix, arg1_tolerance, arg2_max_iterations) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var tolerance = (arg1_tolerance) ? arg1_tolerance : 1e-6;
@@ -436,7 +485,7 @@ module.exports = {
 
     //Return statement
     return solution;
-  },
+  }
 
   /*
     getCofactor() - Fetches the cofactor in a matrix.
@@ -446,7 +495,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  getCofactor: function (arg0_matrix, arg1_row, arg2_column) {
+  global.getCofactor = function (arg0_matrix, arg1_row, arg2_column) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var row = arg1_row;
@@ -469,7 +518,7 @@ module.exports = {
 
     //Return statement
     return minor_matrix.push(new_row);
-  },
+  }
 
   /*
     getMatrixDeterminant() - Calculates the matrix determinant.
@@ -477,7 +526,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getMatrixDeterminant: function (arg0_matrix) {
+  global.getMatrixDeterminant = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -498,7 +547,51 @@ module.exports = {
 
     //Return statement
     return determinant;
-  },
+  }
+
+  global.getMaximumInArray = function (arg0_array, arg1_max_value) {
+		//Convert from parameters
+		var array = arg0_array;
+		var max_value = arg1_max_value;
+
+		//Iterate over array recursively
+		for (var i = 0; i < array.length; i++)
+			if (Array.isArray(array[i])) {
+				max_value = getMaximumInArray(array[i], max_value);
+			} else {
+				if (typeof array[i] == "number")
+					if (max_value) {
+						max_value = Math.max(array[i], max_value);
+					} else {
+						max_value = array[i];
+					}
+			}
+
+		//Return statement
+		return max_value;
+	}
+
+  global.getMinimumInArray = function (arg0_array, arg1_min_value) {
+		//Convert from parameters
+		var array = arg0_array;
+		var min_value = arg1_min_value;
+
+		//Iterate over array recursively
+		for (var i = 0; i < array.length; i++)
+			if (Array.isArray(array[i])) {
+				min_value = getMinimumInArray(array[i], min_value);
+			} else {
+				if (typeof array[i] == "number")
+					if (min_value) {
+						min_value = Math.min(array[i], min_value);
+					} else {
+						min_value = array[i];
+					}
+			}
+
+		//Return statement
+		return min_value;
+	}
 
   /*
     householderTransformationMatrix() - Performs Householder transformation on a matrix.
@@ -506,7 +599,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  householderTransformationMatrix: function (arg0_matrix) {
+  global.householderTransformationMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -540,11 +633,7 @@ module.exports = {
 
     //Return statement
     return tridiagonal_matrix;
-  },
-
-  invertMatrix: function (arg0_matrix) {
-    return module.exports.inverseMatrix(arg0_matrix);
-  },
+  };
 
   /*
     inverseMatrix() - Inverts a matrix.
@@ -552,7 +641,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  inverseMatrix: function (arg0_matrix) {
+  global.inverseMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -581,7 +670,64 @@ module.exports = {
 
     //Return statement
     return inverse;
-  },
+  }
+
+  global.lagrangeInterpolation = function (arg0_x_values, arg1_y_values, arg2_x_to_interpolate) {
+    //Convert from parameters
+    var x_values = getList(arg0_x_values);
+    var y_values = getList(arg1_y_values);
+    var x_to_interpolate = parseInt(arg2_x_to_interpolate);
+
+    //Declare local instance variables
+    var result = 0;
+
+    //Iterate over all x_values
+    for (var i = 0; i < x_values.length; i++) {
+      var term = y_values[i];
+
+      for (var x = 0; x < x_values.length; x++)
+        if (i != x)
+          term = term*(x_to_interpolate - x_values[x])/(x_values[i] - x_values[x]);
+      result += term;
+    }
+
+    //Return statement
+    return result;
+  };
+
+  global.linearInterpolation = function (arg0_x_values, arg1_y_values, arg2_x_to_interpolate) {
+    var x_values = getList(arg0_x_values);
+    var y_values = getList(arg1_y_values);
+    var x = parseFloat(arg2_x_to_interpolate);
+    
+    //Guard clause to make sure x_values and y_values are valid
+    if (x_values.length < 2 || y_values.length < 2) return y_values[0];
+    if (x_values[0] == x_values[1]) return y_values[0];
+    
+    //Declare local instance variables
+    var left_x = x_values[0];
+    var right_x = x_values[1];
+    var left_y = y_values[0];
+    var right_y = y_values[1];
+  
+    //Use exponential growth if both values are positive
+    if (left_y > 0 && right_y > 0) {
+      var growth_rate = Math.log(right_y / left_y) / (right_x - left_x);
+      if (x < left_x)
+        return left_y * Math.exp(growth_rate * (x - left_x));
+      if (x > right_x)
+        return right_y * Math.exp(growth_rate * (x - right_x));
+      return left_y + (x - left_x) * (right_y - left_y) / (right_x - left_x); //Linear interpolation
+    }
+  
+    //Return statement; fallback to standard linear if growth is not defined
+    var slope = (right_y - left_y) / (right_x - left_x);
+    if (x < left_x)
+      return left_y + (x - left_x) * slope;
+    if (x > right_x)
+      return right_y + (x - right_x) * slope;
+    return left_y + (x - left_x) * slope;
+  };
 
   /*
     LUDecompositionMatrix() - Performs LUD decomposition on a matrix.
@@ -591,7 +737,7 @@ module.exports = {
       L: (Array<Array, ...>)
       U: (Array<Array, ...>)
   */
-  LUDecompositionMatrix: function (arg0_matrix) {
+  global.LUDecompositionMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -627,7 +773,7 @@ module.exports = {
 
     //Return statement
     return { L, U };
-  },
+  }
 
   /*
     multiplyArray() - Performs a multiplication operation on every valid element in an array, recursively.
@@ -635,14 +781,14 @@ module.exports = {
 
     Returns: (Array)
   */
-  multiplyArray: function (arg0_array, arg1_number) {
+  global.multiplyArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `n*${number}`);
-  },
+  }
 
   /*
     multiplyArrays() - Multiplies two arrays recursively.
@@ -653,7 +799,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  multiplyArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.multiplyArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -661,7 +807,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `i*x`, options);
-  },
+  }
 
   /*
     multiplyMatrices() - Multiplies two matrices.
@@ -670,7 +816,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  multiplyMatrices: function (arg0_matrix, arg1_matrix) {
+  global.multiplyMatrices = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var ot_matrix = arg1_matrix;
@@ -696,7 +842,7 @@ module.exports = {
 
     //Return statement
     return return_matrix;
-  },
+  }
 
   /*
     operateArray() - Applies a mathematical equation to every element of an array, recursively.
@@ -706,7 +852,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  operateArray: function (arg0_array, arg1_equation) {
+  global.operateArray = function (arg0_array, arg1_equation) {
     //Convert from parameters
     var array = getList(arg0_array);
     var equation = arg1_equation;
@@ -732,7 +878,7 @@ module.exports = {
         }
       }
     });
-  },
+  }
 
   /*
     operateArrays() - Performs an operation when merging two arrays together, recursively.
@@ -746,7 +892,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  operateArrays: function (arg0_array, arg1_array, arg2_equation, arg3_options) {
+  global.operateArrays = function (arg0_array, arg1_array, arg2_equation, arg3_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -775,7 +921,7 @@ module.exports = {
 
     //Return statement
     return result;
-  },
+  }
 
   /*
     QRDecompositionMatrix() - Perofrms QR decomposition on a matrix.
@@ -785,7 +931,7 @@ module.exports = {
       Q: (Array<Array, ...>)
       R: (Array<Array, ...>)
   */
-  QRDecompositionMatrix: function (arg0_matrix) {
+  global.QRDecompositionMatrix = function (arg0_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
 
@@ -829,7 +975,7 @@ module.exports = {
 
     //Return statement
     return { Q, R };
-  },
+  }
 
   /*
     QRLeastSquaredMatrix() - Performs QR least squared on two matrices.
@@ -838,7 +984,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  QRLeastSquaredMatrix: function (arg0_matrix, arg1_matrix) {
+  global.QRLeastSquaredMatrix = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var A = arg0_matrix;
     var b = arg1_matrix;
@@ -870,21 +1016,21 @@ module.exports = {
 
     //Return statement
     return x_vector;
-  },
+  }
 
   /*
     rootArray() - Roots an array recursively.
     arg0_array: (Array) - The array to pass to the function.
     Returns: (Array)
   */
-  rootArray: function (arg0_array, arg1_number) {
+  global.rootArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `root(n, ${number})`);
-  },
+  }
 
   /*
     rootArrays() - Roots two arrays recursively.
@@ -895,7 +1041,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  rootArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.rootArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -903,11 +1049,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `root(i, x)`, options);
-  },
-
-  solveMatrices: function (arg0_matrix, arg1_matrix) {
-    return module.exports.multiplyMatrices(arg0_matrix, arg1_matrix);
-  },
+  }
 
   /*
     SORMatrix() - Performs SOR inversion and multiplication matrices.
@@ -916,7 +1058,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  SORMatrix: function (arg0_matrix, arg1_matrix) {
+  global.SORMatrix = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var ot_matrix = arg1_matrix;
@@ -931,21 +1073,21 @@ module.exports = {
 
     //Return statement
     return solution_matrix;
-  },
+  }
 
   /*
     subtractArray() - Subtracts from an array recursively.
     arg0_array: (Array) - The array to pass to the function.
     Returns: (Array)
   */
-  subtractArray: function (arg0_array, arg1_number) {
+  global.subtractArray = function (arg0_array, arg1_number) {
     //Convert from parameters
     var array = getList(arg0_array);
     var number = arg1_number;
 
     //Return statement
     return operateArray(array, `n - ${number}`);
-  },
+  }
 
   /*
     subtractArrays() - Subtract two arrays recursively.
@@ -956,7 +1098,7 @@ module.exports = {
 
     Returns: (Array)
   */
-  subtractArrays: function (arg0_array, arg1_array, arg2_options) {
+  global.subtractArrays = function (arg0_array, arg1_array, arg2_options) {
     //Convert from parameters
     var array = getList(arg0_array);
     var ot_array = getList(arg1_array);
@@ -964,7 +1106,7 @@ module.exports = {
 
     //Return statement
     return operateArrays(array, ot_array, `i - x`, options);
-  },
+  }
 
   /*
     subtractMatrices() - Subtracts one matrix from another.
@@ -973,7 +1115,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  subtractMatrices: function (arg0_matrix, arg1_matrix) {
+  global.subtractMatrices = function (arg0_matrix, arg1_matrix) {
     //Convert from parameters
     var matrix = arg0_matrix;
     var ot_matrix = arg1_matrix;
@@ -991,7 +1133,7 @@ module.exports = {
 
     //Return statement
     return return_matrix;
-  },
+  }
 
   /*
     transposeMatrix() - Transposes a matrix.
@@ -999,7 +1141,7 @@ module.exports = {
 
     Returns: (Array<Array, ...>)
   */
-  transposeMatrix: function (arg0_matrix) {
+  global.transposeMatrix = function (arg0_matrix) {
       //Convert from parameters
       var matrix = arg0_matrix;
 
@@ -1023,4 +1165,10 @@ module.exports = {
     //Return statement
     return transposed_matrix;
   }
-};
+
+  //KEEP AT BOTTOM! Initialise function aliases
+  {
+    global.invertMatrix = inverseMatrix;
+    global.solveMatrices = multiplyMatrices;
+  }
+}

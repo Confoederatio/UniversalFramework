@@ -1,4 +1,5 @@
-module.exports = {
+//Initialise functions
+{
   /*
     adjustObjectHistory() - Adjusts an object history keyframe to that of another date/timestamp.
     arg0_object: (Object) - The object being referenced.
@@ -7,7 +8,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  adjustObjectHistory: function (arg0_object, arg1_date_object, arg2_date_object) {
+  global.adjustObjectHistory = function (arg0_object, arg1_date_object, arg2_date_object) {
     //Convert from parameters
     var local_object = arg0_object;
     var entry_date = arg1_date;
@@ -34,7 +35,7 @@ module.exports = {
 
     //Return statement
     return local_object;
-  },
+  }
 
   /*
     checkObjectHistory() - Checks whether an object has a given property defined somewhere in its history.
@@ -44,7 +45,7 @@ module.exports = {
 
     Returns: (Boolean/Variable)
   */
-  checkObjectHistory: function (arg0_object, arg1_date_object, arg2_conditional_function) {
+  global.checkObjectHistory = function (arg0_object, arg1_date_object, arg2_conditional_function) {
     //Convert from parameters
     var local_object = arg0_object;
     var date = getTimestamp(arg1_date_object);
@@ -70,7 +71,7 @@ module.exports = {
 
     //Return statement
     return has_property;
-  },
+  }
 
   /*
     createObjectHistory() - Creates an object history keyframe at the current date.
@@ -81,7 +82,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  createObjectHistory: function (arg0_object, arg1_date_object, arg2_options, arg3_coords) {
+  global.createObjectHistory = function (arg0_object, arg1_date_object, arg2_options, arg3_coords) {
     //Convert from parameters
     var local_object = arg0_object;
     var date = arg1_date_object;
@@ -112,7 +113,7 @@ module.exports = {
         local_object.options.history[date_string] = {
           id: timestampToInt(date_string),
           coords: actual_coords,
-          options: {};
+          options: {}
         };
 
       //Manually transcribe options to avoid recursion
@@ -120,7 +121,7 @@ module.exports = {
       var local_history = local_object.options.history[date_string];
 
       local_history.coords = actual_coords;
-      if (!local_history.options) local_history.options);
+      if (!local_history.options) local_history.options = {};
 
       //Iterate over all_option_keys
       for (var i = 0; i < all_option_keys.length; i++)
@@ -145,7 +146,7 @@ module.exports = {
 
     //Return statement
     return local_object;
-  },
+  }
 
   /*
     deleteObjectHistory() - Deletes an object history keyframe.
@@ -154,7 +155,7 @@ module.exports = {
 
     Returns: (Object)/undefined if all history entries deleted
   */
-  deleteObjectHistory: function (arg0_object, arg1_date_object) {
+  global.deleteObjectHistory = function (arg0_object, arg1_date_object) {
     //Convert from parameters
     var local_object = arg0_object;
     var date = getTimestamp(arg1_date_object);
@@ -175,7 +176,7 @@ module.exports = {
 
     //Return statement
     return local_object;
-  },
+  }
 
   /*
     getFirstHistoryFrame() - Returns the first history frame of an object.
@@ -183,7 +184,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  getFirstHistoryFrame: function (arg0_object) {
+  global.getFirstHistoryFrame = function (arg0_object) {
     //Convert from parameters
     var local_object = arg0_object;
 
@@ -193,7 +194,7 @@ module.exports = {
         var all_history_frames = Object.keys(local_object.options.history);
         var history_frame = {
           coords: [],
-          options: {};
+          options: {}
         };
 
         if (all_history_frames.length >= 1) {
@@ -210,7 +211,7 @@ module.exports = {
           return history_frame;
         }
       }
-  },
+  }
 
   /*
     getHistoryCoords() - Fetches the coords of an object at a certain date.
@@ -219,7 +220,7 @@ module.exports = {
 
     Returns: (Array<Array<Number, Number>, ...>)
   */
-  getHistoryCoords: function (arg0_object, arg1_date_object) {
+  global.getHistoryCoords = function (arg0_object, arg1_date_object) {
     //Convert from parameters
     var local_object = arg0_object;
     var date = getTimestamp(arg1_date_object);
@@ -229,7 +230,7 @@ module.exports = {
       if (local_history.coords)
         return local_history.coords
     });
-  },
+  }
 
   /*
     getHistoryFrame() - Returns the history frame of an entity.
@@ -238,7 +239,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  getHistoryFrame: function (arg0_object, arg1_date_object) {
+  global.getHistoryFrame = function (arg0_object, arg1_date_object) {
     //Convert from parameters
     var local_object = arg0_object;
     var date = getTimestamp(arg1_date_object);
@@ -280,7 +281,7 @@ module.exports = {
 
     //Return statement
     return history_frame;
-  },
+  }
 
   /*
     getLastCoords() - Fetches the last valid .coords field from an object.
@@ -291,7 +292,7 @@ module.exports = {
 
     Returns: (Array<Array<Number, Number>, ...>)
   */
-  getLastCoords: function (arg0_object, arg1_history_frame, arg2_options) {
+  global.getLastCoords = function (arg0_object, arg1_history_frame, arg2_options) {
     //Convert from parameters
     var local_object = arg0_object;
     var history_frame = arg1_history_frame;
@@ -323,7 +324,7 @@ module.exports = {
             }
         }
       }
-  },
+  }
 
   /*
     getLastIdenticalCoords() - Fetches the last identical coords prior to the current frame.
@@ -332,7 +333,7 @@ module.exports = {
 
     Returns: (Array<Array<Number, Number>, ...>)
   */
-  getLastIdenticalCoords: function (arg0_object, arg1_history_frame) {
+  global.getLastIdenticalCoords = function (arg0_object, arg1_history_frame) {
     //Convert from parameters
     var local_object = arg0_object;
     var history_frame = arg1_history_frame;
@@ -353,7 +354,7 @@ module.exports = {
               return local_history_entry.coords;
           }
       }
-  },
+  }
 
   /*
     getObjectHistory() - Returns a history frame for the specified date.
@@ -364,7 +365,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  getObjectHistory: function (arg0_object, arg1_date_object, arg2_options) {
+  global.getObjectHistory = function (arg0_object, arg1_date_object, arg2_options) {
     //Convert from parameters
     var local_object = arg0_object;
     var arg1_date_object = arg1_date_object;
@@ -388,4 +389,4 @@ module.exports = {
     //Return statement
     return current_entry;
   }
-};
+}

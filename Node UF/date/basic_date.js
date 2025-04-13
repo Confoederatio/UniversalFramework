@@ -1,11 +1,11 @@
-module.exports = {
+{
   /*
     daysInMonths() - Fetches the number of days already passed since the beginning of the year.
     arg0_date_object: (Object, Date) - The date object/timestamp to pass to the function.
 
     Returns: (Number)
   */
-  daysInMonths: function (arg0_date_object) {
+  global.daysInMonths = function (arg0_date_object) {
     //Convert from parameters
     var date = parseTimestamp(arg0_date_object);
 
@@ -19,24 +19,7 @@ module.exports = {
 
     //Return statement
     return days;
-  },
-
-  /*
-    getDateString() - Returns a formatted string from a date object.
-    arg0_date_object: (Object, Date) - The date object to pass to the function.
-    Returns: (String)
-  */
-  getDateString: function (arg0_date_object) { //[WIP] - Finish function body
-
-  },
-
-  /*
-    getStandardYear() - Returns the standard numeric Gregorian year from a date object/timestamp.
-    arg0_date_object: (Object, Date) - The date object/timestamp to pass to the function.
-  */
-  getStandardYear: function (arg0_date_object) { //[WIP] - Finish function body
-
-  },
+  }
 
   /*
     getTimestamp() - Returns the amount of minutes in a date.
@@ -44,7 +27,7 @@ module.exports = {
 
     Returns: (String)
   */
-  getTimestamp: function (arg0_date_object) {
+  global.getTimestamp = function (arg0_date_object) {
     var date = parseTimestamp(arg0_date_object);
 
     //Guard clause
@@ -68,10 +51,10 @@ module.exports = {
 
     //Return statement
     return `${(timestamp_number >= 0) ? "tz" : "t"}_${timestamp_number}`;
-  },
+  }
 
   //initDateFramework() - Called to initialise date variables in the global scope
-  initDateFramework: function () {
+  global.initDateFramework = function () {
     //Initialise global date strings
     global.bc_leap_years = [
       -45, -42, -39, -36, -33, -30, -27, -24, -21, -18, -15, -12, -9
@@ -85,7 +68,7 @@ module.exports = {
     global.months = [
       "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ];
-  },
+  }
 
   /*
     isLeapYear() - Whether the specified year is a leap year.
@@ -94,7 +77,7 @@ module.exports = {
 
     Returns: (Boolean)
   */
-  isLeapYear: function (arg0_year, arg1_hanseceltican_standard) {
+  global.isLeapYear = function (arg0_year, arg1_hanseceltican_standard) {
     //Convert from parameters
     var year = parseInt(arg0_year);
     var hanseceltican_standard = arg1_hanseceltican_standard;
@@ -106,7 +89,7 @@ module.exports = {
 
     //Return statement
     return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0) && year != 4);
-  },
+  }
 
   /*
     leapYearsBefore() - Fetches the number of leap years before a given year.
@@ -114,13 +97,13 @@ module.exports = {
 
     Returns: (Number)
   */
-  leapYearsBefore: function (arg0_year) {
+  global.leapYearsBefore = function (arg0_year) {
     //Convert from parameters
     var year = arg0_year--;
 
     //Return statement
     return (year/4) - (year/100) + (year/400) - 1; //4AD was not a leap year
-  },
+  }
 
   /*
     leapYearsBetween() - Fetches the number of leap years between two years.
@@ -129,14 +112,14 @@ module.exports = {
 
     Returns: (Number)
   */
-  leapYearsBetween: function (arg0_start_year, arg1_end_year) {
+  global.leapYearsBetween = function (arg0_start_year, arg1_end_year) {
     //Convert from parameters
     var start_year = arg0_start_year;
     var end_year = arg1_end_year;
 
     //Return statement
     return leapYearsBefore(end_year) - leapYearsBefore(start_year + 1);
-  },
+  }
 
   /*
     monthsFromDays() - Fetches the number of months from days, within the context of a date object.
@@ -144,7 +127,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  monthsFromDays: function (arg0_date_object) {
+  global.monthsFromDays = function (arg0_date_object) {
     //Convert from parameters
     var date = parseTimestamp(arg0_date_object);
 
@@ -164,7 +147,7 @@ module.exports = {
 
     //Return statement
     return months + 1;
-  },
+  }
 
   /*
     parseTimestamp() - Parses a timestamp into a date object.
@@ -172,7 +155,7 @@ module.exports = {
 
     Returns: (Object, Date)
   */
-  parseTimestamp: function (arg0_timestamp) {
+  global.parseTimestamp = function (arg0_timestamp) {
     //Convert from parameters
     var timestamp = arg0_timestamp;
 
@@ -224,7 +207,7 @@ module.exports = {
 
     //Return statement
     return local_date;
-  },
+  }
 
   /*
     parseYears() - Returns days/months/years as an object depending on the year amount.
@@ -237,7 +220,7 @@ module.exports = {
       month: (Number)
       year: (Number)
   */
-  parseYears: function (arg0_number, arg1_current_year) {
+  global.parseYears = function (arg0_number, arg1_current_year) {
     //Convert from parameters
     var years_elapsed = arg0_number;
     var current_year = arg1_current_year;
@@ -280,7 +263,7 @@ module.exports = {
 
     //Return statement
     return time_elapsed;
-  },
+  }
 
   /*
     timestampToInt() - Converts a timestamp to its integer position [in minutes from AD1], assuming the Hanseceltican standard.
@@ -288,7 +271,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  timestampToInt: function (arg0_timestamp) {
+  global.timestampToInt = function (arg0_timestamp) {
     //Convert from parameters
     var timestamp = arg0_timestamp;
 
@@ -297,5 +280,4 @@ module.exports = {
       numeriseAlphabet(timestamp.toString().replace("t_", "").replace("tz_", ""))
     );
   }
-
-};
+}

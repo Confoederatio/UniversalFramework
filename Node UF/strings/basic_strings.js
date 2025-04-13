@@ -1,11 +1,11 @@
-module.exports = {
+{
   /*
     capitaliseWords() - Capitalises all the words in a string.
     arg0_input_string: (String) - The string to pass to the function.
 
     Returns: (String)
   */
-  capitaliseWords: function (arg0_input_string) {
+  global.capitaliseWords = function (arg0_input_string) {
     //Convert from parameters
     var input_string = arg0_input_string;
 
@@ -20,7 +20,7 @@ module.exports = {
 
     //Return statement
     return separate_words.join(" ");
-  },
+  }
 
   /*
     cleanStringify() - Cleans an input object to be compatible with JSON.stringify().
@@ -28,7 +28,7 @@ module.exports = {
 
     Returns: (Object)
   */
-  cleanStringify: function (arg0_input_object) {
+  global.cleanStringify = function (arg0_input_object) {
     //Convert from parameters
     var input_object = arg0_input_object;
 
@@ -67,7 +67,7 @@ module.exports = {
       //Sub-return statement
       return clean_object;
     }
-  },
+  }
 
   /*
     equalsIgnoreCase() - Compares two strings, ignoring their case. Returns a boolean
@@ -76,14 +76,14 @@ module.exports = {
 
     Returns: (Boolean)
   */
-  equalsIgnoreCase: function (arg0_string, arg1_string) {
+  global.equalsIgnoreCase = function (arg0_string, arg1_string) {
     //Convert from parameters
     var string = arg0_string;
     var ot_string = arg1_string;
 
     //Return statement
-    return (arg0.toLowerCase() == arg1.toLowerCase());
-  },
+    return (string.toLowerCase() == ot_string.toLowerCase());
+  }
 
   /*
     formaliseString() - Formalises a debug string into human-readable text. Returns a string.
@@ -91,13 +91,13 @@ module.exports = {
 
     Returns: (String)
   */
-  formaliseString: function (arg0_input_string) {
+  global.formaliseString = function (arg0_input_string) {
     //Convert from parameters
     var input_string = arg0_input_string;
 
     //Return statement
     return string.replace(/_/g, " ").replace(/(^\w{1})|(\s{1}\w{1})/g, match => match.toUpperCase());
-  },
+  }
 
   /*
     getDateFromString() - Fetches the date from an input string.
@@ -105,13 +105,13 @@ module.exports = {
 
     Returns: (Date)
   */
-  getDateFromString: function (arg0_input_string) {
+  global.getDateFromString = function (arg0_input_string) {
     //Convert from parameters
     var input_string = arg0_input_string;
 
     //Return statement
     return Date.parse(input_string);
-  },
+  }
 
   /*
     getNesting() - Fetches the amount of nesting embedded within the current string.
@@ -119,7 +119,7 @@ module.exports = {
 
     Returns: (Number)
   */
-  getNesting: function (arg0_input_string) {
+  global.getNesting = function (arg0_input_string) {
     //Convert from parameters
     var string = arg0_input_string;
 
@@ -146,7 +146,7 @@ module.exports = {
 
     //Return statement
     return nesting;
-  },
+  }
 
   /*
     isImage() - Checks if the given link is that of a compatible image.
@@ -154,13 +154,13 @@ module.exports = {
 
     Returns: (Boolean)
   */
-  isImage: function (arg0_input_string) {
+  global.isImage = function (arg0_input_string) {
     //Convert from parameters
     var input_string = arg0_input_string;
 
     //Return statement
     return /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(input_string);
-  },
+  }
 
   /*
     parseBoolean() - Returns a human readable version of a boolean.
@@ -168,13 +168,13 @@ module.exports = {
 
     Returns: (String)
   */
-  parseBoolean: function (arg0_input_boolean) {
+  global.parseBoolean = function (arg0_input_boolean) {
     //Convert from parameters
     var input_boolean = arg0_input_boolean;
 
     //Return statement
     return (input_boolean) ? `Yes` : `No`;
-  },
+  }
 
   /*
     parseDate() - Returns a string timestamp of a contemporary date.
@@ -182,7 +182,7 @@ module.exports = {
 
     Returns: (String)
   */
-  parseDate: function (arg0_timestamp) {
+  global.parseDate = function (arg0_timestamp) {
     //Convert from parameters
     var a = new Date(arg0_timestamp);
 
@@ -196,7 +196,7 @@ module.exports = {
 
     //Return statement
     return `${date} ${month} ${year} ${hour}:${min}:${sec}`;
-  },
+  }
 
   /*
     parseList() - Parses a list into human-readable form.
@@ -204,7 +204,7 @@ module.exports = {
 
     Returns: (String)
   */
-  parseList: function (arg0_input_list) {
+  global.parseList = function (arg0_input_list) {
     //Convert from parameters
     var list = arg0_input_list;
 
@@ -224,7 +224,7 @@ module.exports = {
 
     //Return statement
     return name_string;
-  },
+  }
 
   /*
     processOrdinalString() - Fetches the current ordinal present in a numeric string.
@@ -232,7 +232,7 @@ module.exports = {
 
     Returns: (String)
   */
-  processOrdinalString: function (arg0_input_string) {
+  global.processOrdinalString = function (arg0_input_string) {
     //Convert from parameters
     var input_string = arg0_input_string;
 
@@ -263,4 +263,4 @@ module.exports = {
     //Return statement
     return current_string;
   }
-};
+}

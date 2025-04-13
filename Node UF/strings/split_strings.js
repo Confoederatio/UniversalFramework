@@ -1,4 +1,4 @@
-module.exports = {
+{
   /*
     split() - Splits a string in two based on a character index.
     arg0_input_string: (String) - The string to pass to the function.
@@ -6,14 +6,14 @@ module.exports = {
 
     Returns: (Array<String, String>)
   */
-  split: function (arg0_input_string, arg1_index) {
+  global.split = function (arg0_input_string, arg1_index) {
     //Convert from parameters
     var string = arg0_input_string;
     var length = returnSafeNumber(arg1_length, 200);
 
     //Return statement
     return [string.slice(0, index), string.slice(index)];
-  },
+  }
 
   /*
     splitMarkdownString() - Splits a string according to Markdown, preserving lists, with \n as breakpoints
@@ -25,7 +25,7 @@ module.exports = {
 
     Returns: (Array<String, ...>)
   */
-  splitMarkdownString: function (arg0_input_string, arg1_options) {
+  global.splitMarkdownString = function (arg0_input_string, arg1_options) {
     //Convert from parameters
     var input_string = arg0_input_string;
     var options = (arg1_options) ? arg1_options : {};
@@ -137,7 +137,7 @@ module.exports = {
       //Return statement
       return all_strings;
     } catch {}
-  },
+  }
 
   /*
     splitString() - Splits a string equally by character count.
@@ -146,7 +146,7 @@ module.exports = {
 
     Returns: (Array<String, ...>)
   */
-  splitString: function (arg0_input_string, arg1_length) {
+  global.splitString = function (arg0_input_string, arg1_length) {
     //Convert from parameters
     var string = arg0_input_string;
     var length = returnSafeNumber(arg1_length, 200);
@@ -167,7 +167,7 @@ module.exports = {
 
     //Return statement
     return string_array;
-  },
+  }
 
   /*
     truncateString() - Truncates a string after a given max. character len.
@@ -177,7 +177,7 @@ module.exports = {
 
     Returns: (String)
   */
-  truncateString: function (arg0_input_string, arg1_length, arg2_do_not_show_dots) {
+  global.truncateString = function (arg0_input_string, arg1_length, arg2_do_not_show_dots) {
     //Convert from parameters
     var string = arg0_input_string;
     var number = (arg1_length) ? arg1_length : 80;
@@ -192,4 +192,4 @@ module.exports = {
       return string;
     }
   }
-};
+}
