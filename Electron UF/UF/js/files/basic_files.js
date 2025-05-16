@@ -3,7 +3,7 @@
 /*
   getAllFiles() - Fetches an array of all files in a given folder.
   arg0_folder: (String) - The folder path.
-  
+
   Returns: (Array<String, ...>)
 */
 function getAllFiles (arg0_folder) {
@@ -18,7 +18,7 @@ function getAllFiles (arg0_folder) {
 
       for (var i = 0; i < files.length; i++) {
         //Self-reference to fetch files in sub-directories
-        local_dir_array = (fs.statSync(folder + "/" + files[i]).isDirectory()) ? module.exports.getAllFiles(folder + "/" + files[i]) : file_array.push(path.join(folder, "/", files[i]));
+        local_dir_array = (fs.statSync(folder + "\\" + files[i]).isDirectory()) ? getAllFiles(folder + "\\" + files[i]) : file_array.push(path.join(folder, "\\", files[i]));
 
         //Add files from local_dir_array to file_array
         for (var x = 0; x < local_dir_array.length; x++)
@@ -30,6 +30,38 @@ function getAllFiles (arg0_folder) {
 
     //Return statement
     return file_array;
+}
+
+function getAllDrives () {
+  //Declare local instance variables
+  var current_os = process.platform;
+
+  if (current_os == "win32") {
+    var stdout = child_process.execSync("wmic logicaldisk get name", { encoding: "utf8" });
+
+    //Parse the output to extract drive letters
+    stdout = stdout.split("\n");
+    stdout.unshift();
+    stdout = stdout.map((line) => line.trim());
+
+    //Iterate over all stdout
+    for (var i = stdout.length - 1; i >= 0; i--)
+      if (stdout[i] == "" || stdout[i] == "Name")
+        stdout.splice(i, 1);
+
+    //Return statement
+    return stdout;
+  } else {
+    var stdout = child_process.execSync("df -h", { encoding: "utf8" });
+
+    //Parse the output to extract drives
+    stdout = stdout.split("\n")
+      .map((line) => line.split(/\s+/).pop())
+      .filter((path) => path.startsWith("/") && !path.startsWith("/dev"));
+
+    //Return statement
+    return [...new Set(stdout)];
+  }
 }
 
 /*
@@ -90,7 +122,7 @@ function loadConfig () {
 
     for (var i = 0; i < local_load_order.length; i++) {
       for (var x = 0; x < load_order.load_directories.length; x++) {
-        var local_dir = load_order.load_directories[x];
+        var local_dir = `${__dirname}\\${load_order.load_directories[x]}`;
         var all_directory_files = getAllFiles(local_dir);
 
         for (var y = 0; y < all_directory_files.length; y++) if (all_directory_files[y].includes(local_load_order[i])) {
@@ -103,7 +135,7 @@ function loadConfig () {
 
     //Load each load directory separately
     for (var i = 0; i < load_order.load_directories.length; i++) {
-      var local_dir = load_order.load_directories[i];
+      var local_dir = `${__dirname}\\${load_order.load_directories[i]}`;
       var all_directory_files = getAllFiles(local_dir);
 
       for (var x = 0; x < all_directory_files.length; x++) if (!loaded_files.includes(all_directory_files[x])) {
@@ -124,7 +156,7 @@ function loadConfig () {
 */
 function loadFile (arg0_file) {
   //Convert from parameters
-  var file_path = path.join(__dirname, "..", arg0_file);
+  var file_path = arg0_file;
 
   //Evaluate file contents
   try {
