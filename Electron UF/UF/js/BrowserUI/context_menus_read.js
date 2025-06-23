@@ -115,9 +115,10 @@
 
     Returns: (Variable)
   */
-  function getInput (arg0_input_el) { //[WIP] - Complete function body
+  function getInput (arg0_input_el, arg1_options) {
     //Convert from parameters
     var input_el = arg0_input_el;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var id = input_el.getAttribute("id");
@@ -156,7 +157,7 @@
     } else if (type == "image") {
       //[WIP] - No current file input of this kind
     } else if (type == "number") {
-      output = input_el.querySelector(`input[type="number"]`).value;
+      output = parseFloat(input_el.querySelector(`input[type="number"]`).value);
     } else if (type == "password") {
       output = input_el.querySelector(`input[type="password"]`).value;
     } else if (type == "radio") {

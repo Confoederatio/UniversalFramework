@@ -347,7 +347,7 @@ input[type="color"]::-webkit-color-swatch {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     position: relative;
 
-    top: -1.15rem;
+    top: -1rem;
 
     .line {
       display: flex;
@@ -376,7 +376,6 @@ input[type="color"]::-webkit-color-swatch {
           cursor: pointer;
         }
         &.icon img {
-          padding: 9px;
           width: 15px;
 
           box-sizing: content-box;
@@ -423,8 +422,11 @@ input[type="color"]::-webkit-color-swatch {
             }
           }
 
-          &:hover .submenu {
+          .submenu {
+            left: 0px;
             display: block;
+            padding: 2px;
+            transform: translateY(-2px);
           }
         }
       }
@@ -468,7 +470,6 @@ input[type="color"]::-webkit-color-swatch {
       background-color: white;
       min-height: 10rem;
       padding: 1rem;
-      position: fixed;
       transform: translate(-50%, -50%);
       width: 20rem;
       z-index: 41;
@@ -521,4 +522,25 @@ input[type="color"]::-webkit-color-swatch {
 
     background-color: rgba(0, 0, 0, 0.3);
   }
+}
+
+/* -- Modal content fixes -- */
+.modal-content h3 {
+  margin-top: 0px;
+}
+
+/* -- Toolbar fixes -- */
+.has-submenu:not(:hover) .submenu:not(:hover) {
+  visibility: hidden;
+}
+.submenu {
+  background-color: white;
+  position: relative;
+  z-index: 100;
+}
+.submenu:hover {
+  visibility: visible;
+}
+.editor-button.icon[title="Show HTML Code"] {
+  z-index: -1;
 }

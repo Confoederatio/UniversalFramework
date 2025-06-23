@@ -8,7 +8,7 @@
       return_key: (Boolean)
   */
   function getHierarchyFromID (arg0_hierarchy_id, arg1_options) {
-    //Convert from parmaeters
+    //Convert from parameters
     var hierarchy_id  = arg0_hierarchy_id;
     var options = (arg1_options) ? arg1_options : {};
 
@@ -287,7 +287,7 @@
     arg0_options: (Object)
       naissance_hierarchy: (String) - Whether to export the string as a Naissance hierarchy.
   */
-  function exportHierarchies (arg0_options) { //[WIP] - Work on element.querySelector('div') and replace it with a more specific selector
+  function exportHierarchies (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -726,17 +726,17 @@
 
         if (hierarchy_options.context_menu_function)
           context_menu_button.addEventListener("click", function (e) {
-            global[hierarchy_options.context_menu_function](hierarchy_key, local_item.id);
+            global[hierarchy_options.context_menu_function](hierarchy_key, local_item.id, e);
           });
         if (hierarchy_options.group_context_menu_function)
           if (local_item.type == "group")
             context_menu_button.addEventListener("click", function (e) {
-              global[hierarchy_options.group_context_menu_function](hierarchy_key, local_item.id);
+              global[hierarchy_options.group_context_menu_function](hierarchy_key, local_item.id, e);
             });
         if (hierarchy_options.entity_context_menu_function)
           if (local_item.type == "entity")
             context_menu_button.addEventListener("click", function (e) {
-              global[hierarchy_options.entity_context_menu_function](hierarchy_key, local_item.id);
+              global[hierarchy_options.entity_context_menu_function](hierarchy_key, local_item.id, e);
             });
 
         interaction_container_el.appendChild(context_menu_button);

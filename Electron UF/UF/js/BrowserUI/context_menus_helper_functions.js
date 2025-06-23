@@ -444,6 +444,17 @@
       let local_id = all_inputs[i].getAttribute("id");
       let local_input_obj = options[local_id];
       let local_type = all_inputs[i].getAttribute("type");
+        
+      //.onload handler; returning an object will populate the input respectively
+      if (local_input_obj)
+        if (local_input_obj.onload) {
+          var return_value = local_input_obj.onload(all_inputs[i]);
+
+          if (typeof return_value == "object")
+            all_inputs[i].innerHTML = createInput(
+              dumbMergeObjects(local_input_obj, return_value)
+            );
+        }
 
       if (local_type == "colour")
         handleColourWheel(all_inputs[i]);
@@ -528,6 +539,28 @@
               local_li_el.remove();
             });
         }
+      } else if (local_type == "wysiwyg") {
+        //Add onchange handler if specified
+        if (local_input_obj && local_input_obj.onchange) {
+          var editor = all_inputs[i].querySelector('.wysiwyg-editor');
+          var visual_view = editor.querySelector('.visual-view');
+          var html_view = editor.querySelector('.html-view');
+
+          //Add change handlers for both views
+          visual_view.addEventListener("input", function() {
+            var event = new Event("change");
+            event.target = visual_view;
+            event.value = visual_view.innerHTML;
+            local_input_obj.onchange(event);
+          });
+
+          html_view.addEventListener("input", function() {
+            var event = new Event("change");
+            event.target = html_view;
+            event.value = html_view.value;
+            local_input_obj.onchange(event);
+          });
+        }
       }
 
       //Custom interaction handling
@@ -572,16 +605,6 @@
                 };
               }
           }
-        
-        //.onload handler; returning an object will populate the input respectively
-        if (local_input_obj.onload) {
-          var return_value = local_input_obj.onload(all_inputs[i]);
-
-          if (typeof return_value == "object")
-            all_inputs[i].innerHTML = createInput(
-              dumbMergeObjects(local_input_obj, return_value)
-            );
-        }
       }
     }
   }
