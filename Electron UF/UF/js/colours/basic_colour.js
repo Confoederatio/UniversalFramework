@@ -1,6 +1,5 @@
-//Initialise functions
+//Colours framework
 {
-  //Colours framework
   /*
     componentToHex() - Fetches the hex of a single component.
     c: (Number) - The individual r/g/b component to pass to the function.
@@ -13,6 +12,20 @@
     //Return statement
     return hex.length == 1 ? "0" + hex : hex;
   }
+
+  function decodeRGBAAsNumber (arg0_rgba) {
+    //Convert from parameters
+    var rgba = arg0_rgba;
+
+    //Declare local instance variables
+    var r = rgba[0];
+    var g = rgba[1];
+    var b = rgba[2];
+    var a = rgba[3];
+
+    //Return statement (rebuild 32-bit integer)
+    return ((r << 24) | (g << 16) | (b << 8) | a) >>> 0;
+  };
 
   /*
     deltaE() - Calculates the deltaE between two RGB values
@@ -42,6 +55,20 @@
     //Return statement
     return i < 0 ? 0 : Math.sqrt(i);
   }
+
+  function encodeNumberAsRGBA (arg0_number) {
+    //Convert from parameters
+    var number = returnSafeNumber(Math.round(arg0_number));
+
+    //Declare local instance variables
+    var r = (number >> 24) & 0xFF; //Extract highest 8 bits
+    var g = (number >> 16) & 0xFF; //Extract next 8 bits
+    var b = (number >> 8) & 0xFF;  //Extract next 8 bits
+    var a = number & 0xFF;         //Extract lowest 8 bits
+
+    //Return statement
+    return [r, g, b, a];
+  };
 
   /*
     generateRandomColour() - Generates a random RGB colour.
@@ -132,6 +159,6 @@
     z = (z > 0.008856) ? Math.pow(z, 1/3) : (7.787 * z) + 16/116;
 
     //Return statement
-    return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
+    return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)];
   }
 }
