@@ -1,14 +1,14 @@
 //Initialise functions
 {
   /**
-   * autoFillInputs() - Auto-fills inputs for a given element based on parseVariableString() and their context menu .placeholder object.
-   * @param {Object} [arg0_options] - The options object
+   * autoFillInput() - Auto-fills inputs for a given element based on parseVariableString() and their context menu .placeholder object.
+   * @param {Object} [arg0_options]
    *  @param {HTMLElement} [arg0_options.element] - The direct element object for which to fill in an input for
+   *  @param {Object|String} [arg0_options.placeholder] - The variable to use as the placeholder
    *  @param {string} [arg0_options.type] - The type of input the element represents
    *  @param {Object} [arg0_options.value] - The local value for the given context menu object element
-   *  @param {Object|String} [arg0_options.placeholder] - The variable to use as the placeholder
    */
-  function autoFillInputs (arg0_options) {
+  function autoFillInput (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -67,7 +67,7 @@
   
  /**
   * fillInput() - Fills in a context menu input with its corresponding type.
-  * @param {Object} [arg0_options] - The options object
+  * @param {Object} [arg0_options]
   *  @param {HTMLElement} [arg0_options.element] - The direct element object for which to fill in an input for
   *  @param {string} [arg0_options.type] - The type of input the element represents
   *  @param {Object} [arg0_options.placeholder] - The variable to use as the placeholder
@@ -90,12 +90,13 @@
         var all_checkbox_els = options.element.querySelectorAll(`[type="checkbox"]`);
 
         //Iterate over all_checkbox_els
-        for (var i = 0; i < all_checkbox_els.length; i++)
+        for (let i = 0; i < all_checkbox_els.length; i++) try {
           if (options.placeholder[all_checkbox_els[i].id]) {
             all_checkbox_els[i].checked = options.placeholder[all_checkbox_els[i].id];
           } else {
             all_checkbox_els[i].checked = false;
           }
+        } catch {}
       } else if (["color", "colour"].includes(options.type)) {
         var b_el = options.element.querySelector(`input#b`);
         var g_el = options.element.querySelector(`input#g`);

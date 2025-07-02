@@ -1,3 +1,4 @@
+//Initialise functions
 {
   /*
     cleanObject() - Removes both zero values and undefined/null values from an object by default.
@@ -8,7 +9,7 @@
 
     Returns: (Object)
   */
-  function cleanObject (arg0_object, arg1_options) {
+  global.cleanObject = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -42,97 +43,12 @@
   }
 
   /*
-    dumbFlattenObject() - Non-recursively flattens the given input object, removing only 1 layer at a time.
-    arg0_object: (Object) - The input object to process.
-
-    Returns: (Object)
-  */
-  function dumbFlattenObject (arg0_object) {
-    //Convert from parameters
-    var object = arg0_object;
-
-    //Declare local instance variables
-    var all_object_keys = Object.keys(object);
-    var new_obj = {};
-
-    //Iterate over all_object_keys and move their subobject values to new_obj
-    for (var i = 0; i < all_object_keys.length; i++) {
-      var local_value = object[all_object_keys[i]];
-
-      if (!Array.isArray(local_value) && typeof local_value == "object") {
-        var all_subkeys = Object.keys(local_value);
-
-        //Iterate over all all_subkeys
-        for (var x = 0; x < all_subkeys.length; x++)
-          new_obj[all_subkeys[x]] = local_value[all_subkeys[x]];
-      } else {
-        new_obj[all_object_keys[i]] = local_value;
-      }
-    }
-
-    //Return statement
-    return new_obj;
-  }
-
-  /*
-    dumbMergeObjects()- Merges two objects non-recursively. Overrides all values.
-    arg0_object: (Object) - The object to merge into.
-    arg1_object: (Object) - The object that takes precedence.
-  */
-  function dumbMergeObjects (arg0_object, arg1_object) {
-    //Convert from parameters
-    var object = arg0_object;
-    var ot_object = arg1_object;
-
-    //Declare local instance variables
-    var all_ot_object_keys = Object.keys(ot_object);
-
-    //Iterate over all_ot_object_keys
-    for (var i = 0; i < all_ot_object_keys.length; i++) {
-      var local_value = ot_object[all_ot_object_keys[i]];
-
-      object[all_ot_object_keys[i]] = local_value;
-    }
-
-    //Return statement
-    return object;
-  }
-
-  /*
-    equateObject() - Equates two objects over an interval.
-    arg0_object: (Object)
-    arg1_key: (String)
-    arg2_object: (Object)
-    arg3_key: (String)
-    arg4_interval: (Number) - Optional. 100 by default.
-    arg5_options: (Object)
-      cleanup_function: (Function)
-  */
-  function equateObject (arg0_object, arg1_key, arg2_object, arg3_key, arg4_interval, arg5_options) {
-    //Convert from parameters
-    var object = arg0_object;
-    var key = arg1_key;
-    var ot_object = arg2_object;
-    var ot_key = arg3_key;
-    var interval = (arg4_interval) ? arg4_interval : 100;
-    var options = (arg5_options) ? arg5_options : {};
-
-    //Return statement; set interval
-    return setInterval(function(object, key, ot_object, ot_key){
-      object[key] = ot_object[ot_key];
-
-      if (options.cleanup_function)
-        options.cleanup_function();
-    }, interval, object, key, ot_object, ot_key, interval);
-  }
-
-  /*
     flattenObject() - Moves all keys into the 1st nesting.
     arg0_object: (Object) - The object to pass.
 
     Returns: (Object)
   */
-  function flattenObject (arg0_object) {
+  global.flattenObject = function (arg0_object) {
     //Convert from parameters
     var object = arg0_object;
 
@@ -176,52 +92,13 @@
   }
 
   /*
-    getAllObjectKeys() - Fetches all keys in an object recursively.
-    arg0_object: (Object) - The object to list all keys for.
-    arg1_options: (Object)
-      include_parent_keys: (Boolean) - Optional. Whether to include parent keys. False by default.
-
-    Returns: (Array<String>)
-  */
-  function getAllObjectKeys (arg0_object, arg1_options) {
-    //Convert from parameters
-    var object = arg0_object;
-    var options = (arg1_options) ? arg1_options : {};
-
-    //Initialise options
-    if (!options.current_key) options.current_key = "";
-
-    //Declare local instance variables
-    var all_object_keys = Object.keys(object);
-    var object_keys_array = [];
-
-    //Iterate over all_object_keys
-    for (var i = 0; i < all_object_keys.length; i++) {
-      var local_value = object[all_object_keys[i]];
-
-      if (typeof local_value != "object" || options.include_parent_keys)
-        object_keys_array.push(`${options.current_key}${all_object_keys[i]}`);
-      if (typeof local_value == "object" && !Array.isArray(local_value)) {
-        var new_options = JSON.parse(JSON.stringify(options));
-        new_options.current_key += `${all_object_keys[i]}.`;
-
-        var new_object_keys = getAllObjectKeys(local_value, new_options);
-        object_keys_array = object_keys_array.concat(new_object_keys);
-      }
-    }
-
-    //Return statement
-    return object_keys_array;
-  }
-
-  /*
     getDepth() - Returns object depth as a number.
     arg0_object: (Object) - The object to fetch depth for.
     arg1_depth: (Number) - Optimisation parameter used as an internal helper.
 
     Returns: (Number)
   */
-  function getDepth (arg0_object, arg1_depth) {
+  global.getDepth = function (arg0_object, arg1_depth) {
     //Convert from parameters
     var object = arg0_object;
     var depth = (arg1_depth) ? arg1_depth : 1;
@@ -243,11 +120,11 @@
   /*
     getObjectKey() - Fetches object value from a string (e.g. 'test.one.two')
     arg0_object: (Object) - The object to fetch the key from.
-    arg1_key: (String) - The string of the key to fetch from the object 'test.one.two'.
+    arg1_key: (String) - The string of the key to fetch from the object.
 
     Returns: (Variable)
   */
-  function getObjectKey (arg0_object, arg1_key) {
+  global.getObjectKey = function (arg0_object, arg1_key) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
@@ -256,17 +133,17 @@
     var split_key = (Array.isArray(key)) ? key : key.split(".");
     var return_value;
 
-    if (split_key.length <= 1 && object[split_key[0]] != undefined) {
+    if (split_key.length <= 1 && object[split_key[0]]) {
       return_value = object[split_key[0]];
     } else {
-      if (object[split_key[0]] != undefined) {
+      if (object[split_key[0]]) {
         //Preserve old index; pop from front before calling recursion
         var old_index = JSON.parse(JSON.stringify(split_key[0]));
         split_key.shift();
         var found_return_value = getObjectKey(object[old_index], split_key);
 
         //If value was found, return that
-        if (found_return_value != undefined)
+        if (found_return_value)
           return_value = found_return_value;
       }
     }
@@ -281,7 +158,7 @@
 
     Returns: (Array)
   */
-  function getObjectList (arg0_object_list) {
+  global.getObjectList = function (arg0_object_list) {
     //Convert from parameters
     var list_obj = arg0_object_list;
 
@@ -309,7 +186,7 @@
 
     Returns: (Object)
   */
-  function getSubobject (arg0_object, arg1_key, arg2_restrict_search) {
+  global.getSubobject = function (arg0_object, arg1_key, arg2_restrict_search) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
@@ -366,7 +243,7 @@
 
     Returns: (Array<String, ...>)
   */
-  function getSubobjectKeys (arg0_object, arg1_options) {
+  global.getSubobjectKeys = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -418,7 +295,7 @@
 
     Returns: (Object)
   */
-  function mergeObjects (arg0_object, arg1_object, arg2_options) {
+  global.mergeObjects = function (arg0_object, arg1_object, arg2_options) {
     //Convert from parameters - merge_obj overwrites onto merged_obj
     var merged_obj = JSON.parse(JSON.stringify(arg0_object));
     var merge_obj = JSON.parse(JSON.stringify(arg1_object));
@@ -458,33 +335,23 @@
     return merged_obj;
   }
 
-  /*
-    replaceKeys() - Replaces keys in an object with alternative keys. Used for casting between object types.
-    arg0_object: (Object) - The original object to change.
-    arg1_options: (Object)
-      <original_key>: <replacement_key> - Optional. The key to change.
-  */
-  function replaceKeys (arg0_object, arg1_options) {
+  global.modifyValue = function (arg0_object, arg1_key, arg2_number, arg3_delete_negative) {
     //Convert from parameters
-    var object = (arg0_object) ? arg0_object : {};
-    var options = (arg1_options) ? arg1_options : {};
+    var object = arg0_object;
+    var key = arg1_key;
+    var number = parseFloat(arg2_number);
+    var delete_negative = arg3_delete_negative;
 
-    //Declare local instance variables
-    var all_object_keys = Object.keys(object);
+    //Set value
+    object[key] = (object[key]) ? object[key] + number : number;
 
-    //Iterate over all_option_keys
-    for (var i = 0; i < all_object_keys.length; i++)
-      //Replace key if parallel found in options
-      if (options[all_object_keys[i]]) {
-        var replacement_key = options[all_object_keys[i]];
-
-        object[replacement_key] = object[all_object_keys[i]];
-        delete object[all_object_keys[i]];
-      }
+    if (delete_negative)
+      if (object[key] <= 0)
+        delete object[key];
 
     //Return statement
-    return object;
-  }
+    return object[key];
+  };
 
   /*
     removeZeroes() - Removes zero values from an object.
@@ -492,7 +359,7 @@
 
     Returns: (Object)
   */
-  function removeZeroes (arg0_object) {
+  global.removeZeroes = function (arg0_object) {
     //Convert from parameters
     var object = JSON.parse(JSON.stringify(arg0_object));
 
@@ -514,76 +381,13 @@
     return object;
   }
 
-  function setObjectKey (arg0_object, arg1_key, arg2_value) {
-    //Convert from parameters
-    var object = arg0_object;
-    var key = arg1_key;
-    var value = arg2_value;
-
-    //Declare local instance variables
-    var current = object;
-    var split_key = key.split(".");
-
-    //Iterate over split_key and set each key if not defined
-    for (var i = 0; i < split_key.length; i++) {
-      var local_key = split_key[i];
-
-      //If it's the last key, set the value
-      if (i == split_key.length - 1) {
-        current[local_key] = value;
-      } else {
-        if (!current[local_key] || typeof current[local_key] != "object")
-          current[local_key] = {};
-        //Move top the next level
-        current = current[local_key];
-      }
-    }
-
-    //Return statement
-    return object;
-  }
-
-  /**
-   * sortKeysByObject() - Sorts the keys of an object by the order of another object.
-   * @param {*} arg0_object - The object to sort.
-   * @param {*} [arg1_options] - The object to sort by.
-   *  @param {String} [arg1_options.key="order"] - The key to sort by. .order by default.
-   * 
-   * @returns {Object}
-   */
-  function sortKeysByObject (arg0_object, arg1_options) {
-    //Convert from parameters
-    var object = arg0_object;
-    var options = (arg1_options) ? arg1_options : {};
-
-    //Initialise options
-    if (!options.key) options.key = "order";
-    
-    var all_object_keys = Object.keys(object);
-    var sorted_keys = all_object_keys.map(function (key) {
-      return {
-        key: key,
-        order: returnSafeNumber(object[key][options.key])
-      }
-    });
-      sorted_keys.sort(function (a, b) {
-        return a.order - b.order;
-      });
-      all_object_keys = sorted_keys.map(function (key) {
-        return key.key;
-      });
-
-    //Return statement
-    return all_object_keys;
-  }
-
   /*
     sortObject() - Sorts an object.
     arg0_object: (Object) - The object to sort.
     arg1_options: (Object)
       type: (String) - Optional. The order to sort the object in. 'ascending'/'descending'. 'descending' by default.
   */
-  function sortObject (arg0_object, arg1_options) {
+  global.sortObject = function (arg0_object, arg1_options) {
     //Convert from parameters
     var object = arg0_object;
     var options = (arg1_options) ? arg1_options : {};
@@ -603,44 +407,5 @@
         return (mode == "descending") ? b - a : a - b;
       })
     );
-  }
-
-  /*
-    sortObjectByKey() - Sorts an object by an immediate key.
-    arg0_object: (Object) - The object to sort.
-    arg1_options: (Object)
-      key: (String) - The sub-key to sort by. Non-recursive.
-      type: (String) - Optional. The order to sort the object in. 'ascending'/'descending'. 'descending' by default.
-  */
-  function sortObjectByKey (arg0_object, arg1_options) {
-    //Convert from parameters
-    var object = arg0_object;
-    var options = (arg1_options) ? arg1_options : {};
-
-    //Initialise options
-    if (!options.mode) options.mode = "descending";
-
-    //Declare local instance variables
-    var object_keys = Object.keys(object);
-    var object_array = objectToArray(object);
-    var return_obj = {};
-
-    //Iterate over object_array; assign .RESERVED_KEY to keep track of sorting
-    for (var i = 0; i < object_array.length; i++)
-      object_array[i].RESERVED_KEY = object_keys[i];
-
-    //Sort by key
-    object_array.sort(function(a, b) {
-      return (options.mode == "descending") ? b[options.key] - a[options.key] : a[options.key] - b[options.key];
-    });
-
-    //Format return_obj
-    for (var i = 0; i < object_array.length; i++) {
-      return_obj[object_array[i].RESERVED_KEY] = object_array[i];
-      delete return_obj[object_array[i].RESERVED_KEY].RESERVED_KEY;
-    }
-
-    //Return statement
-    return return_obj;
   }
 }

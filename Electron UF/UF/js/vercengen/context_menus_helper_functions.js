@@ -25,6 +25,14 @@
     return parent_el.contains(child_el);
   }
 
+  /**
+   * elementDragHandler() - Provides a Window interface without CSS styling for an element. .header refers to the draggable header at the top.
+   * @param {HTMLElement} arg0_el
+   * @param {Object} [arg1_options]
+   *  @param {boolean} [arg1_options.is_resizable=false]
+   *
+   * @returns {HTMLElement}
+   */
   function elementDragHandler (arg0_el, arg1_options) {
     //Convert from parameters
     var el = (typeof arg0_el == 'string') ? document.querySelector(arg0_el) : arg0_el;
@@ -51,50 +59,51 @@
     //Add resize functionality if enabled
     if (options.is_resizable) {
       el.classList.add('resizable');
-      
+
       //Define handle positions and cursors
       var handle_config = {
-        'n': { top: '0', left: '0', right: '0', height: resize_threshold + 'px' },
-        'e': { top: '0', right: '0', bottom: '0', width: resize_threshold + 'px' },
-        's': { bottom: '0', left: '0', right: '0', height: resize_threshold + 'px' },
-        'w': { top: '0', left: '0', bottom: '0', width: resize_threshold + 'px' },
-        'ne': { top: '0', right: '0', width: resize_threshold + 'px', height: resize_threshold + 'px' },
-        'nw': { top: '0', left: '0', width: resize_threshold + 'px', height: resize_threshold + 'px' },
-        'se': { bottom: '0', right: '0', width: resize_threshold + 'px', height: resize_threshold + 'px' },
-        'sw': { bottom: '0', left: '0', width: resize_threshold + 'px', height: resize_threshold + 'px' }
+        'n': { top: '0', left: '0', right: '0', height: resize_threshold + 'px', cursor: 'n-resize' },
+        'e': { top: '0', right: '0', bottom: '0', width: resize_threshold + 'px', cursor: 'e-resize' },
+        's': { bottom: '0', left: '0', right: '0', height: resize_threshold + 'px', cursor: 's-resize' },
+        'w': { top: '0', left: '0', bottom: '0', width: resize_threshold + 'px', cursor: 'w-resize' },
+        'ne': { top: '0', right: '0', width: resize_threshold*2 + 'px', height: resize_threshold*2 + 'px', cursor: 'ne-resize' },
+        'nw': { top: '0', left: '0', width: resize_threshold*2 + 'px', height: resize_threshold*2 + 'px', cursor: 'nw-resize' },
+        'se': { bottom: '0', right: '0', width: resize_threshold*2 + 'px', height: resize_threshold*2 + 'px', cursor: 'se-resize' },
+        'sw': { bottom: '0', left: '0', width: resize_threshold*2 + 'px', height: resize_threshold*2 + 'px', cursor: 'sw-resize' }
       };
 
       //Add resize handles
       var handles = ['n', 'e', 's', 'w', 'ne', 'nw', 'se', 'sw'];
-      for (var i = 0; i < handles.length; i++) {
-        var edge = handles[i];
-        var handle = document.createElement('div');
-        handle.className = 'resize-handle resize-' + edge;
-        handle.style.position = 'absolute';
-        handle.style.zIndex = '1000';
-        
-        //Apply handle configuration
-        var config = handle_config[edge];
-        for (var prop in config) {
-          handle.style[prop] = config[prop];
-        }
-        
-        el.appendChild(handle);
-        handle.onmousedown = function(e) {
-          e.stopPropagation();
-          is_resizing = true;
-          resize_edge = edge;
-          
-          //Store initial dimensions
-          var rect = el.getBoundingClientRect();
-          initial_width = rect.width;
-          initial_height = rect.height;
-          initial_left = rect.left;
-          initial_top = rect.top;
-          
-          internalMouseDownHandler(e);
-        };
-      }
+
+      for (var i = 0; i < handles.length; i++)
+        (function (edge) {
+          var handle = document.createElement('div');
+          handle.className = 'resize-handle resize-' + edge;
+          handle.style.position = 'absolute';
+          handle.style.zIndex = '1000';
+
+          //Apply handle configuration
+          var config = handle_config[edge];
+          for (var prop in config) {
+            handle.style[prop] = config[prop];
+          }
+
+          el.appendChild(handle);
+          handle.onmousedown = function(e) {
+            e.stopPropagation();
+            is_resizing = true;
+            resize_edge = edge; // This 'edge' is correctly scoped thanks to the IIFE.
+
+            //Store initial dimensions
+            var rect = el.getBoundingClientRect();
+            initial_width = rect.width;
+            initial_height = rect.height;
+            initial_left = el.offsetLeft;
+            initial_top = el.offsetTop;
+
+            internalMouseDownHandler(e);
+          };
+        })(handles[i]);
     }
 
     //Header drag handler
@@ -119,54 +128,62 @@
     function internalElementDrag (e) {
       //Declare local instance variables
       var e = (e || window.event);
+      var min_height = 50;
+      var min_width = 50;
+      var viewport_height = window.innerHeight;
+      var viewport_width = window.innerWidth;
 
       e.preventDefault();
-      
+
       if (is_resizing && options.is_resizable) {
         var delta_x = e.clientX - position_three;
         var delta_y = e.clientY - position_four;
-        
+
         //Define resize operations
         var resize_ops = {
-          'e': function() { 
-            el.style.width = Math.max(50, initial_width + delta_x) + 'px';
+          'e': function() {
+            let new_width = initial_width + delta_x;
+            // Constrain width to not exceed viewport boundary
+            new_width = Math.min(new_width, viewport_width - initial_left);
+            el.style.width = Math.max(min_width, new_width) + 'px';
           },
-          'w': function() { 
-            var new_width = Math.max(50, initial_width - delta_x);
+          'w': function() {
+            let new_width = initial_width - delta_x;
+            // Constrain width so the left edge doesn't go past 0
+            new_width = Math.min(new_width, initial_left + initial_width);
+            new_width = Math.max(min_width, new_width);
             el.style.width = new_width + 'px';
-            el.style.left = (initial_left + (initial_width - new_width)) + 'px';
+            el.style.left = (initial_left + initial_width - new_width) + 'px';
           },
-          's': function() { 
-            el.style.height = Math.max(50, initial_height + delta_y) + 'px';
+          's': function() {
+            let new_height = initial_height + delta_y;
+            // Constrain height to not exceed viewport boundary
+            new_height = Math.min(new_height, viewport_height - initial_top);
+            el.style.height = Math.max(min_height, new_height) + 'px';
           },
           'n': function() {
-            var new_height = Math.max(50, initial_height - delta_y);
+            let new_height = initial_height - delta_y;
+            // Constrain height so the top edge doesn't go past 0
+            new_height = Math.min(new_height, initial_top + initial_height);
+            new_height = Math.max(min_height, new_height);
             el.style.height = new_height + 'px';
-            el.style.top = (initial_top + (initial_height - new_height)) + 'px';
+            el.style.top = (initial_top + initial_height - new_height) + 'px';
           },
           'se': function() {
-            el.style.width = Math.max(50, initial_width + delta_x) + 'px';
-            el.style.height = Math.max(50, initial_height + delta_y) + 'px';
+            resize_ops.s();
+            resize_ops.e();
           },
           'sw': function() {
-            var new_width = Math.max(50, initial_width - delta_x);
-            el.style.width = new_width + 'px';
-            el.style.left = (initial_left + (initial_width - new_width)) + 'px';
-            el.style.height = Math.max(50, initial_height + delta_y) + 'px';
+            resize_ops.s();
+            resize_ops.w();
           },
           'ne': function() {
-            el.style.width = Math.max(50, initial_width + delta_x) + 'px';
-            var new_height = Math.max(50, initial_height - delta_y);
-            el.style.height = new_height + 'px';
-            el.style.top = (initial_top + (initial_height - new_height)) + 'px';
+            resize_ops.n();
+            resize_ops.e();
           },
           'nw': function() {
-            var new_width = Math.max(50, initial_width - delta_x);
-            var new_height = Math.max(50, initial_height - delta_y);
-            el.style.width = new_width + 'px';
-            el.style.left = (initial_left + (initial_width - new_width)) + 'px';
-            el.style.height = new_height + 'px';
-            el.style.top = (initial_top + (initial_height - new_height)) + 'px';
+            resize_ops.n();
+            resize_ops.w();
           }
         };
 
@@ -180,23 +197,33 @@
         position_three = e.clientX;
         position_four = e.clientY;
 
+        var el_height = el.offsetHeight;
+        var el_width = el.offsetWidth;
+        var new_left = el.offsetLeft - position_one;
+        var new_top = el.offsetTop - position_two;
+
+        new_top = Math.max(0, Math.min(new_top, viewport_height - el_height));
+        new_left = Math.max(0, Math.min(new_left, viewport_width - el_width));
+
         //Set element position
-        el.style.top = (el.offsetTop - position_two) + 'px';
-        el.style.left = (el.offsetLeft - position_one) + 'px';
+        el.style.top = `${new_top}px`;
+        el.style.left = `${new_left}px`;
       }
     }
 
     function internalMouseDownHandler (e) {
       //Declare local instance variables
       var e = (e || window.event);
-      
-      e.preventDefault();
+
       position_three = e.clientX;
       position_four = e.clientY;
 
       document.onmouseup = internalCloseDragElement;
       document.onmousemove = internalElementDrag;
     }
+
+    //Return statement
+    return el;
   }
 
   function execCodeAction (arg0_button_el, arg1_editor_el, arg2_visual_view_el, arg3_html_view_el) {
@@ -285,28 +312,6 @@
       submit.removeEventListener("click", arguments.callee);
       close.removeEventListener("click", arguments.callee);
     });
-  }
-
-  function handleBIUF (arg0_e) {
-    //Convert from parameters
-    var biuf_el = arg0_e;
-
-    //Declare local instance variables
-    var child = biuf_el.firstChild;
-
-    //Declare while loop, break when next sibling element can no longer be found.
-    while (child) {
-      var remove_node = null;
-
-      //Check if child is not of <b><i><u> tags.
-      if (child.tagName && (!["b", "i", "u"].includes(child.tagName.toLowerCase())))
-        remove_node = child;
-      child = child.nextSibling;
-
-      //Remove node if flag is true
-      if (remove_node)
-        remove_node.parentNode.removeChild(remove_node);
-    }
   }
 
   function handleColourWheel (arg0_parent_selector) {
@@ -429,7 +434,8 @@
   /*
     handleContextMenu() - Provides the interaction handler for context menus.
     arg0_context_menu_el: (HTMLElement) - The context menu HTML element.
-    arg1_options: (Object) - Optional. Same as the originaal context menu options.
+    arg1_options: (Object) - Optional. Same as the original context menu options.
+      parent: (Interface) - The ve.Interface parent.
   */
   function handleContextMenu (arg0_context_menu_el, arg1_options) {
     //Convert from parameters
@@ -444,12 +450,31 @@
       let local_id = all_inputs[i].getAttribute("id");
       let local_input_obj = options[local_id];
       let local_type = all_inputs[i].getAttribute("type");
+        
+      //.onload handler; returning an object will populate the input respectively
+      if (local_input_obj)
+        if (local_input_obj.onload) {
+          var return_value = local_input_obj.onload(all_inputs[i]);
 
-      if (local_type == "colour")
-        handleColourWheel(all_inputs[i]);
+          if (typeof return_value == "object")
+            all_inputs[i].innerHTML = createInput(
+              dumbMergeObjects(local_input_obj, return_value)
+            );
+        }
 
       //Default type population (i.e. for 'sortable_list')
-      if (local_type == "search_select") {
+      if (local_type == "colour") {
+        handleColourWheel(all_inputs[i]);
+      } else if (local_type == "interface") {
+        var interface_body_selector = `[id="interface-folder-${local_input_obj.id}"] #interface-body`;
+
+        local_input_obj.anchor = context_menu_el.querySelector(interface_body_selector);
+        local_input_obj.can_close = true;
+        var local_interface = new ve.Interface(local_input_obj);
+
+        if (options.parent)
+          options.parent.components[(local_input_obj.id) ? local_input_obj.id : all_inputs[i]] = local_interface;
+      } else if (local_type == "search_select") {
         all_inputs[i].querySelector(`#search`).addEventListener("click", function (e) {
           all_inputs[i].classList.toggle("shown");
         });
@@ -528,6 +553,28 @@
               local_li_el.remove();
             });
         }
+      } else if (local_type == "wysiwyg") {
+        //Add onchange handler if specified
+        if (local_input_obj && local_input_obj.onchange) {
+          var editor = all_inputs[i].querySelector('.wysiwyg-editor');
+          var visual_view = editor.querySelector('.visual-view');
+          var html_view = editor.querySelector('.html-view');
+
+          //Add change handlers for both views
+          visual_view.addEventListener("input", function() {
+            var event = new Event("change");
+            event.target = visual_view;
+            event.value = visual_view.innerHTML;
+            local_input_obj.onchange(event);
+          });
+
+          html_view.addEventListener("input", function() {
+            var event = new Event("change");
+            event.target = html_view;
+            event.value = html_view.value;
+            local_input_obj.onchange(event);
+          });
+        }
       }
 
       //Custom interaction handling
@@ -572,63 +619,8 @@
                 };
               }
           }
-        
-        //.onload handler; returning an object will populate the input respectively
-        if (local_input_obj.onload) {
-          var return_value = local_input_obj.onload(all_inputs[i]);
-
-          if (typeof return_value == "object")
-            all_inputs[i].innerHTML = createInput(
-              dumbMergeObjects(local_input_obj, return_value)
-            );
-        }
       }
     }
-  }
-
-  function initBIUFToolbar (arg0_parent_el_id) {
-    //Convert from parameters
-    var biuf_element_id = arg0_parent_el_id;
-
-    //Declare local instance variables
-    var biuf_el = document.querySelector(`div#${biuf_element_id} #biuf-input`);
-    var toolbar_el = document.querySelector(`div#${biuf_element_id} #biuf-toolbar`);
-
-    //Declare element references
-    var bold_button = toolbar_el.querySelector("#bold-button");
-    var clear_button = toolbar_el.querySelector("#clear-button");
-    var italic_button = toolbar_el.querySelector("#italic-button");
-    var underline_button = toolbar_el.querySelector("#underline-button");
-
-    //Show toolbar when text is selected
-    document.addEventListener("mouseup", function () {
-      var selection = window.getSelection();
-
-      if (selection.toString() != "" && document.querySelector(`div#${biuf_element_id} #biuf-input:focus`)) {
-        var range = selection.getRangeAt(0);
-        var rect = range.getBoundingClientRect();
-
-        toolbar_el.style.display = "block";
-        toolbar_el.style.top = rect.top - toolbar_el.offsetHeight + "px";
-        toolbar_el.style.left = rect.left + "px";
-      } else {
-        toolbar_el.style.display = "none";
-      }
-    });
-
-    //Apply formatting when various toolbar buttons are clicked
-    bold_button.addEventListener("click", function () {
-      document.execCommand("bold");
-    });
-    clear_button.addEventListener("click", function () {
-      document.execCommand("removeFormat");
-    });
-    italic_button.addEventListener("click", function () {
-      document.execCommand("italic");
-    });
-    underline_button.addEventListener("click", function () {
-      document.execCommand("underline");
-    });
   }
 
   function initWYSIWYG (arg0_parent_el_id) {
@@ -772,11 +764,13 @@
       local_button.classList.remove("active");
     }
 
-    if (!childOf(window.getSelection().anchorNode.parentNode, editor))
-      //Return statement; guard clause
-      return false;
+    try {
+      if (!childOf(window.getSelection().anchorNode.parentNode, editor))
+        //Return statement; guard clause
+        return false;
 
-    parentTagActive(window.getSelection().anchorNode.parentNode);
+      parentTagActive(window.getSelection().anchorNode.parentNode);
+    } catch {}
   }
 
   function setColourWheelCursor (arg0_parent_selector, arg1_colour, arg2_do_not_change) {

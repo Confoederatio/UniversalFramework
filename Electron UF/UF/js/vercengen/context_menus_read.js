@@ -115,9 +115,10 @@
 
     Returns: (Variable)
   */
-  function getInput (arg0_input_el) { //[WIP] - Complete function body
+  function getInput (arg0_input_el, arg1_options) {
     //Convert from parameters
     var input_el = arg0_input_el;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var id = input_el.getAttribute("id");
@@ -132,12 +133,11 @@
       output = getWysiwygFromFields(input_el);
     } else if (type == "checkbox") {
       var all_checkboxes = input_el.querySelectorAll(`[type="checkbox"]`);
-      output = [];
+      output = {};
 
       //Iterate over all_checkboxes
       for (var i = 0; i < all_checkboxes.length; i++)
-        if (all_checkboxes[i].checked)
-          output.push(all_checkboxes[i].id);
+        output[all_checkboxes[i].id] = (all_checkboxes[i].checked);
     } else if (["color", "colour"].includes(type)) {
       output = getColourFromFields(input_el);
     } else if (type == "datalist") {
@@ -155,8 +155,10 @@
         output = options.custom_html_function(input_el);
     } else if (type == "image") {
       //[WIP] - No current file input of this kind
+    } else if (type == "interface") {
+      output = getInputsAsObject(input_el, options);
     } else if (type == "number") {
-      output = input_el.querySelector(`input[type="number"]`).value;
+      output = parseFloat(input_el.querySelector(`input[type="number"]`).value);
     } else if (type == "password") {
       output = input_el.querySelector(`input[type="password"]`).value;
     } else if (type == "radio") {
@@ -229,11 +231,14 @@
       if (local_output != null && local_output != undefined) has_output = true;
 
       //Set return_obj[local_id]
-      if (has_output)
+      if (has_output) {
+        if (!Array.isArray(local_output) && typeof local_output == "object")
+          return_obj = mergeObjects(return_obj, local_output);
         return_obj[local_id] = local_output;
+      }
     }
 
-    //2. Speciaised input handling
+    //2. Specialised input handling
     if (options.entity_id) {
       var common_selectors = config.defines.common.selectors;
       var entity_el = getEntityElement(options.entity_id);
